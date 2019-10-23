@@ -333,7 +333,7 @@ def linearTravel(first, second):
 
     fig, ax = plt.subplots()
 
-    ax.scatter(tArray, angleRArray, label="angleR")
+    ax.plot(tArray, angleRArray, label="angleR")
     #ax.scatter(tArray, angleRStep, s=4, label="angleR frames")
     ax.plot(tArray, angleCArray, label="angleC")
     #ax.scatter(tArray, angleCStep, s=4, label="angleC frames")
