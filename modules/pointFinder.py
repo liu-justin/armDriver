@@ -3,8 +3,6 @@ import numpy as np
 import turtle
 
 import matplotlib.pyplot as plt
-import pandas
-
 
 class Point:
     def __init__(self, x, y):
@@ -262,7 +260,6 @@ def nearestStep(value, step):
 
 # getting the proper step angle values for linear interpolation
 def linearTravel(first, second):
-
     # first check the two points to see if they are reachable, do a within range
     returnString = "the following points are out of range: "
     if (not withinRange(linkR, linkC,first)):
@@ -304,32 +301,24 @@ def linearTravel(first, second):
     yIter = first.y
     test = Point(xIter, yIter)
 
-    angleRoundedList = []
-
     while (abs(xIter - first.x) < abs(xLength) or abs(yIter - first.y) < abs(yLength)):
         
         angles = findAngle(test)
         angleList.append(angles)
-        nearestR = nearestStep(angles[0], singleStepAngle)
-        nearestC = nearestStep(angles[1], singleStepAngle)
-        angleRoundedList.append((nearestR, nearestC))
         #angleList.append((xIter, yIter))
-
-        # for the graph
-        tList.append(tIter)
 
         xIter += xFrame
         yIter += yFrame
         test = Point(xIter, yIter)
 
+        # for the graph
+        tList.append(tIter)
         tIter += frameTime
     
-    # plotting both angles
+    #plotting both angles
     tArray = np.asarray(tList, dtype=np.float32)
     angleRArray = np.asarray([elem[0] for elem in angleList])
     angleCArray = np.asarray([elem[1] for elem in angleList])
-    angleRStep = np.asarray([elem[0] for elem in angleRoundedList])
-    angleCStep = np.asarray([elem[1] for elem in angleRoundedList])
 
     fig, ax = plt.subplots()
 
@@ -343,8 +332,7 @@ def linearTravel(first, second):
     ax.set_yticks(minorTicks, minor=True)
     plt.grid(b=True, which="minor")
     plt.legend()
-    #plt.show()  
-
+    # #plt.show()  
     return angleList
 
 def drawAngleList(angles):

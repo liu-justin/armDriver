@@ -90,8 +90,6 @@ def getSteps(angles):
         stepCountR = int(abs(angleR1//stepAngle - angleR0//stepAngle) + (1 if angleR0%stepAngle == 0 else 0))
         stepCountC = int(abs(angleC1//stepAngle - angleC0//stepAngle) + (1 if angleC0%stepAngle == 0 else 0))
 
-        print(f"stepCountR: {stepCountR} stepCountC: {stepCountC}")
-
         # if there is no steps between R1 and R0, then do nothing
         if stepCountR > 0:
             # find the first step
@@ -110,40 +108,19 @@ def getSteps(angles):
             stepListC.append(stepIterC)
             firstT = (stepListC[-1] - angleC0)/(angleC1 - angleC0) * frameTime + i*frameTime # adding the time is wrong
             timeListC.append(firstT)
-            print(f" before the for loop, and after the first: {[i/stepAngle for i in stepListC]}")
             
             for j in range(1, stepCountC):
                 stepListC.append(stepListC[-1]+stepAngle*np.sign(angleC1-angleC0))
                 t = (stepListC[-1] - angleC0)/(angleC1 - angleC0) * frameTime + i*frameTime
-                print(f"sign of t: {np.sign((stepListC[-1] - angleC0)/(angleC1 - angleC0))}")
                 timeListC.append(t)
 
-            print([i/stepAngle for i in stepListC])
 
-        # if stepCountC == 0:
-        #     stepTimeC = frameTime
-        #     tIterC += stepTimeC
-        #     timeListC.append(tIterC)
-        #     stepListC.append(stepIterC)
-        # else:
-        #     stepTimeC = abs(frameTime/stepCountC)
-        #     for i in range(0,abs(stepCountC)):
-        #         tIterC += stepTimeC
-        #         stepIterC += np.sign(stepCountC)*stepAngle
-        #         timeListC.append(tIterC)
-        #         stepListC.append(stepIterC)
-
-    # timeListR.append(tIterR)
-    # stepListR.append(stepIterR)
-    # timeListC.append(tIterC)
-    # stepListC.append(stepIterC)
-
-    #plt.step(timeListC, stepListC, where="mid", label="angleC steps")
-    #plt.step(timeListR, stepListR, where="post", label="angleR steps")
+    plt.step(timeListC, stepListC, where="mid", label="angleC steps")
+    plt.step(timeListR, stepListR, where="mid", label="angleR steps")
     plt.scatter(timeListR, stepListR, label="angleR steps")
     plt.scatter(timeListC, stepListC, label="angleC steps")
-    for i, txt in enumerate(stepListC):
-        plt.annotate(i, (timeListC[i], stepListC[i]))
+    # for i, txt in enumerate(stepListC):
+    #     plt.annotate(i, (timeListC[i], stepListC[i]))
 
     plt.show() 
 
