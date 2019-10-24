@@ -181,9 +181,22 @@ def findAngle(test):
     distY = y - linkR.outside.y
     distX = x - linkR.outside.x
 
-    aC = math.atan2(distY,distX)
+    # this angle is referenced to the global reference plane, needs to be from aR angle reference plane
+    # angleD is the angle inside the upper quad, so we have to reverse the angle
+    angleD = aR - math.atan2(distY,distX)
 
-    # not necessary when only filling out angles from linear travel, but necessary otherwise
+    aLength = 2.75
+    bLength = 9.5
+    cLength = 2.5
+    dLength = 9.43702304
+    # geometry to get input stepper angle 
+    midLine = math.sqrt(cLength**2 + dLength**2 - 2*cLength*dLength*math.cos(angleD))
+    angleCAD = np.arcsin(cLength*math.sin(angleD)/midLine)
+    angleBAC = np.arccos((aLength**2 + midLine**2 - bLength**2)/(2*aLength*midLine))
+
+    aC = angleCAD + angleBAC
+
+    # not necessary when filling out angles from linear travel, only for drawing
     linkC.angle = aC
 
     #print(f"{aR} {aC}")
