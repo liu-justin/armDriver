@@ -7,8 +7,8 @@ def main():
 	#singlePoint(1,9)
 	#multiplePoint()
 	startTime = time.perf_counter()
-	first = p.Point(2, 11)
-	second = p.Point(11,0)
+	first = p.Point(7, 1)
+	second = p.Point(7,-1)
 	angles = p.linearTravel(first, second)
 	afterLTTime = time.perf_counter()
 	if angles[0] == None:

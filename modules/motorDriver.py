@@ -114,11 +114,9 @@ def getSteps(angles):
                 t = (stepListC[-1] - angleC0)/(angleC1 - angleC0) * frameTime + i*frameTime
                 timeListC.append(t)
 
-
+    print(timeListR)
     plt.step(timeListC, stepListC, where="mid", label="angleC steps")
     plt.step(timeListR, stepListR, where="mid", label="angleR steps")
-    plt.scatter(timeListR, stepListR, label="angleR steps")
-    plt.scatter(timeListC, stepListC, label="angleC steps")
     # for i, txt in enumerate(stepListC):
     #     plt.annotate(i, (timeListC[i], stepListC[i]))
 
