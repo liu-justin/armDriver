@@ -1,6 +1,4 @@
-#import RPi.GPIO as GPIO
 import time
-
 import numpy as np
 import math
 
@@ -14,6 +12,8 @@ Seq.append([1,0,1,0])
 Seq.append([0,1,1,0])
 Seq.append([0,1,0,1])
 Seq.append([1,0,0,1])
+
+ser = serial.Serial("COM8", 9600);
 
 class Motor:
     def __init__(self, a1, a2, b1, b2):
