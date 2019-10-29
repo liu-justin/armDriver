@@ -13,8 +13,6 @@ Seq.append([0,1,1,0])
 Seq.append([0,1,0,1])
 Seq.append([1,0,0,1])
 
-ser = serial.Serial("COM8", 9600);
-
 class Motor:
     def __init__(self, a1, a2, b1, b2):
         self.a1 = a1
@@ -90,11 +88,12 @@ def getSteps(angles):
         stepCountR = int(abs(angleR1//stepAngle - angleR0//stepAngle) + (1 if angleR0%stepAngle == 0 else 0))
         stepCountC = int(abs(angleC1//stepAngle - angleC0//stepAngle) + (1 if angleC0%stepAngle == 0 else 0))
 
-        # if there is no steps between R1 and R0, then do nothing
+        # if there is no steps between R1 and R0, then do nothing, otherwise
         if stepCountR > 0:
-            # find the first step
+            # find and append the first step
             stepIterR = ceilStep(angleR0, stepAngle) if (angleR1 - angleR0 > 0) else floorStep(angleR0, stepAngle)
             stepListR.append(stepIterR)
+            # find the first time with linear interpolation
             firstT = (stepListR[-1] - angleR0)/(angleR1 - angleR0) * frameTime + i*frameTime
             timeListR.append(firstT)
 
@@ -113,6 +112,16 @@ def getSteps(angles):
                 stepListC.append(stepListC[-1]+stepAngle*np.sign(angleC1-angleC0))
                 t = (stepListC[-1] - angleC0)/(angleC1 - angleC0) * frameTime + i*frameTime
                 timeListC.append(t)
+
+    # correcting the very first angles to be as close to real as possible
+    stepListR[0] = nearestStep(angles[0][0], stepAngle)
+    stepListC[0] = nearestStep(angles[0][1], stepAngle)
+
+    # adding the last step position and the last time, based on rounding to the nearest step
+    stepListR.append(nearestStep(angles[-1][0], stepAngle))
+    stepListC.append(nearestStep(angles[-1][1], stepAngle))
+    timeListR.append(frameTime*(len(angles)-1))
+    timeListC.append(frameTime*(len(angles)-1))
 
     print(timeListR)
     plt.step(timeListC, stepListC, where="mid", label="angleC steps")
