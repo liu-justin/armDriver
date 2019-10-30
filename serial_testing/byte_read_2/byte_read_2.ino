@@ -1,5 +1,4 @@
-
-// Example 6 - Receiving binary data
+#include <string.h>
 
 const byte numBytes = 64;
 int delayTimeR[numBytes];
@@ -8,12 +7,14 @@ int delayTimeC[numBytes];
 int stepDirectionC[numBytes];
 byte numReceived = 0;
 
-boolean reading = false;
+boolean reading = true;
 boolean driving = false;
 
 unsigned long previousTime = 0;
-rIndex = 0;
-cIndex = 0;
+int rIndex = 0;
+int cIndex = 0;
+
+Motor r = new Motor(0,1,2,3);
 
 void setup() {
     Serial.begin(9600);
@@ -21,11 +22,11 @@ void setup() {
 }
 
 void loop() {
-    if (reading == True) {
+    if (reading == true) {
         recvBytesWithEndMarkers();
         showNewData();
     }
-    if (driving == True) {
+    if (driving == true) {
         driveMotors();
     }
     
@@ -48,14 +49,14 @@ void recvBytesWithEndMarkers() {
 
     byte rb;
    
-    while (Serial.available() > 0 && newData == false) {
+    while (Serial.available() > 0) {
         rb = Serial.read();
         Serial.println(rb, HEX);
         Serial.println(rb, BIN);
 
         // the byte is a direction byte
         if (rb == stepUpMark || rb == stepEvenMark || rb == stepDownMark) {
-            direction[directionIndex] = rb - 'e';
+            direction[directionIndex] = rb - '|';
             directionIndex++;
             if (directionIndex >= numBytes) {
                 directionIndex = numBytes - 1;
@@ -63,37 +64,32 @@ void recvBytesWithEndMarkers() {
         }
 
         else if (rb == endRMark) {
+            memcpy(delayTimeR, time, numBytes);
+            memcpy(stepDirectionR, direction, numBytes);
 
-            // do in need to do this now that it isnt a byte array, but an int array
-            time[delayIndex] = '\0';
-            direction[directionIndex] = '\0';
-            delayTimeR = time;
-            stepDirectionR = direction;
-
-            time.cleararray
-            direction.cleararray
-            timeIndex = 0
-            directionIndex = 0
+            memset(time, 0, sizeof(time));
+            memset(direction, 0, sizeof(direction));
+            timeIndex = 0;
+            directionIndex = 0;
         }
 
         else if (rb = endCMark) {
+            memcpy(delayTimeC, time, numBytes);
+            memcpy(stepDirectionC, direction, numBytes);
 
-            time[delayIndex] = '\0';
-            direction[directionIndex] = '\0';
-            delayTimeC = time;
-            stepDirectionC = direction;
-
-            time.cleararray
-            direction.cleararray
-            timeIndex = 0
-            directionIndex = 0
+            memset(time, 0, sizeof(time));
+            memset(direction, 0, sizeof(direction));
+            timeIndex = 0;
+            directionIndex = 0;
         }
 
         // the byte is the endMark
         else if (rb == endMark) {
-            reading = False;
-            driving = True;
+            reading = false;
+            driving = true;
+            showNewData();
             previousTime = millis();
+            
         }
 
         else {        
@@ -107,7 +103,6 @@ void recvBytesWithEndMarkers() {
 }
 
 void showNewData() {
-    if (newData == true) {
         Serial.print("This just in (delay time)... ");
         for (byte n = 0; n < numReceived; n++) {
             Serial.print(delayTimeR[n]);
@@ -121,12 +116,10 @@ void showNewData() {
             Serial.print(' ');
         }
         Serial.println();
-        newData = false;
-    }
 }
 
 void driveMotors() {
-    cuurentTime = millis();
+    unsigned long currentTime = millis();
     if (currentTime - previousTime > delayTimeR[rIndex]){
         // step the motors in the direction of stepDirectionR[rIndex]
         rIndex++;
