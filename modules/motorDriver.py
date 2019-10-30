@@ -4,6 +4,8 @@ import math
 
 import matplotlib.pyplot as plt
 
+import modules.pointFinder as p
+
 power_pin = 18
 button_pin = 27
 
@@ -60,7 +62,7 @@ def floorStep(value, step):
 
 def getSteps(angles):
 
-    frameTime = 0.1
+    frameTime = p.frameTime
         # step angle in radians
     stepAngle = 1.8 *np.pi/180
 
@@ -80,17 +82,20 @@ def getSteps(angles):
         # get the total angle to travel during the frame for both linkage R and C
         angleR1 = angles[i+1][0]
         angleR0 = angles[i][0]
+        angleRmin = min(angleR1, angleR0)
         angleC1 = angles[i+1][1]
         angleC0 = angles[i][1]
+        angleCmin = min(angleC1, angleC0)
 
         # # counts the number of motor steps (1.8 degrees) that are in the frame, by subtracting the upper number of steps and the lower number of steps
         # # the end case is if the lower number of steps is an actual multiple, which should be impossible with floats but just an if
-        stepCountR = int(abs(angleR1//stepAngle - angleR0//stepAngle) + (1 if angleR0%stepAngle == 0 else 0))
-        stepCountC = int(abs(angleC1//stepAngle - angleC0//stepAngle) + (1 if angleC0%stepAngle == 0 else 0))
+        stepCountR = int(abs(angleR1//stepAngle - angleR0//stepAngle) + (1 if angleRmin%stepAngle == 0 else 0))
+        stepCountC = int(abs(angleC1//stepAngle - angleC0//stepAngle) + (1 if angleCmin%stepAngle == 0 else 0))
 
         # if there is no steps between R1 and R0, then do nothing, otherwise
         if stepCountR > 0:
-            # find and append the first step
+            # find and append the first step: 
+            # if the slope is positive, find the next step above angleR0; opposite for slope is negative
             stepIterR = ceilStep(angleR0, stepAngle) if (angleR1 - angleR0 > 0) else floorStep(angleR0, stepAngle)
             stepListR.append(stepIterR)
             # find the first time with linear interpolation

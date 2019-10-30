@@ -271,8 +271,11 @@ def nearestStep(value, step):
     else:
         return (value//step + 1)*step
 
+frameTime = 0.1
+
 # getting the proper step angle values for linear interpolation
 def linearTravel(first, second):
+
     # first check the two points to see if they are reachable, do a within range
     returnString = "the following points are out of range: "
     if (not withinRange(linkR, linkC,first)):
@@ -293,8 +296,11 @@ def linearTravel(first, second):
     totalLength = math.sqrt(xLength**2 + yLength**2)
 
     totalTime = totalLength/speed
-    #frameTime = totalTime/20  # should depend on the total time, each motion should have a set number of frames 
-    frameTime = 0.1
+
+    global frameTime
+    # frames set the angle coordinates for linear interpolation 
+    if (totalTime/40 < frameTime):
+        frameTime = totalTime/40
 
     # if the distance is super small, and the total time is less than frame time
     if (totalTime < frameTime*2):

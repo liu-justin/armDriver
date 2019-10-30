@@ -7,11 +7,11 @@ def main():
 	#singlePoint(1,9)
 	#multiplePoint()
 	startTime = time.perf_counter()
-	first = p.Point(9, 9)
-	second = p.Point(11,-6)
+	first = p.Point(2, 9)
+	second = p.Point(11,-9)
 	angles = p.linearTravel(first, second)
 	afterLTTime = time.perf_counter()
-	if angles[0] == None:
+	if angles == None:
 	    print("angles is None, the linearTravel didn't go through the loop")
 	    exit()
 	else:
