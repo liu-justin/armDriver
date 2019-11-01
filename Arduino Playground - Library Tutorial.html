@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<!-- saved from url=(0043)https://playground.arduino.cc/Code/Library/ -->
+<html class=" js no-touch boxshadow opacity fontface svg inlinesvg svgclippaths no-ie8compat" lang="en" style=""><script type="text/javascript" async="" src="./Arduino Playground - Library Tutorial_files/ga.js.download"></script><!--<![endif]--><!-- Added by HTTrack --><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" href="./Arduino Playground - Library Tutorial_files/privacy-modal.css"><link rel="stylesheet" href="./Arduino Playground - Library Tutorial_files/newsletter-modal.css"><link rel="stylesheet" href="./Arduino Playground - Library Tutorial_files/footer.css"><link rel="stylesheet" href="./Arduino Playground - Library Tutorial_files/header.css"><!-- /Added by HTTrack -->
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	
+
+	<title>Arduino Playground - Library Tutorial </title>
+	<link rel="shortcut icon" type="image/x-icon" href="https://playground.arduino.cc/favicon/index.ico">
+
+	<link rel="stylesheet" href="./Arduino Playground - Library Tutorial_files/fonts.css" type="text/css">
+	<link rel="stylesheet" href="./Arduino Playground - Library Tutorial_files/arduino-icons.css">
+	<link rel="stylesheet" href="./Arduino Playground - Library Tutorial_files/animation.css"><!--[if IE 7]>
+	<link rel="stylesheet" href="//content.arduino.cc/legacy/css/arduino-icons-ie7.css"><![endif]-->
+	<!--[if gte IE 9]><!-->
+	<link rel="stylesheet" href="./Arduino Playground - Library Tutorial_files/foundation2.css" type="text/css">
+	<!--[endif]---->
+	<!--[if IE 8]>
+		<link rel='stylesheet' href='//content.arduino.cc/legacy/css/foundation_ie8.css' type='text/css' />	
+	<![endif]-->	
+	<link rel="stylesheet" href="./Arduino Playground - Library Tutorial_files/arduino_code_highlight.css" type="text/css">
+	<link rel="stylesheet" type="text/css" media="screen" href="./Arduino Playground - Library Tutorial_files/typeplate.css">
+	<link rel="stylesheet" href="./Arduino Playground - Library Tutorial_files/common.css" type="text/css">	 
+	<link rel="stylesheet" href="./Arduino Playground - Library Tutorial_files/index.css" type="text/css"> 
+	<link href="https://plus.google.com/114839908922424087554" rel="publisher">
+	<script src="./Arduino Playground - Library Tutorial_files/custom.modernizr.js.download"></script>
+<script type="text/javascript" src="./Arduino Playground - Library Tutorial_files/notice" async="" crossorigin="true"></script><script src="./Arduino Playground - Library Tutorial_files/header.js.download"></script><script src="./Arduino Playground - Library Tutorial_files/footer.js.download"></script><script src="./Arduino Playground - Library Tutorial_files/newsletter-modal.js.download"></script></head>
+<body style=""><div class="icons" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg">
+  <symbol viewBox="0 0 18 18" id="icon-Global-Menu_Home-BBCube">
+    <title>Toggle Navigation</title>
+    <g>
+      <path d="M4 3.158C4 3.623 3.623 4 3.158 4H.842C.377 4 0 3.623 0 3.158V.842C0 .377.377 0 .842 0h2.316C3.623 0 4 .377 4 .842v2.316zM18 3.158c0 .465-.377.842-.842.842h-2.316C14.377 4 14 3.623 14 3.158V.842c0-.465.377-.842.842-.842h2.316c.465 0 .842.377.842.842v2.316zM11 3.158c0 .465-.377.842-.842.842H7.842C7.377 4 7 3.623 7 3.158V.842C7 .377 7.377 0 7.842 0h2.316c.465 0 .842.377.842.842v2.316zM4 17.158c0 .465-.377.842-.842.842H.842C.377 18 0 17.623 0 17.158v-2.316C0 14.377.377 14 .842 14h2.316c.465 0 .842.377.842.842v2.316zM18 17.158c0 .465-.377.842-.842.842h-2.316c-.465 0-.842-.377-.842-.842v-2.316c0-.465.377-.842.842-.842h2.316c.465 0 .842.377.842.842v2.316zM11 17.158c0 .465-.377.842-.842.842H7.842C7.377 18 7 17.623 7 17.158v-2.316c0-.465.377-.842.842-.842h2.316c.465 0 .842.377.842.842v2.316zM4 10.158c0 .465-.377.842-.842.842H.842C.377 11 0 10.623 0 10.158V7.842C0 7.377.377 7 .842 7h2.316c.465 0 .842.377.842.842v2.316zM18 10.158c0 .465-.377.842-.842.842h-2.316c-.465 0-.842-.377-.842-.842V7.842c0-.465.377-.842.842-.842h2.316c.465 0 .842.377.842.842v2.316zM11 10.158c0 .465-.377.842-.842.842H7.842C7.377 11 7 10.623 7 10.158V7.842C7 7.377 7.377 7 7.842 7h2.316c.465 0 .842.377.842.842v2.316z"></path>
+    </g>
+  </symbol>
+  <symbol viewBox="0 0 130.208 28.333" id="icon-Global-WebApp_Compressed">
+    <title>Create Logo</title>
+    <g>
+      <path d="M51.066 14.02c0-6.424-5.416-11.655-12.082-11.655-.612 0-1.24.045-1.854.13-5.18.738-8.646 4.463-10.588 7.32-1.942-2.856-5.41-6.58-10.583-7.32-.62-.085-1.243-.13-1.86-.13-6.663 0-12.084 5.23-12.084 11.654 0 6.425 5.422 11.654 12.082 11.654.615 0 1.242-.047 1.862-.13 5.175-.744 8.64-4.467 10.583-7.33 1.942 2.863 5.407 6.586 10.588 7.33.615.083 1.243.13 1.863.13 6.656 0 12.073-5.228 12.073-11.655zm-35.69 7.432c-.43.062-.856.097-1.28.097-4.384 0-7.95-3.38-7.95-7.53S9.71 6.49 14.1 6.49c.42 0 .848.034 1.275.093 4.88.698 7.865 5.508 8.877 7.433-1.016 1.932-4 6.74-8.877 7.434zm13.463-7.433c1.007-1.93 3.995-6.736 8.87-7.434.426-.06.857-.093 1.273-.093 4.387 0 7.95 3.38 7.95 7.527 0 4.15-3.563 7.53-7.943 7.53-.42 0-.855-.035-1.282-.097-4.874-.695-7.86-5.505-8.87-7.434z"></path>
+      <rect x="10.77" y="12.884" width="7.257" height="2.335"></rect>
+      <polygon points="39.79,15.219 42.246,15.219 42.246,12.884 39.79,12.884 39.79,10.422 37.45,10.422 37.45,12.884 34.989,12.884 34.989,15.219 37.45,15.219 37.45,17.68 39.79,17.68"></polygon>
+      <path d="M51.934 2.826c-.09-.21-.215-.393-.365-.542-.15-.15-.33-.27-.53-.36-.207-.09-.426-.134-.66-.134-.237 0-.46.043-.663.133-.204.09-.382.21-.53.36-.15.15-.274.334-.364.543-.088.208-.135.432-.135.68 0 .233.047.46.135.67.09.218.214.397.363.55.15.154.327.274.53.362.205.09.428.137.663.137.235 0 .453-.045.66-.137.202-.088.38-.208.53-.36.148-.154.274-.334.364-.55.088-.21.133-.44.133-.672 0-.248-.045-.472-.133-.68zm-.375 1.2c-.066.162-.16.3-.28.42-.123.122-.257.217-.41.29-.15.07-.312.107-.49.107-.18 0-.35-.038-.502-.107-.16-.073-.292-.168-.41-.29-.114-.12-.206-.258-.273-.42-.065-.16-.1-.332-.1-.52s.035-.364.1-.527c.067-.17.16-.308.273-.43.118-.12.25-.214.41-.28.153-.067.322-.102.5-.102.18 0 .343.035.493.1.153.068.288.162.41.283.12.123.214.26.28.43.068.162.104.338.104.525 0 .188-.035.36-.105.522zM50.745 3.67c.096-.044.168-.115.22-.2.053-.083.08-.178.08-.28 0-.162-.06-.302-.172-.42-.116-.12-.31-.176-.582-.176-.104 0-.195 0-.276.008-.082.004-.16.01-.236.018v1.69h.427v-.556h.172l.297.557h.48l-.41-.64zm-.424-.227c-.057 0-.098-.004-.126-.013v-.455c.028-.008.075-.017.138-.017.182 0 .273.085.273.245 0 .162-.093.24-.284.24z"></path>
+    </g>
+    <g>
+      <path d="M79.724 11.917c0-1.647-.737-2.264-2.487-2.264h-2.162v4.426h2.248c1.338-.002 2.4-.5 2.4-2.163z"></path>
+      <polygon points="96.968,15.502 100.691,15.502 98.821,9.91"></polygon>
+      <path d="M58.66 2.498v23.074h69.573V2.498H58.66zm9.002 17.276c-3.07 0-5.147-1.664-5.147-5.678 0-3.74 2.145-5.8 5.3-5.8 1.133 0 2.3.276 2.934.67l-.464 1.287c-.635-.515-1.63-.755-2.505-.755-2.538 0-3.79 1.647-3.79 4.563 0 3.02 1.252 4.53 3.774 4.53 1.115 0 2.264-.326 2.796-.67l.344 1.168c-.875.463-2.04.686-3.242.686zm12.44-.172l-2.402-4.34h-2.625v4.34h-1.39V8.453h3.604c2.812 0 3.893 1.183 3.893 3.413 0 1.56-.79 2.642-2.076 3.122l2.642 4.615H80.1zm11.94-9.95h-6.175v3.637h5.593v1.183h-5.593v3.91h6.176v1.22h-7.565V8.45h7.565v1.202zm10.02 9.95l-.995-2.95H96.59l-.96 2.95h-1.39l3.894-11.15h1.475l3.91 11.15h-1.457zm11.12-9.95h-3.842v9.95h-1.39v-9.95h-3.86v-1.2h9.092v1.2zm10.054 0h-6.176v3.637h5.593v1.183h-5.593v3.91h6.176v1.22h-7.565V8.45h7.566v1.202z"></path>
+    </g>
+  </symbol>
+  <symbol viewBox="0 0 24.202 24.276" id="icon-Global-user-profile">
+    <title>User Profile</title>
+    <path d="M20.912 19.718h-1c0-3.827-.883-6.2-5.28-6.2h-5.44c-4.397 0-5.28 2.23-5.28 5.825h-1v-.115c.017-3.337.81-6.71 6.28-6.71h5.44c5.534 0 6.28 3.64 6.28 7.2zM11.95 13.156c-2.464 0-4.468-2.1-4.468-4.68s2.004-4.68 4.467-4.68c2.462 0 4.466 2.1 4.466 4.68s-2.004 4.68-4.467 4.68zm0-8.36c-1.913 0-3.468 1.65-3.468 3.68 0 2.03 1.555 3.68 3.467 3.68 1.91 0 3.466-1.65 3.466-3.68 0-2.03-1.555-3.68-3.467-3.68zM12.034 23.98C5.436 23.98.07 18.61.07 12.013S5.435.05 12.033.05 24 5.415 24 12.013 18.63 23.98 12.033 23.98zm0-22.43C6.264 1.55 1.57 6.242 1.57 12.013S6.262 22.48 12.033 22.48 22.5 17.783 22.5 12.013 17.803 1.55 12.033 1.55z"></path>
+  </symbol>
+  <symbol viewBox="0 0 20.597 18.807" id="icon-Home-Grid-Open_in_new">
+    <title>Open Link in New Tab</title>
+    <rect x="14.542" y="-.105" transform="matrix(-.707 -.707 .707 -.707 23.247 19.503)" width="2.241" height="10.084"></rect>
+    <path d="M20.597 1.123c0-.62-.5-1.12-1.12-1.12h-7.843V2h6.93v6.966h2.033V1.123zM19.24 18.807H1.356c-.747 0-1.355-.64-1.355-1.424V1.426C0 .64.608.003 1.355.003H8.24l.03 1.982H1.99l-.03 14.807h16.604v-3.988h2.032v4.58c0 .784-.608 1.423-1.355 1.423z"></path>
+  </symbol>
+</svg></div>
+	<div id="header"><header id="ino-header">
+
+  <nav class="arduino-nav collapsed">
+
+    <!-- logo -->
+    <div class="logo">
+      <a href="https://playground.arduino.cc/" class="logo-link" role="button" aria-label="Homepage"></a>
+      <a href="https://playground.arduino.cc/" class="logo-link-resellers" role="button" aria-label="Resellers Homepage"></a>
+    </div>
+
+    <!-- main nav -->
+    <div class="main-nav" style="">
+
+      <ul class="ul-burger">
+        <li class="burger-menu">
+          <a class="burger" role="button" aria-label="Toggle Menu">
+            <img src="./Arduino Playground - Library Tutorial_files/burger_menu.svg" alt="Open Navigation">
+          </a>
+        </li>
+      </ul>
+
+      <ul class="nav-left">
+
+        <!-- search form mobile -->
+        <li class="level-1 show-mobile search-container">
+          <a id="search-bar-mobile">
+            <form role="search" id="searchform-mobile" method="GET" action="https://www.google.com/search">
+              <input type="hidden" name="ie" value="UTF-8">
+              <input type="hidden" name="oe" value="UTF-8">
+              <input type="text" placeholder="Search" value="" name="q" title="" class="search-typing" aria-label="search">
+              <i class="clear-icon">×</i>
+              <input type="hidden" name="domains" value="https://playground.arduino.cc" class="fill-it">
+              <input type="hidden" name="sitesearch" value="https://playground.arduino.cc" class="fill-it">
+            </form>
+          </a>
+        </li>
+        <!-- search form end -->
+
+        <!-- user menu mobile -->
+        <li class="user-mobile level-1 signin-mobile">
+          <div class="login-button" style="display: block;">
+            <a href="https://auth.arduino.cc/login?client_id=playground&amp;redirect_uri=https%3A%2F%2Fplayground.arduino.cc%2F&amp;state=1254329006&amp;scope=profile%3Acore+profile%3Apublic+profile%3Acontact+offline&amp;response_type=code">Sign In</a>
+          </div>
+        </li>
+        <li class="user-mobile profile-mobile level-1">
+          <div class="auth-required" style="display: none;">
+            <a href="https://id.arduino.cc/">Profile</a>
+          </div>
+        </li>
+        <li class="user-mobile profile-mobile level-1">
+          <div class="auth-required" style="display: none;">
+            <a href="https://store.arduino.cc/digital/subscriptions">My Plans</a>
+          </div>
+        </li>
+        <li class="logout user-mobile signout-mobile level-1">
+          <div class="auth-required" style="display: none;">
+            <a>Sign Out</a>
+          </div>
+        </li>
+        <!-- user menu mobile end -->
+
+        <li class="level-1" id="home">
+          <a href="https://www.arduino.cc/">Home</a>
+        </li>
+
+        <li class="has-submenu level-1">
+          <a href="https://store.arduino.cc/">Store</a>
+        </li>
+
+        <li class="has-submenu level-1" id="software">
+          <a role="button">Software</a>
+          <ul class="nav-submenu">
+            <li><a href="https://create.arduino.cc/" target="_blank" rel="noopener">Online Tools</a></li>
+            <li><a href="https://www.arduino.cc/en/Main/Software">Downloads</a></li>
+          </ul>
+        </li>
+
+        <li class="level-1" id="education">
+          <a href="https://www.arduino.cc/en/Main/Education">
+            <span class="full">Education</span>
+            <span class="shorten">Edu</span>
+          </a>
+        </li>
+
+        <li class="has-submenu level-1" id="resources">
+          <a role="button">Resources</a>
+          <ul class="nav-submenu">
+            <li><a href="https://www.arduino.cc/en/Main/Products">Products</a></li>
+            <li><a href="https://www.arduino.cc/en/Guide/HomePage">Getting Started</a></li>
+            <li><a href="https://www.arduino.cc/en/Tutorial/HomePage">Tutorials</a></li>
+            <li><a href="https://www.arduino.cc/reference/en">Reference</a></li>
+            <li><a href="https://www.arduino.cc/en/IoT/HomePage">IoT Cloud</a></li>
+          </ul>
+        </li>
+
+
+        <li class="has-submenu level-1" id="community">
+          <a role="button">Community</a>
+          <ul class="nav-submenu">
+            <li><a href="https://forum.arduino.cc/">Forum</a></li>
+            <li><a href="https://blog.arduino.cc/">Blog</a></li>
+            <li><a href="https://create.arduino.cc/projecthub" target="_blank" rel="noopener">Project Hub</a></li>
+            <li><a href="http://playground.arduino.cc/">Playground</a></li>
+            <li><a href="https://www.arduino.cc/en/ArduinoAtHeart/Products">AtHeart</a></li>
+          </ul>
+        </li>
+
+
+        <li class="has-submenu level-1" id="help">
+          <a role="button">Help</a>
+          <ul class="nav-submenu">
+            <li><a href="https://www.arduino.cc/en/Main/FAQ">FAQ</a></li>
+            <li><a href="https://www.arduino.cc/en/ContactUs">Contact Us</a></li>
+            <li><a href="https://store.arduino.cc/store-support">Store Support</a></li>
+          </ul>
+        </li>
+
+        <!-- fake mobile button -->
+        <li class="level-1">
+          <div class="show-mobile fake-button">
+          </div>
+        </li>
+        <!-- fake mobile button end -->
+
+      </ul>
+      <!-- main nav end -->
+
+      <!-- nav right -->
+      <ul class="nav-right">
+
+        <!-- search form -->
+        <li class="level-1 header-hide-mobile">
+          <a id="search-bar">
+            <form role="search" id="searchform" method="GET" action="https://www.google.com/search">
+              <input type="hidden" name="ie" value="UTF-8">
+              <input type="hidden" name="oe" value="UTF-8">
+              <input type="text" placeholder="Search" value="" name="q" title="" class="search-typing">
+              <i class="clear-icon">×</i>
+              <input type="hidden" name="domains" value="https://playground.arduino.cc" class="fill-it">
+              <input type="hidden" name="sitesearch" value="https://playground.arduino.cc" class="fill-it">
+            </form>
+          </a>
+        </li>
+        <!-- search form end -->
+
+        <!-- language-selector -->
+        <!--<li class="language-selector has-submenu level-1">
+
+          <a><div class="selected-language eng"></div></a>
+
+          <div class="nav-submenu">
+            <div class="caret"></div>
+            <div class="dropdown-box">
+            <div class="left-col">
+              <h5>Language</h5>
+              <ul>
+              <li><button class="language-btn"><img src="https://cdn.arduino.cc/header-footer/cy8d1ikufm/images/language_eng.svg"></button>English</li>
+              <li><button class="language-btn"><img src="https://cdn.arduino.cc/header-footer/cy8d1ikufm/images/language_ita.svg"></button>Italian</li>
+              <li><button class="language-btn"><img src="https://cdn.arduino.cc/header-footer/cy8d1ikufm/images/language_china.svg"></button>Chinese</li>
+              </ul>
+            </div>
+            <div class="right-col">
+              <h5>Currency</h5>
+              <ul>
+              <li><button class="currency-btn">EUR</button>Euro</li>
+              <li><button class="currency-btn">USD</button>Dollar</li>
+              <li><button class="currency-btn">GBP</button>Pound</li>
+              <li><button class="currency-btn">CHF</button>Franc</li>
+              <li><button class="currency-btn">HUF</button>Forint</li>
+              </ul>
+            </div>
+            </div>
+          </div>
+
+        </li>-->
+        <!-- language-selector end -->
+
+        <!-- quotes start -->
+        <li class="level-1 quotes-dropdown-trigger has-submenu">
+          <a id="quotes-link">
+            <div id="quotes"><span class="badge">0</span><img src="./Arduino Playground - Library Tutorial_files/icon_quotes.svg" alt="Show Quotes"></div>
+          </a>
+
+          <div class="quotes-submenu">
+            <div class="caret"></div>
+            <div class="dropdown-box">
+              <div class="cart-close-button"></div>
+              <p class="loading-content">Loading ...</p>
+
+            </div>
+          </div>
+        </li>
+        <!-- quotes end -->
+
+        <!-- cart start -->
+        <li class="level-1 cart-dropdown-trigger has-submenu">
+          <a id="cart-link">
+            <div id="cart"><span class="badge">0</span><img src="./Arduino Playground - Library Tutorial_files/cart.svg" alt="Show Cart">
+            </div>
+          </a>
+
+          <div class="cart-submenu">
+            <div class="caret"></div>
+            <div class="dropdown-box">
+              <p class="loading-content">Loading ...</p>
+
+            </div>
+          </div>
+        </li>
+        <!-- cart end -->
+
+        <!-- geolocation button start -->
+        <li class="level-1 store-location-button has-submenu" title="Select your location">
+          <a aria-label="Change Store location">
+            <div class="store-location">
+              <img src="./Arduino Playground - Library Tutorial_files/icon_geolocation.svg" alt="Store Location">
+            </div>
+          </a>
+
+          <div class="nav-submenu">
+            <div class="caret"></div>
+            <div class="dropdown-box">
+              <div class="cart-close-button"></div>
+              <p class="empty eu-africa">
+                Not shopping from Africa or Europe?
+                <a class="change-location">Change location here.</a>
+              </p>
+              <p class="empty america-asia">
+                Not shopping from America, Asia or Oceania?
+                <a class="change-location">Change location here.</a>
+              </p>
+            </div>
+          </div>
+        </li>
+        <!-- geolocation end -->
+
+        <li class="level-1">
+          <div class="login-button" style="display: block;">
+            <a href="https://auth.arduino.cc/login?client_id=playground&amp;redirect_uri=https%3A%2F%2Fplayground.arduino.cc%2F&amp;state=1254329006&amp;scope=profile%3Acore+profile%3Apublic+profile%3Acontact+offline&amp;response_type=code">
+              <span>Sign In</span>
+            </a>
+          </div>
+        </li>
+
+        <li class="profile-dropdown auth-required has-submenu level-1" style="display: none;">
+          <a data-hj-suppress="" class="submenu-toggle profile" aria-label="user profile">
+            <img class="user" src="./Arduino Playground - Library Tutorial_files/global_user_profile.svg" alt="User Profile">
+            <svg class="default">
+              <use xlink:href="#icon-Global-user-profile"></use>
+            </svg>
+            <span class="badge">0</span>
+          </a>
+
+          <div class="nav-submenu">
+            <div class="caret"></div>
+            <div class="dropdown-box">
+              <ul>
+                <li>
+                  <a href="https://id.arduino.cc/">Profile</a>
+                </li>
+                <li class="forum-messages">
+                  <a href="https://forum.arduino.cc/index.php?action=pm">Messages</a>
+                </li>
+                <li>
+                  <a href="https://store.arduino.cc/digital/subscriptions">My Plans</a>
+                </li>
+                <li class="logout">
+                  <a>Sign Out</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </li>
+
+      </ul>
+      <!-- nav right -->
+    </div>
+  </nav>
+  <div id="consent-modal-container"><div id="privacy-and-terms-modal" class="arduino-modal info-modal" action="https://api2.arduino.cc/consent/v1/approval/byUser/me" style="display: none;">
+  <div id="privacy-and-terms-modal-backdrop" class="modal-backdrop"></div>
+  <div class="modal-body approve-privacy-policy">
+
+    <h1>OUR PRIVACY POLICY HAS BEEN UPDATED</h1>
+
+    <form id="terms-privacy-form" novalidate="">
+      <p>
+        We updated recently our <a href="https://www.arduino.cc/PrivacyPolicy/en/" target="_blank" rel="noopener">Privacy policy</a>, please accept the new <a href="https://www.arduino.cc/en/Main/TermsOfService" target="_blank" rel="noopener">Terms of service</a>.
+      </p>
+      <ul class="privacy-settings">
+        <li>
+          <div id="privacy-and-terms-consent-error" class="upper-error-notif">Please accept our privacy policy and terms to continue using our services</div>
+          <label class="checkbox">
+                <input type="checkbox" id="privacy-and-terms-consent" name="privacy-consent" value="privacy_approval">
+
+                <span class="custom-checkbox"></span>
+                <span>I confirm to have read the <a href="https://www.arduino.cc/PrivacyPolicy/en/" target="_blank" rel="noopener">Privacy Policy</a> and to accept the <a href="https://www.arduino.cc/en/Main/TermsOfService" target="_blank" rel="noopener">Terms of Service</a></span>
+              </label>
+        </li>
+      </ul>
+      <section class="buttons-wrapper">
+        <button name="Ok" type="submit" class="primary button" id="privacy-and-terms-ok-button">
+                <span>AGREE AND CONTINUE</span>
+              </button>
+        <p id="privacy-modal-decline-link">or <a href="https://playground.arduino.cc/Code/Library/#">log out</a> and continue the navigation.</p>
+      </section>
+    </form>
+  </div>
+</div>
+</div>
+</header></div>
+	<div id="menuWings" class="fixed"></div>
+	<div id="page">
+        
+        <div style="margin-top: 16px;text-align: center; padding: 16px; background: #fcf6c9; font-size: 18px; line-height: 150%;">
+        Arduino Playground is read-only starting December 31st, 2018. For more info please look at this <a href="https://forum.arduino.cc/index.php?topic=580991.0" target="_blank">Forum Post</a>
+        </div>
+		<br class="clear">
+
+		<!--PageLeftFmt-->
+		<div id="pagenav">
+			<p><em>The <a class="wikilink" href="https://playground.arduino.cc/Main/HomePage/">playground</a> is a publicly-editable wiki about <a class="urllink" href="https://www.arduino.cc/" rel="nofollow">Arduino</a>.</em>
+</p>
+<p class="vspace"></p><p class="sidehead"><a class="wikilink" href="https://playground.arduino.cc/Main/ManualsAndCurriculum/">Manuals and Curriculum</a>
+</p>
+<p class="vspace"></p><p class="sidehead"><a class="urllink" href="https://arduino.stackexchange.com/" rel="nofollow">Arduino StackExchange</a>
+</p>
+<p class="vspace"></p><p class="sidehead"><a class="wikilink" href="https://playground.arduino.cc/Main/ArduinoCoreHardware/">Board Setup and Configuration</a>
+</p>
+<p class="vspace"></p><p class="sidehead"><a class="wikilink" href="https://playground.arduino.cc/Main/DevelopmentTools/">Development Tools</a>
+</p>
+<p class="vspace"></p><p class="sidehead"> <a class="wikilink" href="https://playground.arduino.cc/Main/ArduinoOnOtherAtmelChips/">Arduino on other Chips</a>
+</p>
+<p class="vspace"></p><p class="sidehead"><a class="wikilink" href="https://playground.arduino.cc/Main/InterfacingWithHardware/">Interfacing With Hardware</a>
+</p><ul><li><a class="wikilink" href="https://playground.arduino.cc/Main/InterfacingWithHardware/#Output">Output</a>
+</li><li><a class="wikilink" href="https://playground.arduino.cc/Main/InterfacingWithHardware/#InputTOC">Input</a>
+</li><li><a class="wikilink" href="https://playground.arduino.cc/Main/InterfacingWithHardware/#ui">User Interface</a>
+</li><li><a class="wikilink" href="https://playground.arduino.cc/Main/InterfacingWithHardware/#Storage">Storage</a>
+</li><li><a class="wikilink" href="https://playground.arduino.cc/Main/InterfacingWithHardware/#Communication">Communication</a> 
+</li><li><a class="wikilink" href="https://playground.arduino.cc/Main/IntWithHW-PwrSup/">Power supplies</a> 
+</li><li><a class="wikilink" href="https://playground.arduino.cc/Main/InterfacingWithHardware/#General">General</a> 
+</li></ul><p class="vspace"></p><p class="sidehead"><a class="wikilink" href="https://playground.arduino.cc/Main/InterfacingWithSoftware/">Interfacing with Software</a>
+</p>
+<p class="vspace"></p><p class="sidehead"><a class="wikilink" href="https://playground.arduino.cc/Main/GeneralCodeLibrary/">User Code Library</a>
+</p><ul><li><a class="wikilink" href="https://playground.arduino.cc/Main/SketchList/">Snippets and Sketches</a>
+</li><li><a class="wikilink" href="https://playground.arduino.cc/Main/LibraryList/">Libraries</a>
+</li><li><a class="wikilink" href="https://playground.arduino.cc/Main/TutorialList/">Tutorials</a>
+</li></ul><p class="vspace"></p><p class="sidehead"><a class="urllink" href="https://github.com/arduino/arduino/issues" rel="nofollow">Suggestions &amp; Bugs</a>
+</p>
+<p class="vspace"></p><p class="sidehead"><a class="wikilink" href="https://playground.arduino.cc/Main/ElectroInfoResources/">Electronics Technique</a>
+</p>
+<p class="vspace"></p><p class="sidehead"><a class="wikilink" href="https://playground.arduino.cc/Main/Resources/">Sources for Electronic Parts</a>
+</p>
+<p class="vspace"></p><p class="sidehead"><a class="wikilink" href="https://playground.arduino.cc/Main/SimilarBoards/">Related Hardware and Initiatives</a>
+</p>
+<p class="vspace"></p><p class="sidehead"><a class="urllink" href="https://playground.arduino.cc/Main/People/" rel="nofollow">Arduino People/Groups &amp; Sites</a>
+</p>
+<p class="vspace"></p><p class="sidehead"><a class="urllink" href="https://playground.arduino.cc/Projects/ArduinoUsers/" rel="nofollow">Exhibition</a>
+</p>
+<p class="vspace"></p><p class="sidehead"><a class="urllink" href="https://playground.arduino.cc/Projects/Ideas/" rel="nofollow">Project Ideas</a>
+</p>
+<p class="vspace"></p><p class="sidehead"><a class="wikilink" href="https://playground.arduino.cc/Main/Languages/">Languages</a>
+</p>
+<p class="vspace"></p><hr>
+<p class="vspace"></p><p class="sidehead"> <a class="wikilink" href="https://playground.arduino.cc/Main/Participate/">Participate</a>
+</p><ul><li><a class="wikilink" href="https://playground.arduino.cc/Main/Participate/#contribrules">Formatting guidelines</a>
+</li><li><a class="wikilink" href="https://playground.arduino.cc/Site/AllRecentChanges/">All recent changes</a>
+</li><li><a class="wikilink" href="https://playground.arduino.cc/PmWiki/PmWiki/">PmWiki</a>
+</li><li><a class="wikilink" href="https://playground.arduino.cc/Main/WikiSandbox/">WikiSandBox training</a>
+</li><li><a class="wikilink" href="https://playground.arduino.cc/PmWiki/BasicEditing/">Basic Editing</a>
+</li><li><a class="urllink" href="https://www.pmwiki.org/wiki/PmWiki/DocumentationIndex" rel="nofollow">Documentation index</a>
+</li></ul><p class="vspace"></p>
+
+		</div>
+		<!--/PageLeftFmt-->
+
+		
+
+		<div id="pagetext" class="playground">
+				<!--PageText-->
+<div id="wikitext">
+<p>
+</p>
+<p class="vspace"></p><pre style="background-color: #eeeeee; color: #000000; border: 1px dotted black; font-size: 11pt; padding: 2px;">Library Tutorial for Arduino
+Author:  Alexander Brevig
+Contact: alexanderbrevig@gmail.com
+</pre>
+<h1>How to write libraries for the Arduino?</h1>
+<p>So you want to write a Library for the Arduino?<br>-<strong>Great</strong>!<br>
+Here is a little tutorial on how to write one.
+</p>
+<p class="vspace"></p><p>You will learn the basic syntax rules for c++ class declaration and definition and I will summarize the conventional Arduino function and variable naming.
+</p>
+<p class="vspace"></p><p>For this tutorial we will implement a library called <span class="wikiword">LED13</span> <sub>we will do some fun stuff with the LED @ pin 13</sub><br>We will make it turn on, off and make it blink.
+</p>
+<p class="vspace"></p><p>We will make this:
+</p><div style="text-align: center;"> <a href="https://playground.arduino.cc/Code/Library/#Syntax"><img src="./Arduino Playground - Library Tutorial_files/index.png" alt="" title=""></a> </div>
+<p class="vspace"></p><hr>
+<h2>Navigation</h2>
+<ul><li><a href="https://playground.arduino.cc/Code/Library/#What">What is a Library?</a>
+<ul><li><a href="https://playground.arduino.cc/Code/Library/#WhatArduinoWay">What is the Arduino conventions?</a>
+</li></ul></li><li><a href="https://playground.arduino.cc/Code/Library/#Why">Why do we have libraries?</a>
+</li><li><a href="https://playground.arduino.cc/Code/Library/#How">How do we write libraries?</a>
+<ul><li><a href="https://playground.arduino.cc/Code/Library/#API">Define the functionality your Library has to provide</a>
+</li><li><a href="https://playground.arduino.cc/Code/Library/#Concept">Make a proof of concept sketch</a>
+</li><li><a href="https://playground.arduino.cc/Code/Library/#Syntax">Learn c++ class syntax</a>
+<ul><li><a href="https://playground.arduino.cc/Code/Library/#LED13Header">LED13 Header</a>
+</li><li><a href="https://playground.arduino.cc/Code/Library/#LED13Source">LED13 Source</a>
+</li><li><a href="https://playground.arduino.cc/Code/Library/#LED13Files">Source for this tutrial</a>
+</li></ul></li><li><a href="https://playground.arduino.cc/Code/Library/#Implementation">Implementation</a>
+<ul><li><a href="https://playground.arduino.cc/Code/Library/#SelectModifier">Selecting public, protected or private</a>
+</li><li><a href="https://playground.arduino.cc/Code/Library/#SelectDatatype">Selecting datatypes / returntypes</a>
+</li><li><a href="https://playground.arduino.cc/Code/Library/#SelectName">Selecting variable- / functionnames</a>
+</li><li><a href="https://playground.arduino.cc/Code/Library/#Examples">Writing examples</a>
+</li><li><a href="https://playground.arduino.cc/Code/Library/#Keywords">keywords.txt</a>
+</li></ul></li><li><a href="https://playground.arduino.cc/Code/Library/#Debugging">Debugging</a>
+<ul><li><a href="https://playground.arduino.cc/Code/Library/#Arduino_h">Remember #include &lt;Arduino.h&gt;</a>
+</li><li><a href="https://playground.arduino.cc/Code/Library/#Delete">Delete object file and recompile between each alteration of header and/or source</a>
+</li><li><a href="https://playground.arduino.cc/Code/Library/#Debugger">Learn to interpret the Arduino IDE debugger / compiler.</a>
+</li></ul></li><li><a href="https://playground.arduino.cc/Code/Library/#Sharing">Sharing your library with other people</a>
+</li></ul></li><li><a href="https://playground.arduino.cc/Code/Library/#Links">Links</a>
+</li><li><a href="https://playground.arduino.cc/Code/Library/#Information">Information about this page</a>
+</li></ul><p class="vspace"></p><hr>
+<h2><a name="What" id="What"></a>What is a Library?</h2>
+<p>A Library is a collection of instructions that are designed to execute a specific task. <br>Good libraries describe the tasks it tries to solve by the name of the library itself, 
+and the names of the functions associated to the library.<br>This is because the library should be intuitive to use, and all names should describe, 
+in an efficient way, all questions regarding <em>what</em>, <em>when</em>, and <em>where</em>, but should conceal the <em>how</em>.
+</p>
+<p class="vspace"></p><p>On the Arduino the libraries often serve as a <strong>wrapper</strong> around the <a class="urllink" href="https://arduino.cc/en/Reference/Extended" rel="nofollow">Arduino API</a> language to enhance code <em>readability</em> and <em>user experience</em>.
+</p>
+<p class="vspace"></p><p>Arduino IDE places it's libraries in <span class="arduino_install">\hardware\libraries</span>
+The Library for this tutorial has the URL C:\programming\arduino-0015\hardware\libraries\<span class="wikiword">LED13</span> on my Windows XP machine.
+</p>
+<p class="vspace"></p><p>For the Ubuntu operating system, the libraries may be found at /usr/share/arduino/libraries.
+</p>
+<p class="vspace"></p><h3><a name="WhatArduinoWay" id="WhatArduinoWay"></a>What is the Arduino conventions?</h3>
+<p>The Arduino libraries uses a <span class="wikiword">UppercaseUppercase</span> convention for Library names, and lowercaseUppercase naming convention for the functions.<br>What this means is that our library has/<em>should</em> get the name <span class="wikiword">LED13</span> (not led13 for instance), and the functions will be named <strong>on()</strong> and <strong>off()</strong>.<br>I could've selected <strong>turnOn()</strong> and <strong>turnOff()</strong>, but I've selected the shortest because it is as descriptive, but in addition it is shorter. [short code == less probability for typos]
+</p>
+<p class="vspace"></p><p>It is important to remember that you do not <em>need</em> a Library. It only makes it simpler.<br>If you are interested in the inner mechanics of a specific library, you'll find the <em><span class="wikiword">MyLibrary</span></em>.cpp (if downloaded) in <span class="arduino">/hardware/libraries/<em><span class="wikiword">MyLibrary</span></em>/<em><span class="wikiword">MyLibrary</span></em>.cpp <sub>change <em><span class="wikiword">MyLibrary</span></em> to whatever the name of the library you want to investigate</sub></span>
+</p>
+<p class="vspace"></p><hr>
+<h2><a name="Why" id="Why"></a>Why do we have libraries?</h2>
+<ul><li>Simplify usage and/or organization of code
+</li><li>Enhance code readability
+</li><li>Decentralize logic
+<ul><li>Main sketch can now simply state library.action() instead of coding the equivalent in the sketch.
+</li></ul></li></ul><p class="vspace"></p><hr>
+<h2><a name="How" id="How"></a>How do we write libraries?</h2>
+<p>[ <a href="https://playground.arduino.cc/Code/Library/#API">define functionality</a> - <a href="https://playground.arduino.cc/Code/Library/#Concept">make a proof of concept</a> - <a href="https://playground.arduino.cc/Code/Library/#Syntax">learn c++ class syntax</a> - <a href="https://playground.arduino.cc/Code/Library/#Implementation">implement</a> - <a href="https://playground.arduino.cc/Code/Library/#Debugging">debug</a> ]
+</p>
+<p class="vspace"></p><h3><a name="API" id="API"></a>Define the functionality your Library has to provide</h3>
+<p>For our Library we've decided on these functions:
+</p><ul><li>on()
+</li><li>off()
+</li><li>blink(int time)
+</li></ul><p>This should be the premise for our library.<br>At this point, we do not care <em>how</em> the on() should work, only that it should exist.
+</p>
+<p class="vspace"></p><h3><a name="Concept" id="Concept"></a>Make a proof of concept sketch</h3>
+<p>Before implementing a new class I usually find it very useful to test the idea in a sketch. 
+Try a few different implementations, see what uses the least amount of space, and what seems simplest in use. 
+Select the solution that compromises these two in a suitable way.
+</p>
+<p class="vspace"></p><p>An experience I've made is that if one has something slightly similar to work from, that is often beneficial.<br>For our Library, one immediatly thinks of the Blink right? The <strong>Hello World!</strong> of µCs.
+So, go ahead and start the Arduino IDE and open the File-&gt;Sketchbook-&gt;Examples-&gt;Digital-&gt;Blink.<br>
+The first thing we'll do, is to cut the code inside loop(), and paste it into a new function called void blink().<br>I suspect this is not surprising, being that we <em>know</em> this code will blink the LED connected to pin 13.<br>Now, write blink(); inside the loop, so that the code that once was inside the loop() and now is located inside blink, gets executed (because loop calls blink).
+</p>
+<p class="vspace"></p><p>Now, you should have a sketch looking like this:
+
+</p><div class="sourceblock " id="sourceblock1">
+  <div class="sourceblocktext"><div class="c"><ol><li class="li1"><div class="de1"><span class="kw4">int</span> ledPin <span class="sy0">=</span> <span class="nu0">13</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="co1">// LED connected to digital pin 13</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> setup<span class="br0">(</span><span class="br0">)</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="co1">// run once, when the sketch starts</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">{</span></div></li>
+<li class="li2"><div class="de2">&nbsp; pinMode<span class="br0">(</span>ledPin<span class="sy0">,</span> OUTPUT<span class="br0">)</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp;<span class="co1">// sets the digital pin as output</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> loop<span class="br0">(</span><span class="br0">)</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">// run over and over again</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">{</span></div></li>
+<li class="li2"><div class="de2">&nbsp; blink<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span> <span class="co1">//call the code that makes the LED blink</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="co1">//make the LED blink</span></div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> blink<span class="br0">(</span><span class="br0">)</span><span class="br0">{</span></div></li>
+<li class="li2"><div class="de2">&nbsp; digitalWrite<span class="br0">(</span>ledPin<span class="sy0">,</span> HIGH<span class="br0">)</span><span class="sy0">;</span> &nbsp; <span class="co1">// sets the LED on</span></div></li>
+<li class="li1"><div class="de1">&nbsp; delay<span class="br0">(</span><span class="nu0">1000</span><span class="br0">)</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="co1">// waits for a second</span></div></li>
+<li class="li1"><div class="de1">&nbsp; digitalWrite<span class="br0">(</span>ledPin<span class="sy0">,</span> LOW<span class="br0">)</span><span class="sy0">;</span> &nbsp; &nbsp;<span class="co1">// sets the LED off</span></div></li>
+<li class="li1"><div class="de1">&nbsp; delay<span class="br0">(</span><span class="nu0">1000</span><span class="br0">)</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="co1">// waits for a second</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+</ol></div></div>
+  <div class="sourceblocklink"><a href="https://playground.arduino.cc/Code/Library/index-2.html?action=sourceblock&amp;num=1" type="text/plain">[Get Code]</a></div>
+</div>
+
+<p></p>
+<p class="vspace"></p><p>The next two steps will be to add the void on(); and the void off();. <br>These will be really simple functions, because they will actually just 'wrap' <strong>digitalWrite(13,HIGH)</strong> and <strong>digitalWrite(13,LOW)</strong> respectively.
+</p>
+<p class="vspace"></p><p>Go ahead and try to write these functions. <br>You should end up with something like:
+
+</p><div class="sourceblock " id="sourceblock2">
+  <div class="sourceblocktext"><div class="c"><ol><li class="li1"><div class="de1"><span class="co1">//turn the LED on</span></div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> on<span class="br0">(</span><span class="br0">)</span><span class="br0">{</span></div></li>
+<li class="li1"><div class="de1">&nbsp; digitalWrite<span class="br0">(</span>ledPin<span class="sy0">,</span>HIGH<span class="br0">)</span><span class="sy0">;</span> <span class="co1">//set the pin HIGH and thus turn LED on</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+<li class="li2"><div class="de2">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="co1">//turn the LED off</span></div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> off<span class="br0">(</span><span class="br0">)</span><span class="br0">{</span></div></li>
+<li class="li1"><div class="de1">&nbsp; digitalWrite<span class="br0">(</span>ledPin<span class="sy0">,</span>LOW<span class="br0">)</span><span class="sy0">;</span> <span class="co1">//set the pin LOW and thus turn LED off</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+</ol></div></div>
+  <div class="sourceblocklink"><a href="https://playground.arduino.cc/Code/Library/index-3.html?action=sourceblock&amp;num=2" type="text/plain">[Get Code]</a></div>
+</div>
+
+<p></p>
+<p class="vspace"></p><p>We have one more thing to fix.<br>As the code is now, the blink() will always use two seconds, but we wanted to pass the number of microseconds as an argument.
+Additionally we'll want to remove the redundant code that turns a led on and off.
+We'll replace those redundant calls with on() and off(). 
+You probably know how to write functions that has parameters, but here it is:
+
+</p><div class="sourceblock " id="sourceblock3">
+  <div class="sourceblocktext"><div class="c"><ol><li class="li1"><div class="de1"><span class="co1">//make the LED blink</span></div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> blink<span class="br0">(</span><span class="kw4">int</span> time<span class="br0">)</span><span class="br0">{</span></div></li>
+<li class="li1"><div class="de1">&nbsp; on<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">// sets the LED on</span></div></li>
+<li class="li1"><div class="de1">&nbsp; delay<span class="br0">(</span>time<span class="sy0">/</span><span class="nu0">2</span><span class="br0">)</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="co1">// waits for a second</span></div></li>
+<li class="li2"><div class="de2">&nbsp; off<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">// sets the LED off</span></div></li>
+<li class="li1"><div class="de1">&nbsp; delay<span class="br0">(</span>time<span class="sy0">/</span><span class="nu0">2</span><span class="br0">)</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="co1">// waits for a second</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+</ol></div></div>
+  <div class="sourceblocklink"><a href="https://playground.arduino.cc/Code/Library/index-4.html?action=sourceblock&amp;num=3" type="text/plain">[Get Code]</a></div>
+</div>
+
+<p></p>
+<p class="vspace"></p><p>Now you have enough code to implement all the desired <a href="https://playground.arduino.cc/Code/Library/#API">functionality</a>.
+</p>
+<p class="vspace"></p><h5>Complete Concept Sketch</h5>
+<p>
+</p><div class="sourceblock " id="sourceblock4">
+  <div class="sourceblocktext"><div class="c"><ol><li class="li1"><div class="de1"><span class="kw4">int</span> ledPin <span class="sy0">=</span> <span class="nu0">13</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="co1">// LED connected to digital pin 13</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> setup<span class="br0">(</span><span class="br0">)</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="co1">// run once, when the sketch starts</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">{</span></div></li>
+<li class="li2"><div class="de2">&nbsp; pinMode<span class="br0">(</span>ledPin<span class="sy0">,</span> OUTPUT<span class="br0">)</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp;<span class="co1">// sets the digital pin as output</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> loop<span class="br0">(</span><span class="br0">)</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">// run over and over again</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">{</span></div></li>
+<li class="li2"><div class="de2">&nbsp; blink<span class="br0">(</span><span class="nu0">2000</span><span class="br0">)</span><span class="sy0">;</span> &nbsp;<span class="co1">//call the code that makes the LED blink</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="co1">//turn the LED on</span></div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> on<span class="br0">(</span><span class="br0">)</span><span class="br0">{</span></div></li>
+<li class="li2"><div class="de2">&nbsp; digitalWrite<span class="br0">(</span>ledPin<span class="sy0">,</span>HIGH<span class="br0">)</span><span class="sy0">;</span> <span class="co1">//set the pin HIGH and thus turn LED on</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="co1">//turn the LED off</span></div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> off<span class="br0">(</span><span class="br0">)</span><span class="br0">{</span></div></li>
+<li class="li2"><div class="de2">&nbsp; digitalWrite<span class="br0">(</span>ledPin<span class="sy0">,</span>LOW<span class="br0">)</span><span class="sy0">;</span> <span class="co1">//set the pin LOW and thus turn LED off</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="co1">//make the LED blink</span></div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> blink<span class="br0">(</span><span class="kw4">int</span> time<span class="br0">)</span><span class="br0">{</span></div></li>
+<li class="li2"><div class="de2">&nbsp; on<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">// sets the LED on</span></div></li>
+<li class="li1"><div class="de1">&nbsp; delay<span class="br0">(</span>time<span class="sy0">/</span><span class="nu0">2</span><span class="br0">)</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="co1">// waits for a second</span></div></li>
+<li class="li1"><div class="de1">&nbsp; off<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">// sets the LED off</span></div></li>
+<li class="li1"><div class="de1">&nbsp; delay<span class="br0">(</span>time<span class="sy0">/</span><span class="nu0">2</span><span class="br0">)</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="co1">// waits for a second</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+</ol></div></div>
+  <div class="sourceblocklink"><a href="https://playground.arduino.cc/Code/Library/index-5.html?action=sourceblock&amp;num=4" type="text/plain">[Get Code]</a></div>
+</div>
+
+<p></p>
+<p class="vspace"></p><p>Download the <a href="https://playground.arduino.cc/Code/Library/#ExampleFiles">source for this tutorial</a>
+</p>
+<p class="vspace"></p><p>The <strong>next</strong> step is to:
+</p><h3><a name="Syntax" id="Syntax"></a>Learn <a class="urllink" href="https://en.wikipedia.org/wiki/C++_classes" rel="nofollow">c++ class</a> syntax</h3>
+<p>There are a lot of resources on this topic, but generally the class are split into two files.
+</p><ol><li>The declaration, referred to as the <em>header file</em>. '<span class="wikiword">LED13</span>.h' will indicate that the file declared the class <span class="wikiword">LED13</span>. <em>Declaration</em> is the process of defining what the class should do.
+</li><li>The implementation, referred to as the <em>source file</em>. '<span class="wikiword">LED13</span>.cpp' indicates that the file implement the declared functions and variables from "<span class="wikiword">LED13</span>.h". <em>Implementation</em> is the process of writing the code, that determines how the declared functions are imlemented.
+</li></ol><p class="vspace"></p><h4><a name="LED13Header" id="LED13Header"></a><span class="wikiword">LED13</span> Header</h4>
+<p>
+</p><div class="sourceblock " id="sourceblock5">
+  <div class="sourceblocktext"><div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#ifndef LED13_H</span></div></li>
+<li class="li1"><div class="de1"><span class="co2">#define LED13_H</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="co2">#include &lt;Arduino.h&gt;</span></div></li>
+<li class="li2"><div class="de2">&nbsp;</div></li>
+<li class="li1"><div class="de1">class LED13 <span class="br0">{</span></div></li>
+<li class="li1"><div class="de1">public<span class="sy0">:</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; LED13<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; ~LED13<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li2"><div class="de2">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw4">void</span> on<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw4">void</span> off<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw4">void</span> blink<span class="br0">(</span><span class="kw4">int</span> time<span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li2"><div class="de2"><span class="co2">#endif</span></div></li>
+</ol></div></div>
+  <div class="sourceblocklink"><a href="https://playground.arduino.cc/Code/Library/index-6.html?action=sourceblock&amp;num=5" type="text/plain">[Get Code]</a></div>
+</div>
+
+<p></p>
+<p class="vspace"></p><p><strong>'Code Analysis:</strong>'
+</p><ul><li>Lines 1 and 2 are referred to as an <a class="urllink" href="https://en.wikipedia.org/wiki/Include_guard" rel="nofollow">include guard</a><br>It basically prevents the code from being included into the program binary multiple times.
+</li><li>Line 4 includes the Arduino code to our library. This enables us to use the pinMode, digitalWrite, delay etc.
+</li><li>Line 6 is the beginning of the class itself.
+</li><li>Line 7 uses the <a class="urllink" href="https://msdn.microsoft.com/en-us/library/hzk8a7d3.aspx" rel="nofollow">public</a> keyword 
+</li><li>Line 8 and 9 are called constructor and destructor, they are responsible for setting up your library (construct), and delete it (deconstruct)
+</li><li>Line 10 declares the function 'void on();' , this will turn the LED on
+</li><li>Line 11 declares the function 'void off();' , this will turn the LED off
+</li><li>Line 12 declares the function 'void blink(int time);' , this will blink the LED in 'time' milliseconds.
+</li><li>Line 13 is the end of the class.
+</li><li>Line 15 ends the <a class="urllink" href="https://www.fredosaurus.com/notes-cpp/preprocessor/ifdef.html" rel="nofollow">#ifndef</a> preprocessor directive
+</li></ul><p class="vspace"></p><h4><a name="LED13Source" id="LED13Source"></a><span class="wikiword">LED13</span> Source</h4>
+<p>You will see that this source will be very much like the concept sketch.<br>However, I've changed some datatypes, and the rest is just the c++ syntax.
+</p>
+<p class="vspace"></p><p><span style="font-size:144%">Notice the :: , it is called the 'scope resolution operator'</span>
+</p>
+<p class="vspace"></p><p>
+</p><div class="sourceblock " id="sourceblock6">
+  <div class="sourceblocktext"><div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include "LED13.h" //include the declaration for this class</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="kw4">const</span> byte LED_PIN <span class="sy0">=</span> <span class="nu0">13</span><span class="sy0">;</span> <span class="co1">//use the LED @ Arduino pin 13, this should not change so make it const (constant)</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li2"><div class="de2"><span class="co1">//&lt;&lt;constructor&gt;&gt; setup the LED, make pin 13 an OUTPUT</span></div></li>
+<li class="li1"><div class="de1">LED13<span class="sy0">::</span><span class="me2">LED13</span><span class="br0">(</span><span class="br0">)</span><span class="br0">{</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; pinMode<span class="br0">(</span>LED_PIN<span class="sy0">,</span> OUTPUT<span class="br0">)</span><span class="sy0">;</span> <span class="co1">//make that pin an OUTPUT</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li2"><div class="de2"><span class="co1">//&lt;&lt;destructor&gt;&gt;</span></div></li>
+<li class="li1"><div class="de1">LED13<span class="sy0">::</span>~LED13<span class="br0">(</span><span class="br0">)</span><span class="br0">{</span><span class="coMULTI">/*nothing to destruct*/</span><span class="br0">}</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="co1">//turn the LED on</span></div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> LED13<span class="sy0">::</span><span class="me2">on</span><span class="br0">(</span><span class="br0">)</span><span class="br0">{</span></div></li>
+<li class="li2"><div class="de2">&nbsp; &nbsp; &nbsp; &nbsp; digitalWrite<span class="br0">(</span>LED_PIN<span class="sy0">,</span>HIGH<span class="br0">)</span><span class="sy0">;</span> <span class="co1">//set the pin HIGH and thus turn LED on</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="co1">//turn the LED off</span></div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> LED13<span class="sy0">::</span><span class="me2">off</span><span class="br0">(</span><span class="br0">)</span><span class="br0">{</span></div></li>
+<li class="li2"><div class="de2">&nbsp; &nbsp; &nbsp; &nbsp; digitalWrite<span class="br0">(</span>LED_PIN<span class="sy0">,</span>LOW<span class="br0">)</span><span class="sy0">;</span> <span class="co1">//set the pin LOW and thus turn LED off</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="co1">//blink the LED in a period equal to paramterer -time.</span></div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> LED13<span class="sy0">::</span><span class="me2">blink</span><span class="br0">(</span><span class="kw4">int</span> time<span class="br0">)</span><span class="br0">{</span></div></li>
+<li class="li2"><div class="de2">&nbsp; &nbsp; &nbsp; &nbsp; on<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">//turn LED on</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; delay<span class="br0">(</span>time<span class="sy0">/</span><span class="nu0">2</span><span class="br0">)</span><span class="sy0">;</span> &nbsp;<span class="co1">//wait half of the wanted period</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; off<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="co1">//turn LED off</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; delay<span class="br0">(</span>time<span class="sy0">/</span><span class="nu0">2</span><span class="br0">)</span><span class="sy0">;</span> &nbsp;<span class="co1">//wait the last half of the wanted period</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+</ol></div></div>
+  <div class="sourceblocklink"><a href="https://playground.arduino.cc/Code/Library/index-7.html?action=sourceblock&amp;num=6" type="text/plain">[Get Code]</a></div>
+</div>
+
+<p></p>
+<p class="vspace"></p><h4><a name="LED13Files" id="LED13Files"></a>Source for this tutrial</h4>
+<p><a class="urllink" href="https://playground.arduino.cc/uploads/Code/LED13/index.zip" rel="nofollow">Attach:LED13.zip</a>
+</p>
+<p class="vspace"></p><h3><a name="Implementation" id="Implementation"></a>Implementation</h3>
+<h4><a name="SelectModifier" id="SelectModifier"></a>Selecting public, protected or private</h4>
+<p>A common 'rule of thumb' is to make all data as private as possible. For Arduino that will often result in all variables declared private, and most functions defined public.
+</p>
+<p class="vspace"></p><h4><a name="SelectDatatype" id="SelectDatatype"></a>Selecting datatypes / returntypes</h4>
+<p>Being the Arduino has limited resources I think selecting the 'smallest' variable is the way to go. An Arduino pin will (probably) never become above 255. So in that case using a <a class="urllink" href="https://arduino.cc/en/Reference/Byte" rel="nofollow">byte</a> is sufficient, and preferable.
+</p>
+<p class="vspace"></p><h4><a name="SelectName" id="SelectName"></a>Selecting variable- / functionnames</h4>
+<p>The arduino API has established some cues for how to name a variable or function. Start lower case, and indicate new words with an upper case letter. 'myDescriptiveVariable'
+</p>
+<p class="vspace"></p><h4><a name="Examples" id="Examples"></a>Writing examples</h4>
+<p>Be sure to create examples that are as self describing as possible. Additionally it should be made an effort to demo most of the functions.
+</p><h5>Blink Example</h5>
+<p>
+</p><div class="sourceblock " id="sourceblock7">
+  <div class="sourceblocktext"><div class="c"><ol><li class="li1"><div class="de1"><span class="co2">#include &lt;LED13.h&gt;</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1">LED13 led<span class="sy0">;</span><span class="co1">//initialize an instance of the class</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li2"><div class="de2"><span class="kw4">void</span> setup<span class="br0">(</span><span class="br0">)</span><span class="br0">{</span><span class="coMULTI">/*nothing to setup*/</span><span class="br0">}</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="kw4">void</span> loop<span class="br0">(</span><span class="br0">)</span><span class="br0">{</span></div></li>
+<li class="li1"><div class="de1">&nbsp; led.<span class="me1">blink</span><span class="br0">(</span><span class="nu0">2000</span><span class="br0">)</span><span class="sy0">;</span><span class="co1">//stay one second on, then a second off</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+</ol></div></div>
+  <div class="sourceblocklink"><a href="https://playground.arduino.cc/Code/Library/index-8.html?action=sourceblock&amp;num=7" type="text/plain">[Get Code]</a></div>
+</div>
+
+<p></p>
+<p class="vspace"></p><h4><a name="Keywords" id="Keywords"></a>keywords.txt</h4>
+<p>Remember to implement this file, as it makes using your library a lot easier.
+Our library has four names that needs highlighting.<br>Those are:
+</p><ul><li><span class="wikiword">LED13</span>
+</li><li>on
+</li><li>off
+</li><li>blink
+</li></ul><p>And they are implemented in <strong>keywords.txt</strong> as:
+</p><pre style="background-color: #eeeeee; color: #000000; border: 1px dotted black; font-size: 11pt; padding: 2px;">LED13	KEYWORD1
+on	KEYWORD2
+off	KEYWORD2
+blink	KEYWORD2
+</pre>
+<p class="vspace"></p><h3><a name="Debugging" id="Debugging"></a>Debugging</h3>
+<h4><a name="Arduino_h" id="Arduino_h"></a>Remember #include &lt;Arduino.h&gt;</h4>
+<p>You will get a series of errors if you've forgot to include the Arduino, <em>and</em> trying to use some of the Arduino functions or datatypes.<br>It is only necessary to include the Arduino.h in you library .h, your .cpp will include it because it includes your header.
+</p>
+<p class="vspace"></p><h4><a name="Delete" id="Delete"></a>Delete object file and recompile between each alteration of header and/or source</h4>
+<p>When changes are made in the header or the source, those changes are not automatically incorporated in the object file of you library. 
+To be sure that your changes are compiled and used, delete the <span class="wikiword">LED13</span>.o and recompile a sketch in the Arduino IDE.
+</p>
+<p class="vspace"></p><p>NOTE: After making library changes, before recompiling, you may need to delete the &lt;<span class="wikiword">LibName</span>&gt;.o file which can be found by searching, or in a file similar to: 
+c:\Documents and Settings\Administrator\Local Settings\Temp\build3998508668703718780.tmp
+</p>
+<p class="vspace"></p><h4><a name="Debugger" id="Debugger"></a>Learn to interpret the Arduino IDE debugger / compiler.</h4>
+<p>It can be a timesaver to take an hour and causing error deliberately, so you know what the error messages are caused by for later reference.
+</p>
+<p class="vspace"></p><hr>
+<h2><a name="Sharing" id="Sharing"></a>Sharing your library with other people</h2>
+<p>One of the fastest ways to flush out bugs in a library is to let other people use the library.
+Often people not only find bugs but also contribute patches to fix those bugs.
+</p>
+<p class="vspace"></p><ul><li>(1) Post your library online somewhere, perhaps one of
+<ul><li>here in the Arduino Playground
+</li><li>the Launchpad source code hosting using the Bazaar version control system.
+</li><li>the <span class="wikiword">SourceForge</span> source code hosting using Mercurial version control system
+</li><li>the Savannah source code hosting using Mercurial version control system
+</li><li>Github using the git version control system
+</li><li>the Google Code, Google Project Hosting using Mercurial version control system
+</li><li>Bitbucket
+</li><li>your own website, using your own favorite version control system.
+</li></ul></li><li>(2) Then
+<ul><li>Edit page <a class="wikilink" href="https://playground.arduino.cc/Main/LibraryList/">LibraryList</a> and add a link to your library.
+</li></ul></li></ul><p class="vspace"></p><hr>
+<h2><a name="Links" id="Links"></a>Links</h2>
+<ul><li><a class="urllink" href="https://arduino.cc/en/Reference/Extended" rel="nofollow">Arduino Reference</a>
+</li><li><a class="urllink" href="https://arduino.cc/en/Reference/Libraries" rel="nofollow">Core Libraries</a>
+</li><li><a class="urllink" href="https://arduino.cc/en/Hacking/LibraryTutorial" rel="nofollow">Arduino Library Tutorial</a>
+</li></ul><p class="vspace"></p><hr>
+<h2><a name="Information" id="Information"></a>Information about this page</h2>
+<table border="0" cellpadding="5" cellspacing="0"><tbody><tr><td colspan="2" valign="top">Part of <a class="wikilink" href="https://playground.arduino.cc/Profiles/AlphaBeta/">AlphaBeta</a> Tutorials and Resources.
+</td></tr><tr><td valign="top"> Last Modified: 
+</td><td valign="top"> April 19, 2016, at 03:52 PM
+</td></tr><tr><td valign="top"> By:
+</td><td valign="top"> 
+</td></tr></tbody></table>
+<p class="vspace"></p>
+</div>
+
+
+				
+			</div> <!-- eof pagetext -->
+		
+		<br class="clear">
+		
+	</div> <!-- eof page -->
+		
+	
+	<script src="./Arduino Playground - Library Tutorial_files/jquery-1.10.2.min.js.download"></script>
+	<script src="./Arduino Playground - Library Tutorial_files/foundation.min.js.download"></script>
+	<script>
+	  $(document).foundation();
+	</script>
+	<!--<![endif]-->
+	<!--[if IE 8]>
+	<script src="//content.arduino.cc/legacy/js/foundation_ie8.min.js"></script>
+	<script src="//content.arduino.cc/legacy/js/ie8/jquery.foundation.alerts.js"></script>
+	<script src="//content.arduino.cc/legacy/js/app.js"></script>
+	<![endif]-->
+	
+	<script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-22581631-3']);
+	  _gaq.push(['_setDomainName', 'arduino.cc']);
+	  _gaq.push(['_trackPageview']);
+	
+	    (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	</script>
+    <div>
+      <div id="newsletter-modal"><div id="newsletter-popup-privacy" class="arduino-modal info-modal" action="https://api2.arduino.cc/consent/v1/subscription" style="display: none;">
+  <!-- Step 1.5, approve the privacy policy -->
+  <div id="privacy-modal-backdrop" class="modal-backdrop"></div>
+  <div class="modal-body approve-privacy-policy">
+
+    <h1>Privacy consent</h1>
+
+    <div>
+      <p>
+        Arduino cares about the privacy and personal data of its users. The <a href="https://www.arduino.cc/en/Main/PrivacyPolicy" target="_blank" rel="noopener">privacy policy</a> is meant to inform you on how we process your personal data when you use our services.
+      </p>
+
+      <ul class="privacy-settings">
+        <li>
+          <div id="privacy-consent-error" class="upper-error-notif">Please confirm that you have read the privacy policy</div>
+          <label class="checkbox">
+            <input type="checkbox" id="privacy-consent" name="privacy-consent" value="privacy_approval">
+
+            <span class="custom-checkbox"></span>
+            <span>I confirm to have read the privacy policy<span class="required-asterisk">*</span></span>
+          </label>
+        </li>
+        <li>
+          <div id="newsletter-error" class="upper-error-notif">Please confirm your consent to receive the newsletter</div>
+          <label class="checkbox">
+            <input type="checkbox" id="newsletter-consent" name="newsletter-consent" value="newsletter_approval" checked="">
+
+            <span class="custom-checkbox"></span>
+            <span>I confirm my consent to receive your newsletter<span class="required-asterisk">*</span></span>
+          </label>
+        </li>
+        <li>
+          <label class="checkbox">
+            <input type="checkbox" id="marketing-consent" value="marketing_approval">
+            <span class="custom-checkbox"></span>
+            <span>I confirm my consent to the processing of my personal data for marketing purposes, consisting in commercial offers sent via email</span>
+          </label>
+        </li>
+        <li>
+          <label class="checkbox">
+            <input type="checkbox" id="tracking-consent" value="tracking_approval">
+            <span class="custom-checkbox"></span>
+            <span>I confirm my consent to automated processing of my personal data, by means of profiling, in order to receive commercial offers customized on the basis of my browsing and purchasing behavior</span>
+          </label>
+        </li>
+      </ul>
+      <div class="my-error-notification">
+        <div id="newsletterSubscribeStatus"></div>
+      </div>
+      <section class="buttons-wrapper">
+        <button name="Cancel" class="button secondary" id="newsletter-privacy-policy-cancel-button">Cancel</button>
+        <button name="Ok" class="primary button" id="newsletter-privacy-policy-ok-button">Ok</button>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- step 2, confirm popup -->
+<div id="newsletter-popup-confirm" class="arduino-modal info-modal" style="display: none;">
+     <div class="modal-backdrop"></div>
+  <div id="confirm-newsletter-modal-backdrop" class="modal-body confirm-email">
+    <h1>Confirm your email address</h1>
+    <div id="newsletterModalBody">
+      <p>
+        We need to confirm your email address.<br> To complete the subscription, please click the link in the email we just sent you.
+      </p>
+      <p>
+        Thank you for subscribing!
+      </p>
+      <section class="buttons-wrapper">
+        <button name="Ok" class="button" id="confirm-email-ok-button">Ok</button>
+      </section>
+    </div>
+  </div>
+</div>
+</div>
+      <div id="footer"><div id="footer-block" style="">
+  <div class="newsletter-form">
+    <h4 id="newsletter-input-label">Newsletter</h4>
+    <div class="subscribe-wrapper">
+      <div id="newsletter-email-error" class="upper-error-notif">Please insert a valid email</div>
+      <div class="input-wrapper">
+        <input id="newsletter-email" aria-labelledby="newsletter-input-label" type="email" name="email" class="email" placeholder="Enter your email to sign up">
+        <button id="subscribe-btn" aria-label="Subscribe" class="button">Subscribe</button>
+      </div>
+    </div>
+  </div>
+  <section class="footer-links-wrapper">
+    <ul id="footer-list">
+      <li>
+        <a href="https://www.arduino.cc/en/Main/TermsOfService">
+          <span class="text">Terms Of Service</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.arduino.cc/en/Main/PrivacyPolicy">
+          <span class="text">Privacy Policy</span>
+        </a>
+      </li>
+      <li>
+        <div id="teconsent">
+        </div>
+      </li>
+      <li>
+        <a href="https://www.arduino.cc/en/Main/ContactUs">
+          <span class="text">Contact Us</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.arduino.cc/en/Main/AboutUs">
+          <span class="text">About Us</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://store.arduino.cc/distributors">
+          <span class="text">Distributors</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://careers.arduino.cc/">
+          <span class="text">Careers</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.arduino.cc/en/Main/Security">
+          <span class="text">Security</span>
+        </a>
+      </li>
+    </ul><!-- footer-list -->
+    <div class="footer-note">
+      <p>
+        <a href="https://www.arduino.cc/en/Main/CopyrightNotice">
+          <span class="text">
+            © <span id="current-year">2019</span> Arduino
+          </span>
+        </a>
+      </p>
+    </div>
+  </section>
+  <ul class="social-btn-list">
+    <li>
+      <a href="https://www.facebook.com/official.arduino" target="_blank" id="facebook" class="facebook" rel="noopener">
+        <img src="./Arduino Playground - Library Tutorial_files/icon-facebook.svg" alt="facebook">
+        <p class="follow-us">follow us on Facebook</p>
+      </a>
+    </li>
+    <li>
+      <a href="https://twitter.com/arduino" target="_blank" id="twitter" class="twitter" rel="noopener">
+        <img src="./Arduino Playground - Library Tutorial_files/icon-twitter.svg" alt="twitter">
+        <p class="follow-us">follow us on Twitter</p>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.instagram.com/arduino.cc/" target="_blank" id="instagram" class="instagram" rel="noopener">
+        <img src="./Arduino Playground - Library Tutorial_files/icon-instagram.svg" alt="instagram">
+        <p class="follow-us">follow us on Instagram</p>
+      </a>
+    </li>
+    <li>
+      <a href="https://github.com/arduino/" target="_blank" id="github" class="github" rel="noopener">
+        <img src="./Arduino Playground - Library Tutorial_files/icon-github.svg" alt="github">
+        <p class="follow-us">Arduino on GitHub</p>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.flickr.com/photos/arduino_cc" target="_blank" id="flickr" class="flickr" rel="noopener">
+        <img src="./Arduino Playground - Library Tutorial_files/icon-flickr.svg" alt="flickr">
+        <p class="follow-us">follow us on Flickr</p>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.youtube.com/user/arduinoteam" target="_blank" id="youtube" class="youtube" rel="noopener">
+        <img src="./Arduino Playground - Library Tutorial_files/icon-youtube.svg" alt="youtube">
+        <p class="follow-us">follow us on YouTube</p>
+      </a>
+    </li>
+  </ul>
+
+  <button id="go-top" class="go-top-footer-btn" aria-label="Scroll Top">
+    <span class="arrow-1"></span>
+    <span class="arrow-2"></span>
+    <span class="arrow-3"></span>
+  </button>
+</div><!-- footer-block -->
+</div>
+    </div>
+    <script src="./Arduino Playground - Library Tutorial_files/loader.js.download" type="text/javascript"></script>
+    <script>
+      var auth = {
+        token: function() {
+          return false ? Promise.resolve({
+            token: null          }) : Promise.reject('loggedout')
+        },
+        redirectURI: function() {
+          return 'https://auth.arduino.cc/login?client_id=playground&redirect_uri=https%3A%2F%2Fplayground.arduino.cc%2F&state=1254329006&scope=profile%3Acore+profile%3Apublic+profile%3Acontact+offline&response_type=code';
+        }
+      };
+      ArduinoHeaderAndFooter({
+        auth: "custom",
+        authOptions: auth
+      });
+    </script>
+
+
+</body></html>

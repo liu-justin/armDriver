@@ -1,4 +1,4 @@
-#include <string.h>
+#include <Motor.h>
 
 const byte numBytes = 64;
 int delayTimeR[numBytes];
@@ -14,7 +14,8 @@ unsigned long previousTime = 0;
 int rIndex = 0;
 int cIndex = 0;
 
-Motor r = new Motor(0,1,2,3);
+Motor r(0,1,2,3);
+Motor c(4,5,6,7);
 
 void setup() {
     Serial.begin(9600);
