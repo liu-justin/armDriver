@@ -1,12 +1,5 @@
 #include <Motor.h>
 
-//const int numBytes = 64;
-int delayTimeR[numBytes] = {0};
-int stepDirectionR[numBytes];
-int delayTimeC[numBytes] = {0};
-int stepDirectionC[numBytes];
-byte numReceived = 0;
-
 boolean reading = true;
 boolean driving = false;
 
@@ -25,10 +18,9 @@ void setup() {
 void loop() {
     if (reading == true) {
         recvBytesWithEndMarkers();
-        showNewData();
     }
     if (driving == true) {
-        driveMotors();
+        //driveMotors();
     }
     
 }
@@ -40,62 +32,67 @@ void recvBytesWithEndMarkers() {
     byte stepDownMark = 0x7D; // },125
     byte startMark = 0x65;    // e,101
     byte endMark = 0x66;      // f,102
-    byte endRMark = 0x67;     // g,103
-    byte endCMark = 0x68;     // h,104
+    byte startRMark = 0x67;     // g,103
+    byte startCMark = 0x68;     // h,104
 
-    static byte timeIndex = 0;
-    static byte directionIndex = 0;
-    int time[numBytes];
-    int direction[numBytes];
+    int timeIndex = 0;
+    int directionIndex = 0;
+    int *timePointer;
+    int *directionPointer;
 
     byte rb;
    
     while (Serial.available() > 0) {
         rb = Serial.read();
-        Serial.println(rb, HEX);
-        Serial.println(rb, BIN);
+        showData();
+        Serial.print("start of loop, Serial.available: ");
+        Serial.print(Serial.available());
+        Serial.print(" data read: ");
+        Serial.println(rb);
+        
 
         // the byte is a direction byte
         if (rb == stepUpMark || rb == stepEvenMark || rb == stepDownMark) {
-            direction[directionIndex] = rb - '|';
+            *(directionPointer + directionIndex) = rb - '|';
             directionIndex++;
             if (directionIndex >= numBytes) {
                 directionIndex = numBytes - 1;
             }
         }
 
-        else if (rb == endRMark) {
-            memcpy(delayTimeR, time, numBytes);
-            memcpy(stepDirectionR, direction, numBytes);
-            r.forward1();
-
-            memset(time, 0, sizeof(time));
-            memset(direction, 0, sizeof(direction));
+        else if (rb == startRMark) {
+            // want the time and direction arrays to point to the correct array(in this case R)
+            memset(r.delayTime, 0, numBytes);
+            memset(r.stepDirection, 0, numBytes);
             timeIndex = 0;
             directionIndex = 0;
+            timePointer = r.delayTime;
+            directionPointer = r.stepDirection;
         }
 
-        else if (rb = endCMark) {
-            memcpy(delayTimeC, time, numBytes);
-            memcpy(stepDirectionC, direction, numBytes);
-
-            memset(time, 0, sizeof(time));
-            memset(direction, 0, sizeof(direction));
+        else if (rb == startCMark) {
+            Serial.println("start C");
+            memset(c.delayTime, 0, numBytes);
+            memset(c.stepDirection, 0, numBytes);
             timeIndex = 0;
             directionIndex = 0;
+            timePointer = c.delayTime;
+            directionPointer = c.stepDirection;
         }
 
         // the byte is the endMark
         else if (rb == endMark) {
             reading = false;
             driving = true;
-            showNewData();
+            Serial.println("endMark");
+            showData();
             previousTime = millis();
             
         }
 
         else {        
-            time[timeIndex] = rb;
+            Serial.println(timeIndex);
+            *(timePointer + timeIndex) = rb;
             timeIndex++;
             if (timeIndex >= numBytes) {
                 timeIndex = numBytes - 1;
@@ -104,17 +101,17 @@ void recvBytesWithEndMarkers() {
     }
 }
 
-void showNewData() {
-        Serial.print("This just in (delay time)... ");
-        for (byte n = 0; n < numReceived; n++) {
-            Serial.print(delayTimeR[n]);
+void showData() {
+        Serial.print("This just in (R delay time)... ");
+        for (byte n = 0; n < 64; n++) {
+            Serial.print(r.delayTime[n]);
             Serial.print(' ');
         }
         Serial.println();
         
-        Serial.print("This just in (step direction)... ");
-        for (byte n = 0; n < numReceived; n++) {
-            Serial.print(stepDirectionR[n]);
+        Serial.print("This just in (C delay time)... ");
+        for (byte n = 0; n < 64; n++) {
+            Serial.print(c.delayTime[n]);
             Serial.print(' ');
         }
         Serial.println();
@@ -122,18 +119,18 @@ void showNewData() {
 
 void driveMotors() {
     unsigned long currentTime = millis();
-    if (currentTime - previousTime > delayTimeR[rIndex]){
+    if (currentTime - previousTime > r.delayTime[rIndex]){
         // step the motors in the direction of stepDirectionR[rIndex]
-        r.step1(stepDirectionR[rIndex]);
+        r.step1(r.stepDirection[rIndex]);
         rIndex++;
     }
     
-    if (currentTime - previousTime > delayTimeC[cIndex]){
-        c.step1(stepDirectionC[cIndex]);
+    if (currentTime - previousTime > c.delayTime[cIndex]){
+        c.step1(c.stepDirection[cIndex]);
         cIndex++;
     }
 
-    if (rIndex >= sizeof(delayTimeR) and cIndex >= sizeof(delayTimeC)) {
+    if (rIndex >= 64 and cIndex >= 64) {
         driving = false;
         reading = true;
     }

@@ -6,9 +6,6 @@ import matplotlib.pyplot as plt
 
 import modules.pointFinder as p
 
-power_pin = 18
-button_pin = 27
-
 Seq = []
 Seq.append([1,0,1,0])
 Seq.append([0,1,1,0])
@@ -106,6 +103,10 @@ def getSteps(angles):
                 stepListR.append(stepListR[-1]+stepAngle*np.sign(angleR1-angleR0))
                 t = (stepListR[-1] - angleR0)/(angleR1 - angleR0) * frameTime + i*frameTime
                 timeListR.append(t)
+        else:
+            stepListR.append(nearestStep(angleR0, stepAngle))
+            timeListR.append(i*frameTime)
+
 
         if stepCountC > 0:
             stepIterC = ceilStep(angleC0, stepAngle) if (angleC1 - angleC0 > 0) else floorStep(angleC0, stepAngle)
@@ -117,6 +118,10 @@ def getSteps(angles):
                 stepListC.append(stepListC[-1]+stepAngle*np.sign(angleC1-angleC0))
                 t = (stepListC[-1] - angleC0)/(angleC1 - angleC0) * frameTime + i*frameTime
                 timeListC.append(t)
+        else:
+            stepListC.append(nearestStep(angleC0, stepAngle))
+            timeListC.append(i*frameTime)
+
 
     # correcting the very first angles to be as close to real as possible
     stepListR[0] = nearestStep(angles[0][0], stepAngle)
@@ -128,11 +133,17 @@ def getSteps(angles):
     timeListR.append(frameTime*(len(angles)-1))
     timeListC.append(frameTime*(len(angles)-1))
 
-    print(timeListR)
-    plt.step(timeListC, stepListC, where="mid", label="angleC steps")
-    plt.step(timeListR, stepListR, where="mid", label="angleR steps")
+    plt.scatter(timeListC, stepListC, label="angleC steps")
+    plt.scatter(timeListR, stepListR, label="angleR steps")
     # for i, txt in enumerate(stepListC):
     #     plt.annotate(i, (timeListC[i], stepListC[i]))
 
-    plt.show() 
+    print(f"R: {timeListR}")
+    print(f"C: {timeListC}")
+
+    #plt.show() 
+
+    return timeListR, stepListR, timeListC, stepListC; 
+
+    
 
