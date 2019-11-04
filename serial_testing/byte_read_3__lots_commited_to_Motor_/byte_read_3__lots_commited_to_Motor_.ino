@@ -12,8 +12,8 @@ Motor c(4,5,6,7);
 
 void setup() {
     Serial.begin(9600);
-    // send a reserved char ~ to tell Python that Arduino is ready
-    Serial.println("~");
+    // send a reserved char ~ 0x7e to tell Python that Arduino is ready
+    Serial.write(0x7E);
 }
 
 void loop() {
@@ -26,6 +26,11 @@ void loop() {
     
 }
 
+int timeIndex = 0;
+int directionIndex = 0;
+int *timePointer;
+int *directionPointer;
+
 void recvBytesWithEndMarkers() {
     
     byte stepUpMark = 0x78;   // {,120
@@ -36,20 +41,15 @@ void recvBytesWithEndMarkers() {
     byte startRMark = 0x67;     // g,103
     byte startCMark = 0x68;     // h,104
 
-    int timeIndex = 0;
-    int directionIndex = 0;
-    int *timePointer;
-    int *directionPointer;
-
     byte rb;
    
     while (Serial.available() > 0) {
         rb = Serial.read();
-        showData();
-        Serial.print("start of loop, Serial.available: ");
-        Serial.print(Serial.available());
-        Serial.print(" data read: ");
-        Serial.println(rb);
+        
+        //Serial.print("start of loop, Serial.available: ");
+        //Serial.print(Serial.available());
+        //Serial.print(" data read: ");
+        //Serial.println(rb);
         
 
         // the byte is a direction byte
@@ -72,7 +72,7 @@ void recvBytesWithEndMarkers() {
         }
 
         else if (rb == startCMark) {
-            Serial.println("start C");
+            Serial.println("{start C}");
             memset(c.delayTime, 0, numBytes);
             memset(c.stepDirection, 0, numBytes);
             timeIndex = 0;
@@ -85,39 +85,38 @@ void recvBytesWithEndMarkers() {
         else if (rb == endMark) {
             reading = false;
             driving = true;
-            Serial.println("endMark");
+            Serial.println("{endMark}");
             showData();
             previousTime = millis();
             
         }
 
         else {
-            Serial.print("reading time data, this is timeIndex: ");
-            Serial.println(timeIndex);
+            //Serial.print("reading time data, this is timeIndex: ");
+            //Serial.println(timeIndex);
             *(timePointer + timeIndex) = rb;
             timeIndex++;
             if (timeIndex >= numBytes) {
                 timeIndex = numBytes - 1;
             }
-            //Serial.println("<Arduino is ready>");
+            showData();
+            Serial.write(0x7E);
         }
     }
 }
 
 void showData() {
         Serial.print("R delay time... ");
-        for (byte n = 0; n < 64; n++) {
+        for (byte n = 0; n < 60; n++) {
             Serial.print(r.delayTime[n]);
             Serial.print(' ');
         }
-        Serial.println();
         
         Serial.print("C delay time... ");
-        for (byte n = 0; n < 64; n++) {
+        for (byte n = 0; n < 60; n++) {
             Serial.print(c.delayTime[n]);
             Serial.print(' ');
         }
-        Serial.println();
 }
 
 void driveMotors() {
