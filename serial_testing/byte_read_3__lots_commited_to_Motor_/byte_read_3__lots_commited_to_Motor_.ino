@@ -12,7 +12,8 @@ Motor c(4,5,6,7);
 
 void setup() {
     Serial.begin(9600);
-    Serial.println("<Arduino is ready>");
+    // send a reserved char ~ to tell Python that Arduino is ready
+    Serial.println("~");
 }
 
 void loop() {
@@ -27,9 +28,9 @@ void loop() {
 
 void recvBytesWithEndMarkers() {
     
-    byte stepUpMark = 0x7B;   // {,123
-    byte stepEvenMark = 0x7C; // |,124
-    byte stepDownMark = 0x7D; // },125
+    byte stepUpMark = 0x78;   // {,120
+    byte stepEvenMark = 0x79; // |,121
+    byte stepDownMark = 0x7A; // },122
     byte startMark = 0x65;    // e,101
     byte endMark = 0x66;      // f,102
     byte startRMark = 0x67;     // g,103
@@ -90,26 +91,28 @@ void recvBytesWithEndMarkers() {
             
         }
 
-        else {        
+        else {
+            Serial.print("reading time data, this is timeIndex: ");
             Serial.println(timeIndex);
             *(timePointer + timeIndex) = rb;
             timeIndex++;
             if (timeIndex >= numBytes) {
                 timeIndex = numBytes - 1;
             }
+            //Serial.println("<Arduino is ready>");
         }
     }
 }
 
 void showData() {
-        Serial.print("This just in (R delay time)... ");
+        Serial.print("R delay time... ");
         for (byte n = 0; n < 64; n++) {
             Serial.print(r.delayTime[n]);
             Serial.print(' ');
         }
         Serial.println();
         
-        Serial.print("This just in (C delay time)... ");
+        Serial.print("C delay time... ");
         for (byte n = 0; n < 64; n++) {
             Serial.print(c.delayTime[n]);
             Serial.print(' ');
