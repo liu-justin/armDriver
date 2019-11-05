@@ -1,0 +1,43 @@
+Overview
+
+goal: insert two points, make point travel linearly between them
+
+function linearTravel:
+- take in two points, start point and end point
+- create a series of points linearly spaced between the two points
+for all the points in the series of points:
+	- run a function to grab motor angles for one point (output is tuple)
+	- append it to an angleList
+
+function motorDriver:
+- take in angleList
+for all the tuples in angleList:
+	- for each motor, grab the current angle and the next angle and their associated times
+	- find if there are any finite steps in btwn these two values, and append to that motors stepList
+	- find the corresponding time of the steps with linear interpolation, and append to that motors timeList
+return stepLists and timeLists
+
+function sendToArduino:
+- takes in stepLists and timeLists
+for each element in each timeList:
+	send the difference between current time and next time
+	send stepDirection in stepList at current time
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- find total_distance between the two points using in math.sqrt((end.x - start.x)^2 + (end.y - start.y)^2 + (end.z - start.z)^2)
+- find total_time vs total_distance/speed(certain speed = 10in/s) 
+- divide the total_distance by a certain amount(40) to get the frameTime
+	- if frameTime is > 0.1 seconds, frameTime = 0.1 seconds (for sending to Arduino)
+- get the number of frameSteps with totalTime/frameTime (if frameTime)
