@@ -107,13 +107,13 @@ void recvBytesWithEndMarkers() {
 
 void showData() {
         Serial.print("R delay time... ");
-        for (byte n = 0; n < 60; n++) {
+        for (byte n = 0; n < 128; n++) {
             Serial.print(r.delayTime[n]);
             Serial.print(' ');
         }
         
         Serial.print("C delay time... ");
-        for (byte n = 0; n < 60; n++) {
+        for (byte n = 0; n < 128; n++) {
             Serial.print(c.delayTime[n]);
             Serial.print(' ');
         }

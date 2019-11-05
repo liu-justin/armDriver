@@ -185,10 +185,12 @@ def findAngle(test):
     # angleD is the angle inside the upper quad, so we have to reverse the angle
     angleD = aR - math.atan2(distY,distX)
 
+    # lengths of the 4bar linkage above the main arm
     aLength = 2.75
     bLength = 9.5
     cLength = 2.5
     dLength = 9.43702304
+
     # geometry to get input stepper angle 
     midLine = math.sqrt(cLength**2 + dLength**2 - 2*cLength*dLength*math.cos(angleD))
     angleCAD = np.arcsin(cLength*math.sin(angleD)/midLine)
@@ -302,10 +304,7 @@ def linearTravel(first, second):
     if (totalTime/40 < frameTime):
         frameTime = totalTime/40
 
-    # if the distance is super small, and the total time is less than frame time
-    if (totalTime < frameTime*2):
-        frameTime = totalTime/2
-
+    # initialize the angleList to return
     angleList = []
 
     # just for the graph
@@ -334,7 +333,7 @@ def linearTravel(first, second):
         tList.append(tIter)
         tIter += frameTime
     
-    #plotting both angles
+    #--------------PLOTTING LINEAR POINT2POINT GRAPHS------------------
     tArray = np.asarray(tList, dtype=np.float32)
     angleRArray = np.asarray([elem[0] for elem in angleList])
     angleCArray = np.asarray([elem[1] for elem in angleList])
@@ -351,7 +350,9 @@ def linearTravel(first, second):
     ax.set_yticks(minorTicks, minor=True)
     plt.grid(b=True, which="minor")
     plt.legend()
-    # #plt.show()  
+    # #plt.show()
+    #--------------PLOTTING LINEAR POINT2POINT GRAPHS------------------
+    
     return angleList
 
 def drawAngleList(angles):

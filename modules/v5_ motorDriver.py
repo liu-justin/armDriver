@@ -14,15 +14,11 @@ Seq.append([1,0,0,1])
 
 class Motor:
     def __init__(self, anglesIndex):
-        _ai = anglesIndex
+        _i = anglesIndex
         timeIter = 0
         timeList = [timeIter]
         stepIter = ceilStep(angles[0][_i], stepAngle) if (angles[1][_i] - angles[0][_i] < 0) else floorStep(angles[0][_i], stepAngle)
         stepList = [stepIter]
-
-    def getStartingAngles(i, angles):
-        angleNext = angle
-        return (angles[i][_ai], angles[i+1][_ai])
 
 def nearestStep(value, step):
     if value%step < step/2:
@@ -44,8 +40,13 @@ def getSteps(angles):
 
     R0 = Motor(0)
     RA = Motor(1)
-    #N17 = Motor(2)
-    #Theta = Motor(3)
+    N17 = Motor(2)
+    Theta = Motor(3)
+
+    stepIterR = ceilStep(angles[0][0], stepAngle) if (angles[1][0] - angles[0][0] < 0) else floorStep(angles[0][0], stepAngle)
+    stepIterC = ceilStep(angles[0][1], stepAngle) if (angles[1][1] - angles[0][1] < 0) else floorStep(angles[0][1], stepAngle)
+    stepListR = [stepIterR]
+    stepListC = [stepIterC]
     
     for i in range(len(angles)-1):
 

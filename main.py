@@ -21,9 +21,9 @@ def main():
 		#print(f"Length of angleList: {len(angles)}")
 		data = m.getSteps(angles)
 
-		s.waitForArduino()
+		#s.waitForArduino()
+		#s.sendToArduino(data[0], data[1], data[2], data[3])
 		
-		s.sendToArduino(data[0], data[1], data[2], data[3])
 		afterGSTime = time.perf_counter()
 
 	#print(f"{afterLTTime - startTime} : {afterGSTime - afterLTTime}")
