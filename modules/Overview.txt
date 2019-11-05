@@ -6,26 +6,27 @@ function linearTravel:
 - take in two points, start point and end point
 - create a series of points linearly spaced between the two points
 for all the points in the series of points:
-	- run a function to grab motor angles for one point (output is tuple)
+	- run a function to grab exact angles for 4 motors for one point (output is tuple)
 	- append it to an angleList
+- return angleList
 
 function motorDriver:
 - take in angleList
 for all the tuples in angleList:
 	- for each motor, grab the current angle and the next angle and their associated times
-	- find if there are any finite steps in btwn these two values, and append to that motors stepList
-	- find the corresponding time of the steps with linear interpolation, and append to that motors timeList
+	- find if there are any multiples of (1.8 degrees) in btwn these two values, and append to that motors stepList
+	- find the corresponding time for each multiple with linear interpolation, and append to that motors timeList
 return stepLists and timeLists
 
 function sendToArduino:
 - takes in stepLists and timeLists
 for each element in each timeList:
-	send the difference between current time and next time
-	send stepDirection in stepList at current time
+	send the difference between next time and current time to Arduino
+	send the difference between corresponding next angle and corresponding current angle to Arduino
 
-
-
-
+Arduino:
+- read in times and angles, put into array
+- drive motors yay
 
 
 
