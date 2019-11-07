@@ -3,6 +3,7 @@ import numpy as np
 import turtle
 
 import matplotlib.pyplot as plt
+import modules.stepMath as smath
 
 class Point:
     def __init__(self, x, y):
@@ -267,16 +268,8 @@ def singlePoint(x,y):
 
     turtle.getscreen()._root.mainloop()
 
-def nearestStep(value, step):
-    if value%step < step/2:
-        return value//step*step
-    else:
-        return (value//step + 1)*step
-
-frameTime = 0.1
-
 # getting the proper step angle values for linear interpolation
-def linearTravel(first, second):
+def linearTravel(first, second, motorList):
 
     # first check the two points to see if they are reachable, do a within range
     returnString = "the following points are out of range: "
@@ -299,19 +292,11 @@ def linearTravel(first, second):
 
     totalTime = totalLength/speed
 
-    global frameTime
     # frames set the angle coordinates for linear interpolation 
-    if (totalTime/40 < frameTime):
-        frameTime = totalTime/40
+    if (totalTime/40 < smath.frameTime):
+        smath.frameTime = totalTime/40
 
-    # initialize the angleList to return
-    angleList = []
-
-    # just for the graph
-    tIter = 0
-    tList = []
-
-    frameSteps = math.ceil(totalTime/frameTime)   
+    frameSteps = math.ceil(totalTime/smath.frameTime)   
     xFrame = xLength/frameSteps
     yFrame = yLength/frameSteps
 
@@ -319,11 +304,15 @@ def linearTravel(first, second):
     yIter = first.y
     test = Point(xIter, yIter)
 
+    # just for the graph
+    tIter = 0
+    tList = []
+
     while (abs(xIter - first.x) < abs(xLength) or abs(yIter - first.y) < abs(yLength)):
         
         angles = findAngle(test)
-        angleList.append(angles)
-        #angleList.append((xIter, yIter))
+        for motor in motorList:
+            motor.frameList.append(angles[motor.motorIndex])
 
         xIter += xFrame
         yIter += yFrame
@@ -331,19 +320,15 @@ def linearTravel(first, second):
 
         # for the graph
         tList.append(tIter)
-        tIter += frameTime
+        tIter += smath.frameTime
     
     #--------------PLOTTING LINEAR POINT2POINT GRAPHS------------------
-    tArray = np.asarray(tList, dtype=np.float32)
-    angleRArray = np.asarray([elem[0] for elem in angleList])
-    angleCArray = np.asarray([elem[1] for elem in angleList])
-
     fig, ax = plt.subplots()
 
-    ax.plot(tArray, angleRArray, label="angleR")
-    #ax.scatter(tArray, angleRStep, s=4, label="angleR frames")
-    ax.plot(tArray, angleCArray, label="angleC")
-    #ax.scatter(tArray, angleCStep, s=4, label="angleC frames")
+    for motor in motorList:
+        ax.plot(tList, motor.frameList, label=f"{motor.motorIndex}")
+        #ax.scatter(tArray, motor.frameList, s=4, label=f"{motor.motorIndex}")
+
     plt.xlabel("time (secs)")
     plt.ylabel("angle from east (radians)")
     minorTicks = np.arange(-np.pi, np.pi, singleStepAngle)
@@ -352,8 +337,6 @@ def linearTravel(first, second):
     plt.legend()
     # #plt.show()
     #--------------PLOTTING LINEAR POINT2POINT GRAPHS------------------
-    
-    return angleList
 
 def drawAngleList(angles):
     t = MyTurtle()
