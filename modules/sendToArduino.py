@@ -56,4 +56,26 @@ def sendToArduino(timeR, stepR, timeC, stepC):
 		print(ser.readline())
 		time.sleep(0.001)
 
+def sendToArduinoDict(motorList):
+	for m in motorList: 
+		ser.write((m.arduinoStartByte).to_bytes(1, byteorder="big")) # write the start Byte of the motor to tell Arduino which motor
+		previousTime = next(iter(m.stepDict.items()))[0]
+		previousStep = next(iter(m.stepDict.items()))[1]
 
+		# the very first step will send 0 for time and 0 for step, the Arduino will wait 0ms and step 0 steps
+		# it is useless, but I can't find a way around it with a dict, and its benign so whatever
+
+		for time,step in m.stepDict.items():
+			timeSent = round(time) - previousTime
+			ser.write((timeSent).to_bytes(1, byteorder="big"))
+			stepSent = int(np.sign(step)) + 121
+			ser.write((stepSent).to_bytes(1, byteorder="big"))
+
+			waitForArduino()
+
+	ser.write((102).to_bytes(1, byteorder="big"))
+
+	# confirmation
+	while 1==1:
+		print(ser.readline())
+		time.sleep(0.001)

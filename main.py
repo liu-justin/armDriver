@@ -9,6 +9,9 @@ def main():
 	#singlePoint(1,9)
 	#multiplePoint()
 
+	test = p.Point(1,2)
+	print(str(test))
+
 	R0 = motor.Motor(0)
 	RA = motor.Motor(1)
 	#N17 = motor.Motor(2)
@@ -17,8 +20,8 @@ def main():
 
 	startTime = time.perf_counter()
 
-	first = p.Point(2, 9)
-	second = p.Point(2,-9)
+	first = p.Point(12, 2)
+	second = p.Point(5,-8)
 
 	p.linearTravel(first, second, motorList)
 

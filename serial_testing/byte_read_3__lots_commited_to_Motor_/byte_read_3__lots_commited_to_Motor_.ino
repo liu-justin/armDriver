@@ -7,8 +7,8 @@ unsigned long previousTime = 0;
 int rIndex = 0;
 int cIndex = 0;
 
-Motor r(0,1,2,3);
-Motor c(4,5,6,7);
+Motor r(0,1,2,3,4);
+Motor c(5,6,7,8,9);
 
 void setup() {
     Serial.begin(9600);
@@ -120,16 +120,18 @@ void showData() {
 }
 
 void driveMotors() {
+    // previousTime defined at endMark of recvBytesWithEndMarkers()
     unsigned long currentTime = millis();
     if (currentTime - previousTime > r.delayTime[rIndex]){
-        // step the motors in the direction of stepDirectionR[rIndex]
-        r.step1(r.stepDirection[rIndex]);
+        r.step1(r.stepDirection[rIndex]); // step the motors in the direction of stepDirectionR[rIndex]
         rIndex++;
+        previousTime = currentTime;
     }
     
     if (currentTime - previousTime > c.delayTime[cIndex]){
         c.step1(c.stepDirection[cIndex]);
         cIndex++;
+        previousTime = currentTime;
     }
 
     if (rIndex >= 64 and cIndex >= 64) {
