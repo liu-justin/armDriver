@@ -27,18 +27,3 @@ for each element in each timeList:
 Arduino:
 - read in times and angles, put into array
 - drive motors yay
-
-
-
-
-
-
-
-
-
-
-- find total_distance between the two points using in math.sqrt((end.x - start.x)^2 + (end.y - start.y)^2 + (end.z - start.z)^2)
-- find total_time vs total_distance/speed(certain speed = 10in/s) 
-- divide the total_distance by a certain amount(40) to get the frameTime
-	- if frameTime is > 0.1 seconds, frameTime = 0.1 seconds (for sending to Arduino)
-- get the number of frameSteps with totalTime/frameTime (if frameTime)
