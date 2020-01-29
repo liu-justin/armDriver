@@ -1,6 +1,6 @@
 import modules.stepFinder as s
 import modules.pointFinder as p
-#import modules.sendToArduino as s
+import modules.sendToArduino as a
 import modules.motor as motor
 
 import time
@@ -8,10 +8,7 @@ import time
 def main():
 	#singlePoint(1,9)
 	#multiplePoint()
-
-	test = p.Point(1,2)
-	print(str(test))
-
+	
 	R0 = motor.Motor(0)
 	RA = motor.Motor(1)
 	#N17 = motor.Motor(2)
@@ -33,8 +30,8 @@ def main():
 	else:
 		s.getSteps(motorList)
 
-		#s.waitForArduino()
-		#s.sendToArduino(data[0], data[1], data[2], data[3])
+		a.waitForArduino()
+		a.sendToArduino(data[0], data[1], data[2], data[3])
 
 		afterGSTime = time.perf_counter()
 

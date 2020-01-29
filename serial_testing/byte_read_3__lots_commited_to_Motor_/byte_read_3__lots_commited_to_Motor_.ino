@@ -7,8 +7,8 @@ unsigned long previousTime = 0;
 int rIndex = 0;
 int cIndex = 0;
 
-Motor r(0,1,2,3,4);
-Motor c(5,6,7,8,9);
+Motor r(2,3,4,5,6);
+Motor c(7,8,9,10,11);
 
 void setup() {
     Serial.begin(9600);
@@ -45,12 +45,6 @@ void recvBytesWithEndMarkers() {
    
     while (Serial.available() > 0) {
         rb = Serial.read();
-        
-        //Serial.print("start of loop, Serial.available: ");
-        //Serial.print(Serial.available());
-        //Serial.print(" data read: ");
-        //Serial.println(rb);
-        
 
         // the byte is a direction byte
         if (rb == stepUpMark || rb == stepEvenMark || rb == stepDownMark) {
@@ -127,11 +121,21 @@ void driveMotors() {
         rIndex++;
         previousTime = currentTime;
     }
+
+    int rSwitch = digitalRead(r.getLimitPin());
+    if (rSwitch == 1){
+        //stop
+    }
     
     if (currentTime - previousTime > c.delayTime[cIndex]){
         c.step1(c.stepDirection[cIndex]);
         cIndex++;
         previousTime = currentTime;
+    }
+
+    int cSwitch = digitalRead(c.getLimitPin());
+    if (cSwitch == 1){
+        //stop
     }
 
     if (rIndex >= 64 and cIndex >= 64) {

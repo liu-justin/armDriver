@@ -1,0 +1,30 @@
+#include <DM542_driver.h>
+DM542_driver mainM(2,3,4,5);
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+
+}
+unsigned long previousTime = millis();
+
+void loop() {
+
+  // put your main code here, to run repeatedly:
+  unsigned long currentTime = millis();
+
+  if (currentTime - previousTime > 10) {
+    mainM.pulse();
+    previousTime = currentTime;
+  }
+  
+  if (mainM._stepCounter == 120) {
+    delay(500);
+    mainM.directionForward();
+  }
+  if (mainM._stepCounter == -10) {
+    //delay(1000*60*60*6);
+    delay(1000);
+    mainM.directionBackward();
+  }
+}

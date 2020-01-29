@@ -14,6 +14,9 @@ def floorStep(value):
 
 # max frameTime is 100ms because that is the cutoff in the bytes I send to Arduino only 0-100
 frameTime = 0.1
+
+# which single step angle being used, 1.8 for standard, 0.9 for half stepping(i need to change the Seq in Arduino if I change this)
 stepAngle = 1.8 *np.pi/180
 
+# speed of the endPoint
 speed = 10 #in/s

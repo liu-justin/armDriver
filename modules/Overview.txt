@@ -29,16 +29,9 @@ Arduino:
 - drive motors yay
 
 
+11/21/2019:
+- Arduino: if serial communication is active, pins 0 and 1 are taken and cannot be used for digitalWrite and digitalRead
+- confirmed that driving motor test works, with the limit switch; sending characters is iffy
+- need: to try the NEMA 23 now, with the power supply as well
+- need: look into a soldering station, terminal lugs (home depot), and crimper (wire strippers have crimping stuff)
 
-
-
-
-
-
-
-
-- find total_distance between the two points using in math.sqrt((end.x - start.x)^2 + (end.y - start.y)^2 + (end.z - start.z)^2)
-- find total_time vs total_distance/speed(certain speed = 10in/s) 
-- divide the total_distance by a certain amount(40) to get the frameTime
-	- if frameTime is > 0.1 seconds, frameTime = 0.1 seconds (for sending to Arduino)
-- get the number of frameSteps with totalTime/frameTime (if frameTime)

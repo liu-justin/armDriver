@@ -24,9 +24,9 @@ class Circle(Point):
         self.radius = r
 
         # angle for _angle to reference off of (2nd tilt motor is referenced off of 1st tilt motor angle)
-        self.base_angle = a
+        self.baseAngle = a
 
-        # angle controls where the outside point is in the angular coordinate
+        # angle controls where the outside point is in the angulangleR0coordinate
         self._angle = a
 
         # outside point will sit on the circle circumference, always radius length away from center point
@@ -80,7 +80,7 @@ ORIGIN = Point(0, 0)
 linkR = Circle(ORIGIN, 7.39183102,0)
 linkC = Circle(linkR.outside, 6.5,0)
 
-# lengths of the 4bar linkage above the main arm
+# lengths of the 4bangleR0linkage above the main arm
 aLength = 2.75
 bLength = 9.5
 cLength = 2.5
@@ -90,13 +90,17 @@ dLength = 9.43702304
 def findAngle2D(test):
     # renaming variables for the equation in the notebook
     x = test.x
-    y = test.y
+    y = test.y # y is up
+    z = test.z
     rR = linkR.radius
     rC = linkC.radius
 
+    angleRotation = math.atan2(z,x)
+    x = math.sqrt(z**2 + x**2)
+
     # initializing final tuple to return
-    aR = 0
-    aC = 0
+    angleR0= 0
+    angleRA= 0
 
     # equation k1 = k2*cos + k3*sin, came from circle equation from circle C
     k1 = x**2 + y**2 + (rR**2) - (rC**2)
@@ -114,7 +118,7 @@ def findAngle2D(test):
 
             quad = (-b + math.sqrt(b**2 - 4*a*c))/(2*a) # quadratic formula, get the lower right most solutiion
             #linkR.angle = np.arccos(quad)
-            aR = np.arccos(quad)
+            angleR0= np.arccos(quad)
         else:
             # a*sin^2 + b*sin + c = 0
             a = -(k2**2)-(k3**2)
@@ -124,7 +128,7 @@ def findAngle2D(test):
             quad = (-b - math.sqrt(b**2 - 4*a*c))/(2*a)
 
             #linkR.angle = np.arcsin(quad)
-            aR = np.arcsin(quad)
+            angleR0= np.arcsin(quad)
 
     except ValueError:
         print("math domain error")
@@ -132,34 +136,29 @@ def findAngle2D(test):
         print("divide by zero")
 
     # setting the angle on Circle R (necessary to get linkR.outside updated, so that linkC.center is updated)
-    linkR.angle = aR
+    linkR.angle = angleR0
+    linkC.baseAngle = angleR0
 
     # finding the angle on Circle C
     distY = y - linkR.outside.y
     distX = x - linkR.outside.x
 
-    # this angle is referenced to the global reference plane, needs to be from aR angle reference plane
+    # this angle is referenced to the global reference plane, needs to be from angleR0angle reference plane
     # angleD is the angle inside the upper quad, so we have to reverse the angle
-    angleD = aR - math.atan2(distY,distX)
+    angleD = angleR0- math.atan2(distY,distX)
 
-    # geometry to get input stepper angle 
-    start = time.perf_counter()
+    # geometry to get input stepper angle, using law of sines and cosines
     midLine = math.sqrt(cLength**2 + dLength**2 - 2*cLength*dLength*math.cos(angleD))
     angleCAD = np.arcsin(cLength*math.sin(angleD)/midLine)
     angleBAC = np.arccos((aLength**2 + midLine**2 - bLength**2)/(2*aLength*midLine))
-    end = time.perf_counter()
+    angleRA = angleCAD + angleBAC
 
-    aC = angleCAD + angleBAC
-    print(f"ac: {aC}, time: {end-start}")
-    aC2 = findAngleRA(angleD)
-    print(f"ac2: {aC2[0]}, time: {aC2[1]}")
+    # not necessary when filling out angles from lineangleR0travel, only for drawing
+    linkC.angle = angleRA
 
+    return (angleR0, angleRA)
 
-    # not necessary when filling out angles from linear travel, only for drawing
-    linkC.angle = aC
-
-    return (aR, aC)
-
+# looks like this is slower than what is already at line 148, uses a constraint equation
 def findAngleRA(theta):
     start = time.perf_counter()    
     A = -2*aLength*dLength + 2*aLength*cLength*math.cos(theta)
@@ -176,7 +175,7 @@ def findAngleRA(theta):
 def withinRange(test):
     return (linkR.radius - linkC.radius < test.distanceTo(ORIGIN) and test.distanceTo(ORIGIN) < linkR.radius + linkC.radius)
 
-# getting the proper step angle values for linear interpolation
+# getting the proper step angle values for lineangleR0interpolation
 def linearTravel(startPoint, endPoint, motorList):
 
     # startPoint check the two points to see if they are reachable, do a within range
@@ -195,25 +194,28 @@ def linearTravel(startPoint, endPoint, motorList):
     
     xLength = endPoint.x - startPoint.x
     yLength = endPoint.y - startPoint.y
-    totalLength = math.sqrt(xLength**2 + yLength**2)
+    zLength = endPoint.z - startPoint.z
+    totalLength = math.sqrt(xLength**2 + yLength**2 + zLength**2)
     totalTime = totalLength/speed
 
-    # frames set the angle coordinates for linear interpolation 
+    # frames set the angle coordinates for lineangleR0interpolation 
     if (totalTime/40 < smath.frameTime):
         smath.frameTime = totalTime/40
 
     frameSteps = math.ceil(totalTime/smath.frameTime)   
     xFrame = xLength/frameSteps
     yFrame = yLength/frameSteps
+    zFrame = zLength/frameSteps
     xIter = startPoint.x
     yIter = startPoint.y
-    test = Point(xIter, yIter)
+    zIter = startPoint.z
+    test = Point(xIter, yIter, zIter)
 
     # just for the graph
     tIter = 0
     tList = []
 
-    while (abs(xIter - startPoint.x) < abs(xLength) or abs(yIter - startPoint.y) < abs(yLength)):
+    while (abs(xIter - startPoint.x) < abs(xLength) or abs(yIter - startPoint.y) < abs(yLength) or abs(zIter - startPoint.z < abs(zLength))):
         
         angles = findAngle2D(test)
         for motor in motorList:
@@ -221,13 +223,14 @@ def linearTravel(startPoint, endPoint, motorList):
 
         xIter += xFrame
         yIter += yFrame
-        test = Point(xIter, yIter)
+        zIter += zFrame
+        test = Point(xIter, yIter, zIter)
 
         # for the graph
         tList.append(tIter)
         tIter += smath.frameTime
     
-    #--------------PLOTTING LINEAR POINT2POINT GRAPHS------------------
+    #--------------PLOTTING LINEangleR0POINT2POINT GRAPHS------------------
     fig, ax = plt.subplots()
 
     for motor in motorList:
@@ -241,7 +244,7 @@ def linearTravel(startPoint, endPoint, motorList):
     plt.grid(b=True, which="minor")
     plt.legend()
     # #plt.show()
-    #--------------PLOTTING LINEAR POINT2POINT GRAPHS------------------
+    #--------------PLOTTING LINEangleR0POINT2POINT GRAPHS------------------
 
 
 
