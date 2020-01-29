@@ -35,3 +35,8 @@ Arduino:
 - confirmed that driving motor test works, with the limit switch; sending characters is iffy
 - need: to try the NEMA 23 now, with the power supply as well
 - need: look into a soldering station, terminal lugs (home depot), and crimper (wire strippers have crimping stuff)
+
+1/28/2020:
+- find a way to connect Python communication with Arduino in a better way
+- Python sends start flag and waits for Arduino, Arduino shifts to the front of the motorList
+- I dont know how Arduino sends data to Python
