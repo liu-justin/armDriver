@@ -1,15 +1,13 @@
-#include <Motor.h>
-
+#include <DM542_driver.h>
+DM542_driver mainM(2,3,4,5);
 
 Motor R0(2,3,4,5,6);
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-
 }
 unsigned long previousTime = millis();
-int motorDirection = 1;
 
 void loop() {
 
@@ -17,8 +15,8 @@ void loop() {
   unsigned long currentTime = millis();
   
   //0.5rev/sec
-  if (currentTime - previousTime > 10) {
-    R0.step1(motorDirection);
+  if (currentTime - previousTime > 50) {
+    mainM.pulse();
     previousTime = currentTime;
   }
 

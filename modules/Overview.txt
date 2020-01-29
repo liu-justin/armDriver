@@ -27,6 +27,7 @@ for each element in each timeList:
 Arduino:
 - read in times and angles, put into array
 - drive motors yay
+<<<<<<< HEAD
 
 
 11/21/2019:
@@ -34,4 +35,3 @@ Arduino:
 - confirmed that driving motor test works, with the limit switch; sending characters is iffy
 - need: to try the NEMA 23 now, with the power supply as well
 - need: look into a soldering station, terminal lugs (home depot), and crimper (wire strippers have crimping stuff)
-

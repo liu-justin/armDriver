@@ -2,7 +2,8 @@ import serial
 import numpy as np
 import time
 
-ser = serial.Serial("COM4", 9600);
+# for the comport, look in Arduino IDE when the arduino is connected
+ser = serial.Serial("COM8", 9600);
 
 def waitForArduino():
 	x = ser.read()
