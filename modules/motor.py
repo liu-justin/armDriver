@@ -5,7 +5,7 @@ class Motor:
     def __init__(self, motorIndex):
         self._mi = motorIndex
         # Arduino start reading bytes start at R0 motor, byte 103
-        self.arduinoStartByte = motorIndex + 103
+        self.arduinoStartByte = motorIndex + 105
         self.frameList = []
         self.timeList = []
         self.stepList = []

@@ -228,18 +228,18 @@ def linearTravel(startPoint, endPoint, motorList):
         tIter += smath.frameTime
     
     #--------------PLOTTING LINEAR POINT2POINT GRAPHS------------------
-    fig, ax = plt.subplots()
+    # fig, ax = plt.subplots()
 
-    for motor in motorList:
-        #ax.plot(tList, motor.frameList, label=f"{motor.motorIndex}")
-        ax.scatter(tList, motor.frameList, s=4, label=f"{motor.motorIndex}")
+    # for motor in motorList:
+    #     #ax.plot(tList, motor.frameList, label=f"{motor.motorIndex}")
+    #     ax.scatter(tList, motor.frameList, s=4, label=f"{motor.motorIndex}")
 
-    plt.xlabel("time (secs)")
-    plt.ylabel("angle from east (radians)")
-    minorTicks = np.arange(-np.pi, np.pi, smath.stepAngle)
-    ax.set_yticks(minorTicks, minor=True)
-    plt.grid(b=True, which="minor")
-    plt.legend()
+    # plt.xlabel("time (secs)")
+    # plt.ylabel("angle from east (radians)")
+    # minorTicks = np.arange(-np.pi, np.pi, smath.stepAngle)
+    # ax.set_yticks(minorTicks, minor=True)
+    # plt.grid(b=True, which="minor")
+    # plt.legend()
     # #plt.show()
     #--------------PLOTTING LINEAR POINT2POINT GRAPHS------------------
 

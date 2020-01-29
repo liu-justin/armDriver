@@ -9,14 +9,14 @@ def getSteps(motorList):
     start = time.perf_counter()
 
     for m in motorList:
-        m.listSteps()
+        #m.listSteps()
         #plt.scatter(m.timeList, m.stepList, label=f"{m.motorIndex}")
 
-        #m.dictSteps()
+        m.dictSteps()
         #plt.scatter(list(m.stepDict.keys()), list(m.stepDict.values()), label=f"{m.motorIndex}")       
 
-    end = time.perf_counter()
-    print(f"dictionary route: {end-start}")
+    # end = time.perf_counter()
+    # print(f"dictionary route: {end-start}")
     plt.show() 
     
 
