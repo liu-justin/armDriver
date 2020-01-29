@@ -5,35 +5,56 @@
 
 #include "Arduino.h"
 
-const int numBytes = 128;
+const int NUM_BYTES = 64;
 
 class DM542_driver {
 	public:
-		DM542_driver(int pulse, int direct, int limit);
-		int delayTime[numBytes];
-		int stepDirection[numBytes];
-		void directionForward();
-		void directionBackward();
+		DM542_driver(int pulse, int direct, int limit, int CW, int CWW);
+		int timePy[NUM_BYTES];
+
+		void showTimePy();
+
+		int dirPy[NUM_BYTES];
+		int getTimePyCounter();
+		void incrementTimePyCounter();
+		void setStartReceivingByte(byte incomingStartByte);
+		byte getStartReceivingByte();
+
+		void directionForward(); // CCW
+		void directionBackward(); // CW
 		void directionChange();
+
 		void pulse();
-		int pulseInt(int steps);
-		void home();
 		
 		int getLimitPin();
 
-		int _stepCounter = 1;
-		int speed = 1; // rev/s
-		long delayTimeTest;
-		bool direction;
+		
+		void setStep(int incomingStep);
+		int getStep();
+		
+		
+		void setState(int incomingState);
+		int getState();
+
+		int getCWFlag();
+		int getCCWFlag();
+
+
+		unsigned long previousTime;
 		
 	private:
 		
-		int pulse_pin;
-		int direction_pin;
-		int limit_pin;
-		bool limit_tripped;
+		int _pulsePin;
+		int _directionPin;
+		int _limitPin;
+		int _startReceivingByte;
 
-		
+		int _timePyCounter;
+		bool _direction;
+		int _step;
+		int _state;
+		int _ccwFlag;
+		int _cwFlag;
 
 };
 

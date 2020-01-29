@@ -134,7 +134,8 @@ void recvBytesWithEndMarkers(DM542_driver motor) {
             }
         }
 
-        else if (rb == motor.getStartReceivingByte()) {
+        else if (rb == startR0Mark || rb == startRAMark) {
+          if (rb == motor.getStartReceivingByte()) {
             Serial.print("Arduino received a start receiving byte and it has a match; ");
             memset(motor.timePy, 0, NUM_BYTES); // memset is populates the array with zeros
             memset(motor.dirPy, 0, NUM_BYTES);
@@ -142,6 +143,8 @@ void recvBytesWithEndMarkers(DM542_driver motor) {
             directionIndex = 0;
             timePointer = motor.timePy; // point the pointers to the head of the array
             directionPointer = motor.dirPy;
+          }
+          
         }
 
         // the byte is the endMark
