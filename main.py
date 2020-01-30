@@ -23,6 +23,5 @@ def main():
 		s.getSteps(motorList)
 
 		a.waitForArduino("Arduino is ready, going to state 6")
-		#a.waitForArduino()
 		a.sendToArduinoDict(motorList)
 main()

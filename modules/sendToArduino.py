@@ -5,13 +5,14 @@ import time
 # for the comport, look in Arduino IDE when the arduino is connected
 ser = serial.Serial("COM8", 9600);
 
-def waitForArduino(passcode = '~'):
+def waitForArduino(passcode):
 	msg = ser.read().decode("unicode_escape")
 	
 	while not msg.endswith(passcode):
 		msg += ser.read().decode("unicode_escape")
 		if (msg.endswith('~')):
-			print(msg)
+			print(f"Periodic update: {msg}")
+			msg = ""
 
 	print(f"Out of waiting! msg is: {msg}")
 
@@ -58,6 +59,8 @@ def sendToArduino(timeR, stepR, timeC, stepC):
 def sendToArduinoDict(motorList):
 	for m in motorList: 
 		print(f"To: sending {m.arduinoStartByte} {len(motorList)} times")
+
+		# sending the startByte twice to catch the correct motor wherever the loop is
 		for i in range(len(motorList)):
 			ser.write((m.arduinoStartByte).to_bytes(1, byteorder="big")) # write the start Byte of the motor to tell Arduino which motor
 		waitForArduino("Arduino received a start receiving byte and it has a match;")
@@ -68,12 +71,15 @@ def sendToArduinoDict(motorList):
 		# it is useless, but I can't find a way around it with a dict, and its benign so whatever
 
 		for time,step in m.stepDict.items():
-			timeSent = round(time) - previousTime
+			timeSent = int(time) - previousTime
 			ser.write((timeSent).to_bytes(1, byteorder="big"))
+
+			waitForArduino("Arduino received a timeByte;")
+
 			stepSent = int(np.sign(step)) + 121
 			ser.write((stepSent).to_bytes(1, byteorder="big"))
 
-			waitForArduino()
+			
 
 	ser.write((102).to_bytes(1, byteorder="big"))
 
