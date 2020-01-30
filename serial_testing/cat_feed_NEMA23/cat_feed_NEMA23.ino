@@ -38,7 +38,7 @@ void loop() {
 
       case 5: // receiving from Python intialization
           // send a reserved char ~ 0x7e to tell Python that Arduino is ready
-          Serial.write(0x7E);
+          Serial.println(" Arduino is ready, going to state 6");
           motorList[i].setState(6);
         break;
 
@@ -113,29 +113,21 @@ void recvBytesWithEndMarkers(DM542_driver motor) {
     byte stepUpMark = 0x78;   // {,120
     byte stepEvenMark = 0x79; // |,121
     byte stepDownMark = 0x7A; // },122
-    byte startReceivingMark = 0x65;    // e,101
-    byte endMark = 0x66;      // f,102
+    byte topTimeMark = 0x64;
 
     byte rb;
-    Serial.println("Before the loop does this happen again");
+
+    bool startWritingFlag = false;
+
     while (Serial.available() > 0) {
         rb = Serial.read();
-        Serial.print("Arduino got the following byte: ");
+        Serial.print("Motor ");
+        Serial.print(motor.getStartReceivingByte());
+        Serial.print(" got the following byte: ");
         Serial.print(rb);
-        Serial.print("| ");
-        
-        // the byte is a direction byte
-        if (rb == stepUpMark || rb == stepEvenMark || rb == stepDownMark) {
-            Serial.print("Arduino received a direction byte; ");
-            *(directionPointer + directionIndex) = rb - '|'; // I think this in Python is just motor.dirPy[directionIndex] = rb + '|'
-            directionIndex++;
-            if (directionIndex >= NUM_BYTES) {
-                directionIndex = NUM_BYTES - 1;
-            }
-        }
+        Serial.print("~ ");
 
-        else if (rb == startR0Mark || rb == startRAMark) {
-          if (rb == motor.getStartReceivingByte()) {
+        if (rb == motor.getStartReceivingByte() && !startWritingFlag) {
             Serial.print("Arduino received a start receiving byte and it has a match; ");
             memset(motor.timePy, 0, NUM_BYTES); // memset is populates the array with zeros
             memset(motor.dirPy, 0, NUM_BYTES);
@@ -143,27 +135,34 @@ void recvBytesWithEndMarkers(DM542_driver motor) {
             directionIndex = 0;
             timePointer = motor.timePy; // point the pointers to the head of the array
             directionPointer = motor.dirPy;
-          }
-          
-        }
 
-        // the byte is the endMark
-        else if (rb == endMark) {
-            Serial.println("{endMark}");
-            
-        }
-
-        else {
-            Serial.print("Arduino received a time byte, this is the timeIndex: ");
-            Serial.print(timeIndex);
-            Serial.print("| ");
-            *(timePointer + timeIndex) = rb;
-            timeIndex++;
-            if (timeIndex >= NUM_BYTES) {
-                timeIndex = NUM_BYTES - 1;
-            }
-            motor.showTimePy();
+            startWritingFlag = true;
             Serial.write(0x7E);
+        }
+
+        if (startWritingFlag) {
+          // the byte is a direction byte
+          if (rb == stepUpMark || rb == stepEvenMark || rb == stepDownMark) {
+              Serial.print("Arduino received a direction byte; ");
+              *(directionPointer + directionIndex) = rb - '|'; // I think this in Python is just motor.dirPy[directionIndex] = rb + '|'
+              directionIndex++;
+              if (directionIndex >= NUM_BYTES) {
+                  directionIndex = NUM_BYTES - 1;
+              }
+          }
+  
+          else if (rb <= topTimeMark) {
+              Serial.print("Arduino received a time byte, this is the timeIndex: ");
+              Serial.print(timeIndex);
+              Serial.print("| ");
+              *(timePointer + timeIndex) = rb;
+              timeIndex++;
+              if (timeIndex >= NUM_BYTES) {
+                  timeIndex = NUM_BYTES - 1;
+              }
+              motor.showTimePy();
+              Serial.write(0x7E);
+          }
         }
     }
 }

@@ -5,17 +5,15 @@ import time
 # for the comport, look in Arduino IDE when the arduino is connected
 ser = serial.Serial("COM8", 9600);
 
-def waitForArduino():
-	x = ser.read()
-	msg = x
+def waitForArduino(passcode = '~'):
+	msg = ser.read().decode("unicode_escape")
+	
+	while not msg.endswith(passcode):
+		msg += ser.read().decode("unicode_escape")
+		if (msg.endswith('~')):
+			print(msg)
 
-	print(f"Arduino's first response (b'~' is good): {msg}")
-	while x != b'~':
-		x = ser.read()
-		msg = msg + x
-		#print(f"looping, msg is {msg}")
-
-	print(f"Out of waiting! msg is : {msg}")
+	print(f"Out of waiting! msg is: {msg}")
 
 def sendToArduino(timeR, stepR, timeC, stepC):
 	# the sending code is time then step
@@ -25,7 +23,7 @@ def sendToArduino(timeR, stepR, timeC, stepC):
 	#ser.write((101).to_bytes(1, byteorder="big"))
 
 	# byte to start reading motorR and store it
-	ser.write((103).to_bytes(1, byteorder="big"))
+	ser.write((105).to_bytes(1, byteorder="big"))
 	print("sent 103 to start R array")
 
 	for i in range(0,len(timeR)-1):
@@ -39,7 +37,7 @@ def sendToArduino(timeR, stepR, timeC, stepC):
 		waitForArduino()
 
 	# byte to start reading motorC and store it
-	ser.write((104).to_bytes(1, byteorder="big"))
+	ser.write((106).to_bytes(1, byteorder="big"))
 
 	for i in range(len(timeC)-1):
 		timeMS = int(round(timeC[i+1]*1000)-round(timeC[i]*1000))
@@ -59,7 +57,10 @@ def sendToArduino(timeR, stepR, timeC, stepC):
 
 def sendToArduinoDict(motorList):
 	for m in motorList: 
-		ser.write((m.arduinoStartByte).to_bytes(1, byteorder="big")) # write the start Byte of the motor to tell Arduino which motor
+		print(f"To: sending {m.arduinoStartByte} {len(motorList)} times")
+		for i in range(len(motorList)):
+			ser.write((m.arduinoStartByte).to_bytes(1, byteorder="big")) # write the start Byte of the motor to tell Arduino which motor
+		waitForArduino("Arduino received a start receiving byte and it has a match;")
 		previousTime = next(iter(m.stepDict.items()))[0]
 		previousStep = next(iter(m.stepDict.items()))[1]
 
