@@ -13,6 +13,7 @@ class DM542_driver {
 		int timePy[NUM_BYTES];
 
 		void showTimePy();
+		void showDirPy();
 
 		int dirPy[NUM_BYTES];
 		int getTimePyCounter();

@@ -46,6 +46,7 @@ class Motor:
 
     def dictSteps(self):
 
+        # initialization for the first step of stepDict
         frame1 = self.frameList[1]
         frame0 = self.frameList[0]
         #ceilStep(angles[0][_i], smath.stepAngle) if (angles[1][_i] - angles[0][_i] < 0) else floorStep(angles[0][_i], smath.stepAngle)
@@ -74,6 +75,8 @@ class Motor:
 
         self.stepDict[0] = smath.nearestStep(self.frameList[0])
         self.stepDict[smath.frameTime*(len(self.frameList)-1)] = smath.nearestStep(self.frameList[-1])
+
+        print(self.stepDict)
         
     @property
     def motorIndex(self):

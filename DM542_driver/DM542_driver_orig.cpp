@@ -93,3 +93,11 @@ void DM542_driver::showTimePy() {
 		Serial.print(" ");
 	}
 }
+
+void DM542_driver::showDirPy() {
+	Serial.println("Showing the direction array in the object");
+	for (int i = 0; i < NUM_BYTES; i++) {
+		Serial.print(dirPy[i]);
+		Serial.print(" ");
+	}
+}

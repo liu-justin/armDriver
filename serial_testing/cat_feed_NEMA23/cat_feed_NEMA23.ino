@@ -26,9 +26,9 @@ void loop() {
   
   for (int i = 0; i < MOTOR_COUNT; i++) {
     //DM542_driver* motor = &motorList[i]; was when i replaced all the motorList[i] with motor, but pointers are poop
-    Serial.print("Start of main loop, motor ");
+    Serial.print("ml, motor ");
     Serial.print(i);
-    Serial.print(" has the state: ");
+    Serial.print(" state: ");
     Serial.print(motorList[i]->getState());
     Serial.print("~ ");
     
@@ -43,7 +43,8 @@ void loop() {
 
       case 5: // receiving from Python intialization
           // send a reserved char ~ 0x7e to tell Python that Arduino is ready
-          Serial.print("Arduino is ready, going to state 6; ");
+          //Serial.print("Arduino is ready, going to state 6; ");
+          Serial.print("s6");
           motorList[i]->setState(6);
         break;
 
@@ -52,8 +53,9 @@ void loop() {
         break;
 
       case 7: // reading in data
-        Serial.print("In state 7");
+        Serial.print("s7");
         Serial.print("~ ");
+        readingDataFromPy(motorList[i]);
         break;
 
       case 15: // homing initialization
@@ -121,11 +123,11 @@ int *directionPointer;
 void waitingForStartByte(DM542_driver* motor) {
     if (Serial.available() > 0) {
         byte rb = Serial.read();
-        Serial.print("Motor ");
-        Serial.print(motor->getStartReceivingByte());
-        Serial.print(" got the following byte: ");
-        Serial.print(rb);
-        Serial.print("~ ");
+//        Serial.print("Motor ");
+//        Serial.print(motor->getStartReceivingByte());
+//        Serial.print(" got the following byte: ");
+//        Serial.print(rb);
+//        Serial.print("~ ");
 
         if (rb == motor->getStartReceivingByte()) {
             
@@ -136,7 +138,6 @@ void waitingForStartByte(DM542_driver* motor) {
             timePointer = motor->timePy; // point the pointers to the head of the array
             directionPointer = motor->dirPy;
             motor->setState(7);
-            Serial.print(motor->getState());
             Serial.print("Arduino received a start receiving byte and it has a match; ");
         }
     }
@@ -147,17 +148,25 @@ void waitingForStartByte(DM542_driver* motor) {
 }
 
 void readingDataFromPy(DM542_driver* motor) {
-    byte stepUpMark = 0x78;   // {,120
-    byte stepEvenMark = 0x79; // |,121
-    byte stepDownMark = 0x7A; // },122
-    byte topTimeMark = 0x64;
+    byte stepUpMark = 0x78;   // x,120
+    byte stepEvenMark = 0x79; // y,121
+    byte stepDownMark = 0x7A; // z,122
+    byte topTimeMark = 0x64;  //   100
+    byte endMark = 0x66;      // f,102
 
     byte rb;
     while (Serial.available() > 0) {
+      rb = Serial.read();
+//      Serial.print("Motor ");
+//      Serial.print(motor->getStartReceivingByte());
+//      Serial.print(" got the following byte: ");
+//      Serial.print(rb);
+//      Serial.print("~ ");
+      
       // the byte is a direction byte
       if (rb == stepUpMark || rb == stepEvenMark || rb == stepDownMark) {
-          Serial.print("Arduino received a direction byte; ");
-          *(directionPointer + directionIndex) = rb - '|'; // I think this in Python is just motor.dirPy[directionIndex] = rb + '|'
+//          Serial.print("Arduino received a direction byte; ");
+          *(directionPointer + directionIndex) = rb - 'y'; // I think this in Python is just motor.dirPy[directionIndex] = rb + '|'
           directionIndex++;
           if (directionIndex >= NUM_BYTES) {
               directionIndex = NUM_BYTES - 1;
@@ -165,17 +174,24 @@ void readingDataFromPy(DM542_driver* motor) {
       }
     
       else if (rb <= topTimeMark) {
-          
           *(timePointer + timeIndex) = rb;
           timeIndex++;
           if (timeIndex >= NUM_BYTES) {
               timeIndex = NUM_BYTES - 1;
           }
-          Serial.print("Arduino received a time byte, this is the timeIndex: ");
-          Serial.print(timeIndex);
-          Serial.print("| ");
-          //motor.showTimePy();
-          Serial.write(0x7E);
+//          Serial.print("Arduino received a time byte;");
+//          Serial.print(", this is the timeIndex: ");
+//          Serial.print(timeIndex);
+//          Serial.print("| ");
+//          
+//          Serial.print("~ ");
+      }
+
+      else if (rb == endMark) {
+        motor->showTimePy();
+        motor->showDirPy();
+        Serial.print("Arduino received an endMark; ");
+        motor->setState(15);
       }
     }
 }

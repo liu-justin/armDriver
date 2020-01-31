@@ -11,8 +11,16 @@ def waitForArduino(passcode):
 	while not msg.endswith(passcode):
 		msg += ser.read().decode("unicode_escape")
 		if (msg.endswith('~')):
-			print(f"Periodic update: {msg}")
+			#print(f"Periodic update: {msg}")
 			msg = ""
+
+	#print(f"Out of waiting! msg is: {msg}")
+
+def waitForTilde():
+	msg = ser.read().decode("unicode_escape")
+	
+	while not msg.endswith("~"):
+		msg += ser.read().decode("unicode_escape")
 
 	print(f"Out of waiting! msg is: {msg}")
 
@@ -71,19 +79,25 @@ def sendToArduinoDict(motorList):
 		# it is useless, but I can't find a way around it with a dict, and its benign so whatever
 
 		for time,step in m.stepDict.items():
-			timeSent = int(time) - previousTime
-			ser.write((timeSent).to_bytes(1, byteorder="big"))
+			# if all this data is sent at once, Arduino can only fit 64 bytes into its que, the rest get dumped
+			# ABOVE IS NOT TRUE - if you get rid of all Serial communication updates, then Arduino runs thru the que faster than Python can fill it up
 
-			waitForArduino("Arduino received a timeByte;")
+			timeSent = int(round(time*1000 - previousTime)) # rounding the distance, not the times then the distance; also time needs to be converted into ms
+			#print(f"To: time sent is - {timeSent}")
+			previousTime = time*1000 						# update previousTime
+			ser.write((timeSent).to_bytes(1, byteorder="big")) # send the time to Arduino
 
-			stepSent = int(np.sign(step)) + 121
-			ser.write((stepSent).to_bytes(1, byteorder="big"))
+			#waitForArduino("Arduino received a time byte;") # waiting for Arduino to receive a time byte before sending a direction byte
 
-			
+			dirSent = int(np.sign(step)) + 121
+			dirSent = int(np.sign(step - previousStep)) + 121 # find out if this step is >/</= previous, add to 121 for Arduino (is a flag)
+			previousStep = step
+			ser.write((dirSent).to_bytes(1, byteorder="big"))
+			#print(f"To: direction sent is - {dirSent}")
 
-	ser.write((102).to_bytes(1, byteorder="big"))
+		ser.write((102).to_bytes(1, byteorder="big")) #102 is the endMark
+		print(f"To: sent 102, an endmark")
+		waitForArduino("Arduino received an endMark;")
 
-	# confirmation
 	while 1==1:
-		print(ser.readline())
-		time.sleep(0.001)
+		waitForTilde()
