@@ -156,6 +156,9 @@ def findAngle2D(test):
     # not necessary when filling out angles from lineangleR0travel, only for drawing
     linkC.angle = angleRA
 
+    # geometry fix, check journal
+    angleRA += 0.1931807502
+
     return (angleR0, angleRA)
 
 # looks like this is slower than what is already at line 148, uses a constraint equation
@@ -307,7 +310,7 @@ def multiplePoint():
     for i in range(0,13):
         for j in range(-12,12):
             test = Point(i,j)
-            angle = findAngle(test)
+            angle = findAngle2D(test)
 
             # if the linkC overlaps directly ontop of test
             if (abs(linkR.outside.distanceTo(test)-6.5) <=0.0001):
