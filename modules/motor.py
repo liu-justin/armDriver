@@ -77,6 +77,7 @@ class Motor:
         self.stepDict[smath.frameTime*(len(self.frameList)-1)] = smath.nearestStep(self.frameList[-1])
 
         print(self.stepDict)
+        print(len(self.stepDict))
         
     @property
     def motorIndex(self):

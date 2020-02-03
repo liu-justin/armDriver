@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include "DM542_driver.h"
 
-DM542_driver::DM542_driver(int pulse, int direct, int limit, int CCW, int CW) {
+DM542_driver::DM542_driver(int pulse, int direct, int limit, int CW, int CCW) {
 	_pulsePin = pulse;
 	_directionPin = direct;
 	_limitPin = limit;
@@ -14,6 +14,7 @@ DM542_driver::DM542_driver(int pulse, int direct, int limit, int CCW, int CW) {
 
 	_state = 1;
 	_timePyCounter = 0;
+
 
 }
 
@@ -32,6 +33,11 @@ void DM542_driver::directionBackward() {
 void DM542_driver::directionChange(){
 	_direction = !_direction;
 	digitalWrite(_directionPin, _direction);
+}
+
+// should be a -1 or 1 coming in
+void DM542_driver::setDirection(int incomingDir) {
+	_direction = incomingDir*0.5 + 0.5;
 }
 
 void DM542_driver::setStep(int incomingStep) {
@@ -100,4 +106,16 @@ void DM542_driver::showDirPy() {
 		Serial.print(dirPy[i]);
 		Serial.print(" ");
 	}
+}
+
+int DM542_driver::getRelativeMoveCounter() {
+	return _relativeMoveCounter;
+}
+
+void DM542_driver::setRelativeMoveCounter(int incomingCounter) {
+	_relativeMoveCounter = incomingCounter;
+}
+
+void DM542_driver::decrementRelativeMoveCounter() {
+	_relativeMoveCounter -= 1;
 }

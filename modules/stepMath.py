@@ -16,7 +16,7 @@ def floorStep(value):
 frameTime = 0.1
 
 # which single step angle being used, 1.8 for standard, 0.9 for half stepping(i need to change the Seq in Arduino if I change this)
-stepAngle = 1.8 *np.pi/180
+stepAngle = 1.8 *np.pi/180 / 4
 
 # speed of the endPoint
-speed = 10 #in/s
+speed = 4 #in/s

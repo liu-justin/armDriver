@@ -5,11 +5,11 @@
 
 #include "Arduino.h"
 
-const int NUM_BYTES = 64;
+const int NUM_BYTES = 128;
 
 class DM542_driver {
 	public:
-		DM542_driver(int pulse, int direct, int limit, int CW, int CWW);
+		DM542_driver(int pulse, int direct, int limit, int CW, int CCW);
 		int timePy[NUM_BYTES];
 
 		void showTimePy();
@@ -24,6 +24,7 @@ class DM542_driver {
 		void directionForward(); // CCW
 		void directionBackward(); // CW
 		void directionChange();
+		void setDirection(int incomingDir);
 
 		void pulse();
 		
@@ -40,8 +41,14 @@ class DM542_driver {
 		int getCWFlag();
 		int getCCWFlag();
 
+		void decrementRelativeMoveCounter();
+		int getRelativeMoveCounter();
+		void setRelativeMoveCounter(int incomingCounter);
+
+
 
 		unsigned long previousTime;
+		int previousMajorStep;
 		
 	private:
 		
@@ -51,6 +58,7 @@ class DM542_driver {
 		int _startReceivingByte;
 
 		int _timePyCounter;
+		int _relativeMoveCounter;
 		bool _direction;
 		int _step;
 		int _state;

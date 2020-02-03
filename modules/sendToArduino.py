@@ -11,10 +11,10 @@ def waitForArduino(passcode):
 	while not msg.endswith(passcode):
 		msg += ser.read().decode("unicode_escape")
 		if (msg.endswith('~')):
-			#print(f"Periodic update: {msg}")
+			print(f"Periodic update: {msg}")
 			msg = ""
 
-	#print(f"Out of waiting! msg is: {msg}")
+	print(f"---------------------------------------Out of waiting! msg is: {msg}")
 
 def waitForTilde():
 	msg = ser.read().decode("unicode_escape")
@@ -71,12 +71,15 @@ def sendToArduinoDict(motorList):
 		# sending the startByte twice to catch the correct motor wherever the loop is
 		for i in range(len(motorList)):
 			ser.write((m.arduinoStartByte).to_bytes(1, byteorder="big")) # write the start Byte of the motor to tell Arduino which motor
-		waitForArduino("Arduino received a start receiving byte and it has a match;")
+			waitForArduino("Arduino received a start receiving byte")	
+
 		previousTime = next(iter(m.stepDict.items()))[0]
 		previousStep = next(iter(m.stepDict.items()))[1]
 
 		# the very first step will send 0 for time and 0 for step, the Arduino will wait 0ms and step 0 steps
 		# it is useless, but I can't find a way around it with a dict, and its benign so whatever
+
+		print(f"To: sending time and dir data now")
 
 		for time,step in m.stepDict.items():
 			# if all this data is sent at once, Arduino can only fit 64 bytes into its que, the rest get dumped
@@ -87,7 +90,7 @@ def sendToArduinoDict(motorList):
 			previousTime = time*1000 						# update previousTime
 			ser.write((timeSent).to_bytes(1, byteorder="big")) # send the time to Arduino
 
-			#waitForArduino("Arduino received a time byte;") # waiting for Arduino to receive a time byte before sending a direction byte
+			waitForArduino("Arduino received a time byte;") # waiting for Arduino to receive a time byte before sending a direction byte
 
 			dirSent = int(np.sign(step)) + 121
 			dirSent = int(np.sign(step - previousStep)) + 121 # find out if this step is >/</= previous, add to 121 for Arduino (is a flag)

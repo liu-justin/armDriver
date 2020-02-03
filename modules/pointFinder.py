@@ -78,6 +78,7 @@ class Circle(Point):
 
 ORIGIN = Point(0, 0)
 linkR = Circle(ORIGIN, 7.39183102,0)
+#linkR = Circle(ORIGIN, 6.92335156,0)
 linkC = Circle(linkR.outside, 6.5,0)
 
 # lengths of the 4bangleR0linkage above the main arm
@@ -134,7 +135,7 @@ def findAngle2D(test):
         print("math domain error")
     except ZeroDivisionError:
         print("divide by zero")
-
+    
     # setting the angle on Circle R (necessary to get linkR.outside updated, so that linkC.center is updated)
     linkR.angle = angleR0
     linkC.baseAngle = angleR0
@@ -153,11 +154,15 @@ def findAngle2D(test):
     angleBAC = np.arccos((aLength**2 + midLine**2 - bLength**2)/(2*aLength*midLine))
     angleRA = angleCAD + angleBAC
 
+
     # not necessary when filling out angles from lineangleR0travel, only for drawing
     linkC.angle = angleRA
 
-    # geometry fix, check journal
+    # adding missing radians(angle from base circle to RA to RC)
     angleRA += 0.1931807502
+
+    # adding the missing radians from main amrs weird geometry (angle from base circle to R0 to RC)
+    angleR0 += 1.243288929048
 
     return (angleR0, angleRA)
 
@@ -242,11 +247,11 @@ def linearTravel(startPoint, endPoint, motorList):
 
     # plt.xlabel("time (secs)")
     # plt.ylabel("angle from east (radians)")
-    # minorTicks = np.arange(-np.pi, np.pi, smath.stepAngle)
+    # minorTicks = np.arange(-np.pi, np.pi, smath.stepAngle*4)
     # ax.set_yticks(minorTicks, minor=True)
     # plt.grid(b=True, which="minor")
     # plt.legend()
-    # #plt.show()
+    #plt.show()
     #--------------PLOTTING LINEangleR0POINT2POINT GRAPHS------------------
 
 
