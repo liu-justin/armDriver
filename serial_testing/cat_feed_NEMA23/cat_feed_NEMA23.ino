@@ -1,9 +1,9 @@
-#include <DM542_driver.h>
-DM542_driver R0(2,3,4,42,103);
-DM542_driver RA(5,6,7,34,81);
+#include <Motor.h>
+Motor R0(2,3,4,42,103);
+Motor RA(5,6,7,34,81);
 
 # define MOTOR_COUNT 2
-DM542_driver* motorList[MOTOR_COUNT] = {&R0, &RA};
+Motor* motorList[MOTOR_COUNT] = {&R0, &RA};
 
 int stepsPerRev = 800; // written on the motor driver
 int minorSteps = stepsPerRev/200; // how many minor steps are in between the 200 major steps of a standard stepper motor
@@ -25,7 +25,7 @@ void loop() {
   unsigned long currentTime = millis();
   
   for (int i = 0; i < MOTOR_COUNT; i++) {
-    //DM542_driver* motor = &motorList[i]; was when i replaced all the motorList[i] with motor, but pointers are poop
+    //Motor* motor = &motorList[i]; was when i replaced all the motorList[i] with motor, but pointers are poop
     Serial.print("ml, motor "); Serial.print(i); Serial.print(" state: "); Serial.print(motorList[i]->getState()); Serial.print("~ ");
 
     
@@ -138,7 +138,7 @@ int directionIndex = 0;
 int *timePointer;
 int *directionPointer;
 
-void waitingForStartByte(DM542_driver* motor) {
+void waitingForStartByte(Motor* motor) {
     if (Serial.available() > 0) {
         byte rb = Serial.read();
         Serial.print("Motor ");
@@ -169,7 +169,7 @@ void waitingForStartByte(DM542_driver* motor) {
 
 }
 
-void readingDataFromPy(DM542_driver* motor) {
+void readingDataFromPy(Motor* motor) {
     byte stepUpMark = 0x78;   // x,120
     byte stepEvenMark = 0x79; // y,121
     byte stepDownMark = 0x7A; // z,122

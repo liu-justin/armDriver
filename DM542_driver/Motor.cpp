@@ -1,7 +1,7 @@
 #include "Arduino.h"
-#include "DM542_driver.h"
+#include "Motor.h"
 
-DM542_driver::DM542_driver(int pulse, int direct, int limit, int CW, int CCW) {
+Motor::Motor(int pulse, int direct, int limit, int CW, int CCW) {
 	_pulsePin = pulse;
 	_directionPin = direct;
 	_limitPin = limit;
@@ -19,80 +19,80 @@ DM542_driver::DM542_driver(int pulse, int direct, int limit, int CW, int CCW) {
 }
 
 // forward is positive angle, so CCW
-void DM542_driver::directionForward() {
+void Motor::directionForward() {
 	_direction = true;
 	digitalWrite(_directionPin, _direction);
 }
 
 // this is clockwise
-void DM542_driver::directionBackward() {
+void Motor::directionBackward() {
 	_direction = false;
 	digitalWrite(_directionPin, _direction);
 }
 
-void DM542_driver::directionChange(){
+void Motor::directionChange(){
 	_direction = !_direction;
 	digitalWrite(_directionPin, _direction);
 }
 
 // should be a -1 or 1 coming in
-void DM542_driver::setDirection(int incomingDir) {
+void Motor::setDirection(int incomingDir) {
 	_direction = incomingDir*0.5 + 0.5;
 }
 
-void DM542_driver::setStep(int incomingStep) {
+void Motor::setStep(int incomingStep) {
 	_step = incomingStep;
 }
 
-int DM542_driver::getStep() {
+int Motor::getStep() {
 	return _step;
 }
 
-void DM542_driver::pulse(){
+void Motor::pulse(){
 	digitalWrite(_pulsePin, HIGH);
 	digitalWrite(_pulsePin, LOW);
 	_step += (2*_direction)-1;
 }
 
-void DM542_driver::setState(int incomingState) {
+void Motor::setState(int incomingState) {
 	_state = incomingState;
 	// Serial.print("Setting state to ");
 	// Serial.println(incomingState);
 }
 
-int DM542_driver::getState() {
+int Motor::getState() {
 	return _state;
 }
 
-int DM542_driver::getTimePyCounter() {
+int Motor::getTimePyCounter() {
 	return _timePyCounter;
 }
 
-void DM542_driver::incrementTimePyCounter() {
+void Motor::incrementTimePyCounter() {
 	_timePyCounter++;
 }
 
-int DM542_driver::getCCWFlag() {
+int Motor::getCCWFlag() {
 	return _ccwFlag;
 }
 
-int DM542_driver::getCWFlag() {
+int Motor::getCWFlag() {
 	return _cwFlag;
 }
 
-int DM542_driver::getLimitPin(){
+int Motor::getLimitPin(){
 	return _limitPin;
 }
 
-void DM542_driver::setStartReceivingByte(byte incomingStartByte) {
+void Motor::setStartReceivingByte(byte incomingStartByte) {
 	_startReceivingByte = incomingStartByte;
 }
 
-byte DM542_driver::getStartReceivingByte() {
+byte Motor::getStartReceivingByte() {
 	return _startReceivingByte;
 }
 
-void DM542_driver::showTimePy() {
+void Motor::showTimePy() {
 	Serial.println("Showing the time array in the object");
 	for (int i = 0; i < NUM_BYTES; i++) {
 		Serial.print(timePy[i]);
@@ -100,7 +100,7 @@ void DM542_driver::showTimePy() {
 	}
 }
 
-void DM542_driver::showDirPy() {
+void Motor::showDirPy() {
 	Serial.println("Showing the direction array in the object");
 	for (int i = 0; i < NUM_BYTES; i++) {
 		Serial.print(dirPy[i]);
@@ -108,14 +108,14 @@ void DM542_driver::showDirPy() {
 	}
 }
 
-int DM542_driver::getRelativeMoveCounter() {
+int Motor::getRelativeMoveCounter() {
 	return _relativeMoveCounter;
 }
 
-void DM542_driver::setRelativeMoveCounter(int incomingCounter) {
+void Motor::setRelativeMoveCounter(int incomingCounter) {
 	_relativeMoveCounter = incomingCounter;
 }
 
-void DM542_driver::decrementRelativeMoveCounter() {
+void Motor::decrementRelativeMoveCounter() {
 	_relativeMoveCounter -= 1;
 }

@@ -1,15 +1,15 @@
-#ifndef DM542_driver_h
-#define DM542_driver_h
+#ifndef Motor_h
+#define Motor_h
 
-/*provides stepper DM542_driver control thru single steps*/
+/*provides stepper Motor control thru single steps*/
 
 #include "Arduino.h"
 
 const int NUM_BYTES = 128;
 
-class DM542_driver {
+class Motor {
 	public:
-		DM542_driver(int pulse, int direct, int limit, int CW, int CCW);
+		Motor(int pulse, int direct, int limit, int CW, int CCW);
 		int timePy[NUM_BYTES];
 
 		void showTimePy();

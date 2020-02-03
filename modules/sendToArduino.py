@@ -88,8 +88,9 @@ def sendToArduinoDict(motorList):
 			timeSent = int(round(time*1000 - previousTime)) # rounding the distance, not the times then the distance; also time needs to be converted into ms
 			#print(f"To: time sent is - {timeSent}")
 			previousTime = time*1000 						# update previousTime
+			
 			ser.write((timeSent).to_bytes(1, byteorder="big")) # send the time to Arduino
-
+			print(f"To: sending time and dir data now")
 			waitForArduino("Arduino received a time byte;") # waiting for Arduino to receive a time byte before sending a direction byte
 
 			dirSent = int(np.sign(step)) + 121
