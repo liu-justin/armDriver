@@ -1,5 +1,6 @@
 #include "Arduino.h"
-#include "motorManager.h"
+#include "MotorManager.h"
+#include "Motor.h"
 
 motorManager::motorManager(Motor* R0, Motor* RA) {
 	Motor* _motorList = {R0, RA};
