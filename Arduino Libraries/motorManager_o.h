@@ -11,7 +11,7 @@ class motorManager {
 
 		
 	private:
-		Motor* _smotorList[];
+		Motor* _motorList[];
 };
 
 #endif

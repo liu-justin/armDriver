@@ -1,4 +1,5 @@
 #include <Motor.h>
+#include <MotorManager.h>
 Motor R0(2,3,4,42,103);
 Motor RA(5,6,7,34,81);
 

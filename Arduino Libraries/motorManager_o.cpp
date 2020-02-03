@@ -2,7 +2,7 @@
 #include "motorManager.h"
 
 motorManager::motorManager(Motor* R0, Motor* RA) {
-	_motorList = {R0, RA};
+	Motor* _motorList = {R0, RA};
 
 
 }
