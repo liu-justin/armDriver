@@ -2,10 +2,14 @@
 #include "MotorManager.h"
 #include "Motor.h"
 
-motorManager::motorManager(Motor* R0, Motor* RA) {
-	Motor* _motorList = {R0, RA};
+motorManager::motorManager(Motor* R0, Motor* RA, Motor* RR = None) {
+	_motorList[0] = R0;
+}
 
-
+template<typename... Args>
+auto adder(Args... args) {
+  return (... + args);
+  // or (args + ...)
 }
 
 // // forward is positive angle, so CCW
