@@ -1,16 +1,22 @@
 #include "Arduino.h"
 #include "MotorManager.h"
 #include "Motor.h"
+#include <stdio.h>
+#include <stdarg.h>
 
-motorManager::motorManager(Motor* R0, Motor* RA, Motor* RR = None) {
-	_motorList[0] = R0;
+MotorManager::MotorManager(int count, ...) {
+	va_list ap;
+	_motorList = (Motor*)malloc(sizeof(Motor)*count);
+
+	va_start(ap, count);
+	for (int i = 0; i < count; i++) {
+		//_motorList[i] = va_arg(ap, Motor*);
+		Motor* a = va_arg(ap, Motor*);
+		_motorList[i] = a;
+	}
+	va_end(ap);
 }
 
-template<typename... Args>
-auto adder(Args... args) {
-  return (... + args);
-  // or (args + ...)
-}
 
 // // forward is positive angle, so CCW
 // void Motor::directionForward() {

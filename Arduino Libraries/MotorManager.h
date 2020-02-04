@@ -6,15 +6,17 @@
 #include "Arduino.h"
 #include "Motor.h"
 
-class motorManager {
+class MotorManager {
 	public:
-		motorManager(Motor* R0, Motor* RA);
+		//motorManager(Motor* R0, Motor* RA);
+		MotorManager(int count, ...);
 
 		void setAllStates(int incomingState);
 
 		
 	private:
-		Motor* _motorList[2];
+		// delcare the pointer to the first motor
+		Motor* _motorList;
 };
 
 #endif

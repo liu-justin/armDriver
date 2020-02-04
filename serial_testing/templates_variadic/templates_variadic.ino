@@ -1,5 +1,4 @@
 #include <Motor.h>
-#include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
 
@@ -16,11 +15,10 @@ void loop() {
 
 }
 
-// first param is how many params you want to average, the rest are the params
-// this works
-
 Motor* motorList[2];
 
+// first param is how many params you want to average, the rest are the params
+// this works
 void motorVariadic(int count, ...)
 {
     va_list ap;
