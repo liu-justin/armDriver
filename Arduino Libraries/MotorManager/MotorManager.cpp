@@ -4,95 +4,108 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+// MotorManager::MotorManager(int count, ...) {
+// 	va_list ap;
+
+// 	va_start(ap, count);
+// 	for (int i = 0; i < count; i++) {
+// 		//_motorList[i] = va_arg(ap, Motor*);
+// 		_motorList[i] = va_arg(ap, Motor*);
+// 	}
+// 	va_end(ap);
+// }
+
 MotorManager::MotorManager(int count, ...) {
 	va_list ap;
-	_motorList = (Motor*)malloc(sizeof(Motor)*count);
 
 	va_start(ap, count);
 	for (int i = 0; i < count; i++) {
 		//_motorList[i] = va_arg(ap, Motor*);
-		Motor* a = va_arg(ap, Motor*);
-		_motorList[i] = a;
+		_motorList[i] = va_arg(ap, Motor*);
 	}
 	va_end(ap);
 }
 
+// forward is positive angle, so CCW
+Motor* MotorManager::getMotor(int index) {
+	return _motorList[index];
+}
 
-// // forward is positive angle, so CCW
-// void Motor::directionForward() {
-// 	_direction = true;
-// 	digitalWrite(_directionPin, _direction);
-// }
+void MotorManager::setAllStates(int incomingState) {
+	for (int i = 0; i < MOTORLISTLENGTH; i++) {
+		_motorList[i]->setState(incomingState);
+	}
+}
 
 // // this is clockwise
-// void Motor::directionBackward() {
+// void MotorManager::directionBackward() {
 // 	_direction = false;
 // 	digitalWrite(_directionPin, _direction);
 // }
 
-// void Motor::directionChange(){
+// void MotorManager::directionChange(){
 // 	_direction = !_direction;
 // 	digitalWrite(_directionPin, _direction);
 // }
 
 // // should be a -1 or 1 coming in
-// void Motor::setDirection(int incomingDir) {
+// void MotorManager::setDirection(int incomingDir) {
 // 	_direction = incomingDir*0.5 + 0.5;
 // }
 
-// void Motor::setStep(int incomingStep) {
+// void MotorManager::setStep(int incomingStep) {
 // 	_step = incomingStep;
 // }
 
-// int Motor::getStep() {
+// int MotorManager::getStep() {
 // 	return _step;
 // }
 
-// void Motor::pulse(){
+// void MotorManager::pulse(){
 // 	digitalWrite(_pulsePin, HIGH);
 // 	digitalWrite(_pulsePin, LOW);
 // 	_step += (2*_direction)-1;
 // }
 
-// void Motor::setState(int incomingState) {
+// void MotorManager::setState(int incomingState) {
 // 	_state = incomingState;
 // 	// Serial.print("Setting state to ");
 // 	// Serial.println(incomingState);
 // }
 
-// int Motor::getState() {
+// int MotorManager::getState() {
 // 	return _state;
 // }
 
-// int Motor::getTimePyCounter() {
+// int MotorManager::getTimePyCounter() {
 // 	return _timePyCounter;
 // }
 
-// void Motor::incrementTimePyCounter() {
+// void MotorManager::incrementTimePyCounter() {
 // 	_timePyCounter++;
 // }
 
-// int Motor::getCCWFlag() {
+// int MotorManager::getCCWFlag() {
 // 	return _ccwFlag;
 // }
 
-// int Motor::getCWFlag() {
+// int MotorManager::getCWFlag() {
 // 	return _cwFlag;
 // }
 
-// int Motor::getLimitPin(){
+// int MotorManager::getLimitPin(){
 // 	return _limitPin;
 // }
 
-// void Motor::setStartReceivingByte(byte incomingStartByte) {
+// void MotorManager::setStartReceivingByte(byte incomingStartByte) {
 // 	_startReceivingByte = incomingStartByte;
 // }
 
-// byte Motor::getStartReceivingByte() {
+// byte MotorManager::getStartReceivingByte() {
 // 	return _startReceivingByte;
 // }
 
-// void Motor::showTimePy() {
+// void MotorManager::showTimePy() {
 // 	Serial.println("Showing the time array in the object");
 // 	for (int i = 0; i < NUM_BYTES; i++) {
 // 		Serial.print(timePy[i]);
@@ -100,7 +113,7 @@ MotorManager::MotorManager(int count, ...) {
 // 	}
 // }
 
-// void Motor::showDirPy() {
+// void MotorManager::showDirPy() {
 // 	Serial.println("Showing the direction array in the object");
 // 	for (int i = 0; i < NUM_BYTES; i++) {
 // 		Serial.print(dirPy[i]);
@@ -108,14 +121,14 @@ MotorManager::MotorManager(int count, ...) {
 // 	}
 // }
 
-// int Motor::getRelativeMoveCounter() {
+// int MotorManager::getRelativeMoveCounter() {
 // 	return _relativeMoveCounter;
 // }
 
-// void Motor::setRelativeMoveCounter(int incomingCounter) {
+// void MotorManager::setRelativeMoveCounter(int incomingCounter) {
 // 	_relativeMoveCounter = incomingCounter;
 // }
 
-// void Motor::decrementRelativeMoveCounter() {
+// void MotorManager::decrementRelativeMoveCounter() {
 // 	_relativeMoveCounter -= 1;
 // }
