@@ -2,11 +2,12 @@
 #include <stdlib.h>
 
 #include "MotorVector.h"
+#include "Motor.h"
 
 MotorVector::MotorVector() {
     _capacity = VECTOR_INIT_CAPACITY;
     _total = 0;
-    _items = malloc(sizeof(void *) * _capacity);
+    _items = malloc(sizeof(Motor) * _capacity);
 }
 
 int MotorVector::total()
@@ -17,10 +18,10 @@ int MotorVector::total()
 static void MotorVector::resize(int incomingCapacity)
 {
     #ifdef DEBUG_ON
-    printf("vector_resize: %d to %d\n", _capacity, incomingCapacity);
+    //("vector_resize: %d to %d\n", _capacity, incomingCapacity);
     #endif
 
-    void **items = realloc(_items, sizeof(void *) * _capacity);
+    Motor *items = realloc(_items, sizeof(Motor) * _capacity);
     if (items) {
         _items = items;
         _capacity = incomingCapacity;
@@ -34,7 +35,7 @@ void MotorVector::add(void *item)
     v->items[v->total++] = item;
 }
 
-void MotorVector::get(int index)
+Motor* MotorVector::get(int index)
 {
     if (index >= 0 && index < _total)
         return _items[index];

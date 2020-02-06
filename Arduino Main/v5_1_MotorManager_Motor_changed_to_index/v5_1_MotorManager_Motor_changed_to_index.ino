@@ -132,13 +132,12 @@ int *timePointer;
 int *directionPointer;
 
 void waitingForStartByte(int index) {
+    Serial.print("while waiting for start byte, ");
     if (Serial.available() > 0) {
         byte rb = Serial.read();
-        Serial.print("Motor ");
-        Serial.print(mm.getMotor(index)->getStartReceivingByte());
-        Serial.print(" got the following byte: ");
+        Serial.print("got the following byte: ");
         Serial.print(rb);
-        Serial.print("~ ");
+        Serial.print("; ");
 
         if (rb == mm.getMotor(index)->getStartReceivingByte()) {
             
@@ -150,14 +149,14 @@ void waitingForStartByte(int index) {
             directionPointer = mm.getMotor(index)->dirPy;
             mm.getMotor(index)->setState(7);
             mm.setAllStatesBut(1, index); 
-            Serial.println("yay Arduino received start receiving bytes ");
+            Serial.println("it is the start receiving bytes ");
         }
         else {
-          Serial.println("Arduino received a byte, but not the right start bytes");
+          Serial.println("it is not the right start bytes");
         }
     }
     else {
-      Serial.println("Did not receive any bytes at all");
+      Serial.println("did not receive any bytes at all");
     }
 
 }
@@ -172,15 +171,12 @@ void readingDataFromPy(int index) {
     byte rb;
     while (Serial.available() > 0) {
       rb = Serial.read();
-      Serial.print("Motor ");
-      Serial.print(mm.getMotor(index)->getStartReceivingByte());
-      Serial.print(" got the following byte: ");
+      Serial.print("while reading data got the following byte: ");
       Serial.print(rb);
       Serial.print("~ ");
       
       // the byte is a direction byte
       if (rb == stepUpMark || rb == stepEvenMark || rb == stepDownMark) {
-//          Serial.print("Arduino received a direction byte; ");
           *(directionPointer + directionIndex) = rb - 'y'; // I think this in Python is just motor.dirPy[directionIndex] = rb + '|'
           directionIndex++;
           if (directionIndex >= NUM_BYTES) {
@@ -195,11 +191,6 @@ void readingDataFromPy(int index) {
               timeIndex = NUM_BYTES - 1;
           }
           Serial.print("Arduino received a time byte;");
-//          Serial.print(", this is the timeIndex: ");
-//          Serial.print(timeIndex);
-//          Serial.print("| ");
-//          
-//          Serial.print("~ ");
       }
 
       else if (rb == endMark) {
