@@ -6,22 +6,26 @@
 #include "Arduino.h"
 #include "Motor.h"
 
-const int MOTORLISTLENGTH = 2;
+const int MOTOR_COUNT = 2;
 
 class MotorManager {
 	public:
 		//motorManager(Motor* R0, Motor* RA);
-		MotorManager(int count, ...);
+		MotorManager(...);
 		Motor* getMotor(int index);
 
 		void setAllStates(int incomingState);
+		void setAllStatesBut(int incomingState, int index);
+		void revertAllStates();
+		void revertAllStatesBut(int index);
+
+		bool checkStates(int incomingState);
 		// need to change to different sizes when I use more motors
 		
 		
 	private:
 		// delcare the pointer to the first motor
-		int _motorListLength = 2;
-		Motor *_motorList[MOTORLISTLENGTH];
+		Motor *_motorList[MOTOR_COUNT];
 		
 };
 

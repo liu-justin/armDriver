@@ -37,6 +37,7 @@ class Motor {
 		
 		void setState(int incomingState);
 		int getState();
+		void revertState();
 
 		int getCWFlag();
 		int getCCWFlag();
@@ -62,6 +63,7 @@ class Motor {
 		bool _direction;
 		int _step;
 		int _state;
+		int _statePrevious;
 		int _ccwFlag;
 		int _cwFlag;
 

@@ -4,14 +4,13 @@
 //#include <unwind-cxx.h>
 //#include <utility.h>
 
-
 #include <Motor.h>
 #include <MotorManager.h>
-#include <vector.h>
 Motor R0(2,3,4,42,103);
 Motor RA(5,6,7,34,81);
 
-MotorManager mm(2, &R0, &RA);
+// if you want to add motors, need to add the adjust the MOTORLISTLENGTH in MotorManager
+MotorManager mm(&R0, &RA);
 
 // importing this stuff from StandardC++ library didnt work
 //std::vector<int> v;

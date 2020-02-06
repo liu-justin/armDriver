@@ -13,6 +13,7 @@ Motor::Motor(int pulse, int direct, int limit, int CW, int CCW) {
 	_cwFlag = CW;
 
 	_state = 1;
+	_statePrevious = 1;
 	_timePyCounter = 0;
 
 
@@ -55,6 +56,7 @@ void Motor::pulse(){
 }
 
 void Motor::setState(int incomingState) {
+	_statePrevious = _state;
 	_state = incomingState;
 	// Serial.print("Setting state to ");
 	// Serial.println(incomingState);
@@ -62,6 +64,10 @@ void Motor::setState(int incomingState) {
 
 int Motor::getState() {
 	return _state;
+}
+
+void Motor::revertState() {
+	_state = _statePrevious;
 }
 
 int Motor::getTimePyCounter() {

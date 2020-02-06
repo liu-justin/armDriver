@@ -11,7 +11,7 @@
 #define VECTOR_TOTAL(vec) vector_total(&vec)
 #define VECTOR_FREE(vec) vector_free(&vec)
 
-typedef struct vector {
+class Vector {
     void **items;
     int capacity;
     int total;

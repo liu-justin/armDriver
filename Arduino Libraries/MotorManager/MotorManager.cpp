@@ -15,11 +15,11 @@
 // 	va_end(ap);
 // }
 
-MotorManager::MotorManager(int count, ...) {
+MotorManager::MotorManager(...) {
 	va_list ap;
 
-	va_start(ap, count);
-	for (int i = 0; i < count; i++) {
+	va_start(ap, MOTOR_COUNT);
+	for (int i = 0; i < MOTOR_COUNT; i++) {
 		//_motorList[i] = va_arg(ap, Motor*);
 		_motorList[i] = va_arg(ap, Motor*);
 	}
@@ -32,9 +32,37 @@ Motor* MotorManager::getMotor(int index) {
 }
 
 void MotorManager::setAllStates(int incomingState) {
-	for (int i = 0; i < MOTORLISTLENGTH; i++) {
+	for (int i = 0; i < MOTOR_COUNT; i++) {
 		_motorList[i]->setState(incomingState);
 	}
+}
+
+void MotorManager::setAllStatesBut(int incomingState, int index) {
+	for (int i = 0; i < MOTOR_COUNT; i++) {
+		if (i != index)
+			_motorList[i]->setState(incomingState);
+	}
+}
+
+void MotorManager::revertAllStates() {
+	for (int i = 0; i < MOTOR_COUNT; i++) {
+		_motorList[i]->revertState();
+	}	
+}
+
+void MotorManager::revertAllStatesBut(int index) {
+	for (int i = 0; i < MOTOR_COUNT; i++) {
+		if(i != index)
+			_motorList[i]->revertState();
+	}	
+}
+
+bool MotorManager::checkStates(int incomingState) {
+	for (int i = 0; i < MOTOR_COUNT; i++) {
+		if (_motorList[i]->getState() != incomingState)
+			return false;
+	}
+	return true;
 }
 
 // // this is clockwise
