@@ -16,6 +16,7 @@ void setup() {
   RA.setStartReceivingByte(startRAMark);
   // setting state to homing intialization
   mm.setAllStates(5);
+  Serial.print("Arduino is ready!");
 
 }
 
@@ -24,10 +25,10 @@ void loop() {
   
   for (int i = 0; i < MOTOR_COUNT; i++) {
     //Motor* motor = &mm.getMotor(i); was when i replaced all the mm.getMotor(i) with motor, but pointers are poop
-    Serial.print("ml, motor "); Serial.print(i); Serial.print(" state: "); Serial.print(mm.getMotor(index)->getState()); Serial.print("~ ");
+    Serial.print("ml, motor "); Serial.print(i); Serial.print(" state: "); Serial.print(mm.getMotor(i)->getState()); Serial.print("; ");
 
     
-    switch(mm.getMotor(index)->getState()){
+    switch(mm.getMotor(i)->getState()){
       case 0: // error
         Serial.print(i);
         Serial.println(" errored, limit switch was pressed");
@@ -43,87 +44,85 @@ void loop() {
         break;
 
       case 5: // receiving from Python intialization
-          mm.getMotor(index)->setState(6);
-          Serial.print("s6");
+          mm.getMotor(i)->setState(6);
         break;
 
       case 6: // waiting for the start byte from Arduino
-        waitingForStartByte(mm.getMotor(i));
+        waitingForStartByte(i);
         break;
 
       case 7: // reading in data
-        Serial.print("s7");
-        Serial.print("~ ");
-        readingDataFromPy(mm.getMotor(i));
+        readingDataFromPy(i);
         break;
 
       case 15: // homing initialization
-        mm.getMotor(index)->directionForward(); // i think backwards is CCW from drive side
-        mm.getMotor(index)->setState(16);
+        mm.getMotor(i)->directionForward(); // i think backwards is CCW from drive side
+        mm.getMotor(i)->setState(16);
         break;
         
       case 16: // homing
-        if (currentTime - mm.getMotor(index)->previousTime > 50) { // 50 is a slow homing speed for 1600, for 800 its pretty fast
-          mm.getMotor(index)->pulse();
-          mm.getMotor(index)->previousTime = currentTime;
+        if (currentTime - mm.getMotor(i)->previousTime > 50) { // 50 is a slow homing speed for 1600, for 800 its pretty fast
+          mm.getMotor(i)->pulse();
+          mm.getMotor(i)->previousTime = currentTime;
         } 
 
         // limit switch has been hit
-        if (digitalRead(mm.getMotor(index)->getLimitPin()) == 1){
-          mm.getMotor(index)->directionChange();
+        if (digitalRead(mm.getMotor(i)->getLimitPin()) == 1){
+          mm.getMotor(i)->directionChange();
           
-          mm.getMotor(index)->setStep(mm.getMotor(index)->getCCWFlag()*minorSteps); // need to add this to the initialization as a parameter
-          mm.getMotor(index)->setState(17);
+          mm.getMotor(i)->setStep(mm.getMotor(i)->getCCWFlag()*minorSteps); // need to add this to the initialization as a parameter
+          mm.getMotor(i)->setState(17);
         }
         break;
         
       case 17: // homing ending, just getting off the limit switch so it isnt tripped while moving
-        if (currentTime - mm.getMotor(index)->previousTime > 50) { // 50 is a slow homing speed
-          mm.getMotor(index)->pulse();
-          mm.getMotor(index)->previousTime = currentTime;
+        if (currentTime - mm.getMotor(i)->previousTime > 50) { // 50 is a slow homing speed
+          mm.getMotor(i)->pulse();
+          mm.getMotor(i)->previousTime = currentTime;
         } 
         
         // return to a known position, in this case im down 135deg from mark on each so i dont need a seperate home flag in the initialization
-        if (mm.getMotor(index)->getStep()/minorSteps == 75){
-          mm.getMotor(index)->setState(1);
+        if (mm.getMotor(i)->getStep()/minorSteps == 75){
+          mm.getMotor(i)->setState(1);
         }
         break;
         
       case 25: // initialization of linear movement from timePy
-        mm.getMotor(index)->previousTime = millis();
-        mm.getMotor(index)->previousMajorStep = mm.getMotor(index)->getStep();
-        mm.getMotor(index)->setState(26);
+        mm.getMotor(i)->previousTime = millis();
+        mm.getMotor(i)->previousMajorStep = mm.getMotor(i)->getStep();
+        mm.getMotor(i)->setState(26);
         break;
         
       case 26: // linear moving from delayTime array
-        if (currentTime - mm.getMotor(index)->previousTime > mm.getMotor(index)->timePy[mm.getMotor(index)->getTimePyCounter()]) {
-          if (mm.getMotor(index)->dirPy[mm.getMotor(index)->getTimePyCounter()] != 0){
+        if (currentTime - mm.getMotor(i)->previousTime > mm.getMotor(i)->timePy[mm.getMotor(i)->getTimePyCounter()]) {
+          if (mm.getMotor(i)->dirPy[mm.getMotor(i)->getTimePyCounter()] != 0){
             // this could be backwards
-            mm.getMotor(index)->setDirection(mm.getMotor(index)->dirPy[mm.getMotor(index)->getTimePyCounter()]);
-            mm.getMotor(index)->pulse();
+            mm.getMotor(i)->setDirection(mm.getMotor(i)->dirPy[mm.getMotor(i)->getTimePyCounter()]);
+            mm.getMotor(i)->pulse();
             // only for when Python sends major steps only
 //            for (int j = 0; j < minorSteps; j++) {
 //              mm.getMotor(index)->pulse();
 //            }
           }
-          mm.getMotor(index)->previousTime = currentTime;
-          mm.getMotor(index)->incrementTimePyCounter();
+          mm.getMotor(i)->previousTime = currentTime;
+          mm.getMotor(i)->incrementTimePyCounter();
         }
 
         // if it hits a limit switch, go to 99(error), it went out of bounds
-        if (digitalRead(mm.getMotor(index)->getLimitPin()) == 1){
-          mm.getMotor(index)->setState(99);
+        if (digitalRead(mm.getMotor(i)->getLimitPin()) == 1){
+          mm.getMotor(i)->setState(99);
         }
 
         // should be if the proper number read (last number mark of timePy)
-        if (mm.getMotor(index)->getTimePyCounter() > NUM_BYTES) {
-          mm.getMotor(index)->setState(1);
+        if (mm.getMotor(i)->getTimePyCounter() > NUM_BYTES) {
+          mm.getMotor(i)->setState(1);
         }
         break;
 
       case 35: // initialization of relative movement
         break;
     }
+    Serial.print("~ ");
   }
 }
 
@@ -151,15 +150,14 @@ void waitingForStartByte(int index) {
             directionPointer = mm.getMotor(index)->dirPy;
             mm.getMotor(index)->setState(7);
             mm.setAllStatesBut(1, index); 
-            Serial.println("yay Arduino received a start receiving byte ");
-            Serial.println("second time for catching Arduino received a start receiving byte");
+            Serial.println("yay Arduino received start receiving bytes ");
         }
         else {
-          Serial.println("nope Arduino received a start receiving byte ");
+          Serial.println("Arduino received a byte, but not the right start bytes");
         }
     }
     else {
-      Serial.println("waiting for serial for the start byte");
+      Serial.println("Did not receive any bytes at all");
     }
 
 }

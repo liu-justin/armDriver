@@ -71,7 +71,7 @@ def sendToArduinoDict(motorList):
 		# sending the startByte twice to catch the correct motor wherever the loop is
 		for i in range(len(motorList)):
 			ser.write((m.arduinoStartByte).to_bytes(1, byteorder="big")) # write the start Byte of the motor to tell Arduino which motor
-			waitForArduino("Arduino received a start receiving byte")	
+		waitForArduino("start receiving bytes")	# when i put this in the for loop, first one caught motor 1, but second one was too late for motor 0 and also caught motor 1
 
 		previousTime = next(iter(m.stepDict.items()))[0]
 		previousStep = next(iter(m.stepDict.items()))[1]
