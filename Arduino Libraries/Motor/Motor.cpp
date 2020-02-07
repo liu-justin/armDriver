@@ -118,6 +118,19 @@ void Motor::showDirPy() {
 	}
 }
 
+void Motor::setReceivedTime(int incomingTime) {
+	_receivedTime = incomingTime;
+}
+void Motor::setReceivedDir(int incomingDir) {
+	_receivedDir = incomingDir;
+}
+int Motor::getReceivedTime() {
+	return _receivedTime;
+}
+int Motor::getReceivedDir() {
+	return _receivedDir;
+}
+
 int Motor::getRelativeMoveCounter() {
 	return _relativeMoveCounter;
 }

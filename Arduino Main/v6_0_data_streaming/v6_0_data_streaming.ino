@@ -9,7 +9,7 @@ int stepsPerRev = 800; // written on the motor driver
 int minorSteps = stepsPerRev/200; // how many minor steps are in between the 200 major steps of a standard stepper motor
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(57600);
   byte startR0Mark = 0x69;     // g,105
   byte startRAMark = 0x6A;     // h,106
   R0.setStartReceivingByte(startR0Mark);
@@ -25,7 +25,7 @@ void loop() {
   
   for (int i = 0; i < MOTOR_COUNT; i++) {
     //Motor* motor = &mm.getMotor(i); was when i replaced all the mm.getMotor(i) with motor, but pointers are poop
-    Serial.print("ml, motor "); Serial.print(i); Serial.print(" state: "); Serial.print(mm.getMotor(i)->getState()); Serial.print(", statePrev: "); Serial.print(mm.getMotor(i)->getStatePrevious()); Serial.println("; ");
+    Serial.print("ml, motor "); Serial.print(i); Serial.print(" state: "); Serial.print(mm.getMotor(i)->getState()); Serial.print(", statePrev: "); Serial.print(mm.getMotor(i)->getStatePrevious()); Serial.print("; ");
  
     switch(mm.getMotor(i)->getState()){
       case 0: // error
@@ -163,7 +163,6 @@ void waitingForStartByte(int index) {
     else {
       Serial.println("did not receive any bytes at all");
     }
-
 }
 
 void readingDataFromPy(int index) {
@@ -204,5 +203,25 @@ void readingDataFromPy(int index) {
         mm.getMotor(index)->setState(8);
         mm.revertAllStatesBut(index);
       }
+    }
+}
+
+void waitandRead(int index) {
+    Serial.print("while waiting for start byte, ");
+    if (Serial.available() > 3) { // need the start byte, time byte, and dir byte; safeguard for when Arduino clears the buffer faster than Python can fill it
+        byte rb = Serial.peek(); // peek instead of read, so I don't have to send two from Python
+        Serial.print("got the following byte: "); Serial.print(rb); Serial.print(", ");
+        if (rb == mm.getMotor(index)->getStartReceivingByte()) {
+          rb = Serial.read(); // clears the start byte
+          mm.getMotor(index)->setReceivedTime(Serial.read()); // grabs the time byte
+          mm.getMotor(index)->setReceivedDir(Serial.read());  // grabs the dir byte
+          Serial.println("it is the start receiving bytes ");
+        }
+        else {
+          Serial.println("it is not the right start bytes");
+        }
+    }
+    else {
+      Serial.println("did not receive any bytes at all");
     }
 }
