@@ -5,7 +5,7 @@
 
 #include "Arduino.h"
 
-const int NUM_BYTES = 128;
+const int NUM_BYTES = 64;
 
 class Motor {
 	public:
@@ -37,6 +37,7 @@ class Motor {
 		
 		void setState(int incomingState);
 		int getState();
+		int getStatePrevious();
 		void revertState();
 
 		int getCWFlag();

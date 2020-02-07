@@ -9,13 +9,13 @@ int stepsPerRev = 800; // written on the motor driver
 int minorSteps = stepsPerRev/200; // how many minor steps are in between the 200 major steps of a standard stepper motor
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(57600);
   byte startR0Mark = 0x69;     // g,105
   byte startRAMark = 0x6A;     // h,106
   R0.setStartReceivingByte(startR0Mark);
   RA.setStartReceivingByte(startRAMark);
   // setting state to homing intialization
-  mm.setAllStates(5);
+  mm.setAllStates(15);
   Serial.print("Arduino is ready!");
 
 }
@@ -25,9 +25,8 @@ void loop() {
   
   for (int i = 0; i < MOTOR_COUNT; i++) {
     //Motor* motor = &mm.getMotor(i); was when i replaced all the mm.getMotor(i) with motor, but pointers are poop
-    Serial.print("ml, motor "); Serial.print(i); Serial.print(" state: "); Serial.print(mm.getMotor(i)->getState()); Serial.print("; ");
-
-    
+    Serial.print("ml, motor "); Serial.print(i); Serial.print(" state: "); Serial.print(mm.getMotor(i)->getState()); Serial.print(", statePrev: "); Serial.print(mm.getMotor(i)->getStatePrevious()); Serial.print("; ");
+ 
     switch(mm.getMotor(i)->getState()){
       case 0: // error
         Serial.print(i);
@@ -37,11 +36,13 @@ void loop() {
         // might have a UI control, in which it sends data to motors and case 1 reads it
         // if all motors are ready, go to driving at 25
         if (mm.checkStates(1)) {
-//          mm.getMotor(index)->showTimePy();
-//          mm.getMotor(index)->showDirPy();
+
           mm.setAllStates(25);
         }
         break;
+
+      case 2: // ready buffer, only to reset the statePrev
+
 
       case 5: // receiving from Python intialization
           mm.getMotor(i)->setState(6);
@@ -53,6 +54,12 @@ void loop() {
 
       case 7: // reading in data
         readingDataFromPy(i);
+        break;
+        
+      case 8: // receiving from Python ending buffer, to reset statePrev
+        mm.getMotor(i)->showTimePy();
+        mm.getMotor(i)->showDirPy();
+        mm.getMotor(i)->setState(15);
         break;
 
       case 15: // homing initialization
@@ -135,9 +142,7 @@ void waitingForStartByte(int index) {
     Serial.print("while waiting for start byte, ");
     if (Serial.available() > 0) {
         byte rb = Serial.read();
-        Serial.print("got the following byte: ");
-        Serial.print(rb);
-        Serial.print("; ");
+        Serial.print("got the following byte: "); Serial.print(rb); Serial.print(", ");
 
         if (rb == mm.getMotor(index)->getStartReceivingByte()) {
             
@@ -171,9 +176,9 @@ void readingDataFromPy(int index) {
     byte rb;
     while (Serial.available() > 0) {
       rb = Serial.read();
-      Serial.print("while reading data got the following byte: ");
-      Serial.print(rb);
-      Serial.print("~ ");
+      Serial.print("while reading data got the following byte: "); Serial.print(rb); Serial.print(", ");
+      
+      
       
       // the byte is a direction byte
       if (rb == stepUpMark || rb == stepEvenMark || rb == stepDownMark) {
@@ -196,7 +201,7 @@ void readingDataFromPy(int index) {
       else if (rb == endMark) {
         
         Serial.print("Arduino received an endMark;");
-        mm.getMotor(index)->setState(15);
+        mm.getMotor(index)->setState(8);
         mm.revertAllStatesBut(index);
       }
     }

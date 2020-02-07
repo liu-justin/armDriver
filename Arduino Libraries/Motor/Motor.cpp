@@ -66,6 +66,10 @@ int Motor::getState() {
 	return _state;
 }
 
+int Motor::getStatePrevious() {
+	return _statePrevious;
+}
+
 void Motor::revertState() {
 	_state = _statePrevious;
 }

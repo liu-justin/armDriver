@@ -17,7 +17,7 @@ void setup() {
   RA.setStartReceivingByte(startRAMark);
   // setting state to homing intialization
   for (int i = 0; i < MOTOR_COUNT; i++) {
-    motorList[i]->setState(5);
+    motorList[i]->setState(15);
   }
 
 }
@@ -75,8 +75,10 @@ void loop() {
           motorList[i]->previousTime = currentTime;
         } 
 
+        Serial.println(digitalRead(motorList[i]->getLimitPin()));
         // limit switch has been hit
         if (digitalRead(motorList[i]->getLimitPin()) == 1){
+          
           motorList[i]->directionChange();
           
           motorList[i]->setStep(motorList[i]->getCCWFlag()*minorSteps); // need to add this to the initialization as a parameter
