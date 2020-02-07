@@ -163,7 +163,6 @@ void waitingForStartByte(int index) {
     else {
       Serial.println("did not receive any bytes at all");
     }
-
 }
 
 void readingDataFromPy(int index) {
@@ -204,5 +203,25 @@ void readingDataFromPy(int index) {
         mm.getMotor(index)->setState(8);
         mm.revertAllStatesBut(index);
       }
+    }
+}
+
+void waitandRead(int index) {
+    Serial.print("while waiting for start byte, ");
+    if (Serial.available() > 3) { // need the start byte, time byte, and dir byte; safeguard for when Arduino clears the buffer faster than Python can fill it
+        byte rb = Serial.peek(); // peek instead of read, so I don't have to send two from Python
+        Serial.print("got the following byte: "); Serial.print(rb); Serial.print(", ");
+        if (rb == mm.getMotor(index)->getStartReceivingByte()) {
+          rb = Serial.read(); // clears the start byte
+          mm.getMotor(index)->setReceivedTime(Serial.read()); // grabs the time byte
+          mm.getMotor(index)->setReceivedDir(Serial.read());  // grabs the dir byte
+          Serial.println("it is the start receiving bytes ");
+        }
+        else {
+          Serial.println("it is not the right start bytes");
+        }
+    }
+    else {
+      Serial.println("did not receive any bytes at all");
     }
 }

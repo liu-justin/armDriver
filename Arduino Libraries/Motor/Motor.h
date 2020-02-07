@@ -11,11 +11,15 @@ class Motor {
 	public:
 		Motor(int pulse, int direct, int limit, int CW, int CCW);
 		int timePy[NUM_BYTES];
-
+		int dirPy[NUM_BYTES];
 		void showTimePy();
 		void showDirPy();
-
-		int dirPy[NUM_BYTES];
+		
+		void setReceivedTime(int incomingTime);
+		void setReceivedDir(int incomingDir);
+		int getReceivedTime();
+		int getReceivedDir();
+		
 		int getTimePyCounter();
 		void incrementTimePyCounter();
 		void setStartReceivingByte(byte incomingStartByte);
@@ -58,6 +62,9 @@ class Motor {
 		int _directionPin;
 		int _limitPin;
 		int _startReceivingByte;
+
+		int _receivedTime;
+		int _receivedDir;
 
 		int _timePyCounter;
 		int _relativeMoveCounter;
