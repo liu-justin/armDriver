@@ -9,7 +9,7 @@ int stepsPerRev = 800; // written on the motor driver
 int minorSteps = stepsPerRev/200; // how many minor steps are in between the 200 major steps of a standard stepper motor
 
 void setup() {
-  Serial.begin(57600);
+  Serial.begin(9600);
   byte startR0Mark = 0x69;     // g,105
   byte startRAMark = 0x6A;     // h,106
   R0.setStartReceivingByte(startR0Mark);
@@ -25,7 +25,7 @@ void loop() {
   
   for (int i = 0; i < MOTOR_COUNT; i++) {
     //Motor* motor = &mm.getMotor(i); was when i replaced all the mm.getMotor(i) with motor, but pointers are poop
-    Serial.print("ml, motor "); Serial.print(i); Serial.print(" state: "); Serial.print(mm.getMotor(i)->getState()); Serial.print(", statePrev: "); Serial.print(mm.getMotor(i)->getStatePrevious()); Serial.print("; ");
+    Serial.print("ml, motor "); Serial.print(i); Serial.print(" state: "); Serial.print(mm.getMotor(i)->getState()); Serial.print(", statePrev: "); Serial.print(mm.getMotor(i)->getStatePrevious()); Serial.println("; ");
  
     switch(mm.getMotor(i)->getState()){
       case 0: // error
