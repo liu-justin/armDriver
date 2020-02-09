@@ -28,5 +28,7 @@ def main():
 
 		#a.waitForArduino("Arduino is ready!")
 		#a.sendToArduinoDict(motorList)
+		while 1==1:
+			a.communicateWithArduino()
 		
 main()

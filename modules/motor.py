@@ -10,6 +10,7 @@ class Motor:
         self.timeList = []
         self.stepList = []
         self.stepTuple = []
+        self.tupleCounter = 0
         self.stepDict = {}
         
     def listSteps(self):

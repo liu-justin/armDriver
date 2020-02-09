@@ -65,5 +65,26 @@ def sendToArduinoDict(motorList):
 	while 1==1:
 		waitForTilde()
 
+
+# dir is sent tail end, where the change in step happens at the end of the period
+def initiateWithArduino(motorList):
+	for m in motorList:
+		ser.write((m.arduinoStartByte).to_bytes(1, byteorder="big")) # start byte
+		ser.write((m.stepTuple[tupleCounter][0]).to_bytes(1, byteorder="big")) # time byte
+		ser.write((m.stepTuple[tupleCounter][1]).to_bytes(1, byteorder="big")) # dir byte
+		tupleCounter += 1
+		ser.write((m.arduinoStartByte).to_bytes(1, byteorder="big")) # start byte
+		ser.write((m.stepTuple[tupleCounter][0]).to_bytes(1, byteorder="big")) # time byte
+		ser.write((m.stepTuple[tupleCounter][1]).to_bytes(1, byteorder="big")) # dir byte
+
 def communicateWithArduino(motorList):
-	
+	if ser.available():
+		# msg received will be an index, need to navigate to the correct motor and send the correct values
+		index = ser.read().decode("unicode_escape")
+
+		
+		ser.write((motorList[index].arduinoStartByte).to_bytes(1, byteorder="big")) # start byte
+		ser.write((motorList[index].stepTuple[tupleCounter][0]).to_bytes(1, byteorder="big")) # time byte
+		ser.write((motorList[index].stepTuple[tupleCounter][1]).to_bytes(1, byteorder="big")) # dir byte
+
+		motorList[index].tupleCounter += 1

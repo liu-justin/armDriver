@@ -9,10 +9,12 @@ class Motor {
 	public:
 		Motor(int pulse, int direct, int limit, int CW, int CCW);
 		
+		void receiveTime(int incomingTime);
+		void receiveDir(int incomingDir);
 		void enqueTime(int incomingTime);
 		void enqueDir(int incomingDir);
-		void dequeTime();
-		void dequeDir();
+		void consumeTime();
+		void consumeDir();
 		int getTime();
 		int getDir();
 

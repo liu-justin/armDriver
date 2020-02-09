@@ -83,16 +83,26 @@ int Motor::getLimitPin(){
 	return _limitPin;
 }
 
+
+
+void Motor::receiveTime(int incomingTime) {
+	_timeNext = incomingTime;
+}
+void Motor::receiveDir(int incomingDir) {
+	_dirNext = incomingDir;
+}
 void Motor::enqueTime(int incomingTime) {
+	_time = _timeNext;
 	_timeNext = incomingTime;
 }
 void Motor::enqueDir(int incomingDir) {
+	_dir = _dirNext;
 	_dirNext = incomingDir;
 }
-void Motor::dequeTime() {
+void Motor::consumeTime() {
 	_time = _timeNext;
 }
-void Motor::dequeDir() {
+void Motor::consumeDir() {
 	_dir = _dirNext;
 }
 
