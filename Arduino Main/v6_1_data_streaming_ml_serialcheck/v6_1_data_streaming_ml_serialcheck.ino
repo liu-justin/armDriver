@@ -12,11 +12,8 @@ void setup() {
   Serial.begin(57600);
   
   // setting state to homing intialization
-  mm.setAllStates(15);
-  Serial.print("Arduino is ready for first Times/Dirs!");
-  // keep looping until all time/dir timeNext/dirNext is filled
-  waitAndReadInit();
-  Serial.print("Ready to receive real data");
+  mm.setAllStates(45);
+  Serial.print("Arduino is ready!");
 
 }
 
@@ -26,7 +23,7 @@ void loop() {
   
   for (int i = 0; i < MOTOR_COUNT; i++) {
     //Motor* motor = &mm.getMotor(i); was when i replaced all the mm.getMotor(i) with motor, but pointers are poop
-    Serial.print("ml, motor "); Serial.print(i); Serial.print(" state: "); Serial.print(mm.getMotor(i)->getState()); Serial.print(", statePrev: "); Serial.print(mm.getMotor(i)->getStatePrevious()); Serial.print("; ");
+    //Serial.print("ml, motor "); Serial.print(i); Serial.print(" state: "); Serial.print(mm.getMotor(i)->getState()); Serial.print(", statePrev: "); Serial.print(mm.getMotor(i)->getStatePrevious()); Serial.print("; ");
  
     switch(mm.getMotor(i)->getState()){
       case 0: // error
@@ -86,7 +83,15 @@ void loop() {
         break;
       case 35: // initialization of relative movement
         break;
-      case 45: // waiting for data from Python
+      case 45: // init for data streaming
+      // keep in the state until all time/dir timeNext/dirNext is filled
+        waitAndReadInit();
+        if (mm.checkTimes()){
+          mm.setAllStates(46);
+          Serial.print("Ready to receive real data");
+            
+        }
+      case 46: // data streaming from Python
         
         if (currentTime - mm.getMotor(i)->previousTime > mm.getMotor(i)->getTime()) {
           
@@ -102,7 +107,7 @@ void loop() {
             mm.getMotor(i)->previousTime = currentTime;
             mm.getMotor(i)->consumeTime();
             mm.getMotor(i)->consumeDir();
-            Serial.println("requesting more data");
+            Serial.println(i);
         }
         if (digitalRead(mm.getMotor(i)->getLimitPin()) == 1){
           mm.getMotor(i)->setState(99);
@@ -110,43 +115,42 @@ void loop() {
         break;
           
       }
-      Serial.print("~ ");
+      //Serial.print("~ ");
     }
   }
 
 
 void waitAndRead() {
-    Serial.print("while waiting for a byte, ");
+    //Serial.print("while waiting for a byte, ");
     while (Serial.available() >= 3) { // need the start byte, time byte, and dir byte; safeguard for when Arduino clears the buffer faster than Python can fill it
         byte rb = Serial.peek(); // peek instead of read, so I don't have to send two from Python
-        Serial.print("got the following byte: "); Serial.print(rb); Serial.print(", ");
+        //Serial.print("got the following byte: "); Serial.print(rb); Serial.print(", ");
         if (rb >= 105 && rb < 105 + MOTOR_COUNT) {
           rb = Serial.read(); // clears the start byte
           int index = rb - 105;
           mm.getMotor(index)->receiveTime(Serial.read()); // grabs the time byte
           mm.getMotor(index)->receiveDir(Serial.read());  // grabs the dir byte
-          Serial.println("got a byte, set the time/dir, and now requesting next byte ");
+          Serial.println(index);
         }
         else {
-          Serial.println("Serial did not start with a start byte");
+          //Serial.println("Serial did not start with a start byte");
         }
     }
 }
 
 void waitAndReadInit() {
-    Serial.print("while waiting for a byte, ");
+    //Serial.print("while waiting for a byte, ");
     while (Serial.available() >= 3) { // need the start byte, time byte, and dir byte; safeguard for when Arduino clears the buffer faster than Python can fill it
         byte rb = Serial.peek(); // peek instead of read, so I don't have to send two from Python
-        Serial.print("got the following byte: "); Serial.print(rb); Serial.print(", ");
+        //Serial.print("got the following byte: "); Serial.print(rb); Serial.print(", ");
         if (rb >= 105 && rb < 105 + MOTOR_COUNT) {
           rb = Serial.read(); // clears the start byte
           int index = rb - 105;
           mm.getMotor(index)->enqueTime(Serial.read()); // grabs the time byte
           mm.getMotor(index)->enqueDir(Serial.read());  // grabs the dir byte
-          Serial.println("got a byte, set the time/dir, and now requesting next byte ");
         }
         else {
-          Serial.println("Serial did not start with a start byte");
+          //Serial.println("Serial did not start with a start byte");
         }
     }
 }
