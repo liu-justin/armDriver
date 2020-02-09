@@ -14,9 +14,6 @@ Motor::Motor(int pulse, int direct, int limit, int CW, int CCW) {
 
 	_state = 1;
 	_statePrevious = 1;
-	_timePyCounter = 0;
-
-
 }
 
 // forward is positive angle, so CCW
@@ -74,14 +71,6 @@ void Motor::revertState() {
 	_state = _statePrevious;
 }
 
-int Motor::getTimePyCounter() {
-	return _timePyCounter;
-}
-
-void Motor::incrementTimePyCounter() {
-	_timePyCounter++;
-}
-
 int Motor::getCCWFlag() {
 	return _ccwFlag;
 }
@@ -94,41 +83,24 @@ int Motor::getLimitPin(){
 	return _limitPin;
 }
 
-void Motor::setStartReceivingByte(byte incomingStartByte) {
-	_startReceivingByte = incomingStartByte;
+void Motor::enqueTime(int incomingTime) {
+	_timeNext = incomingTime;
+}
+void Motor::enqueDir(int incomingDir) {
+	_dirNext = incomingDir;
+}
+void Motor::dequeTime() {
+	_time = _timeNext;
+}
+void Motor::dequeDir() {
+	_dir = _dirNext;
 }
 
-byte Motor::getStartReceivingByte() {
-	return _startReceivingByte;
+int Motor::getTime() {
+	return _time;
 }
-
-void Motor::showTimePy() {
-	Serial.println("Showing the time array in the object");
-	for (int i = 0; i < NUM_BYTES; i++) {
-		Serial.print(timePy[i]);
-		Serial.print(" ");
-	}
-}
-
-void Motor::showDirPy() {
-	Serial.println("Showing the direction array in the object");
-	for (int i = 0; i < NUM_BYTES; i++) {
-		Serial.print(dirPy[i]);
-		Serial.print(" ");
-	}
-}
-
-void Motor::setReceivedTime(int incomingTime) {
-	_receivedTime = incomingTime;
-}
-void Motor::setReceivedDir(int incomingDir) {
-	_receivedDir = incomingDir;
-}
-int Motor::getReceivedTime() {
-	return _receivedTime;
-}
-int Motor::getReceivedDir() {
-	return _receivedDir;
+int Motor::getDir() {
+	return _dir;
 }
 
 int Motor::getRelativeMoveCounter() {

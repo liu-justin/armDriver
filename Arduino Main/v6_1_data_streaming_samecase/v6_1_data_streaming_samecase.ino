@@ -131,8 +131,6 @@ void loop() {
 
       case 45: // waiting for data from Python
         waitAndRead(i);
-        break;
-      case 46: // driving motor based on receivedTime
         if (currentTime - mm.getMotor(i)->previousTime > mm.getMotor(i)->getReceivedTime()) {
             if (mm.getMotor(i)->getReceivedDir() != 0){
               // this could be backwards

@@ -1,20 +1,29 @@
-#ifndef Motor_h
-#define Motor_h
+#ifndef MotorBatch_h
+#define MotorBatch_h
 
-/*provides stepper Motor control thru single steps*/
+/*provides stepper MotorBatch control thru single steps*/
 
 #include "Arduino.h"
 
-class Motor {
+const int NUM_BYTES = 64;
+
+class MotorBatch {
 	public:
-		Motor(int pulse, int direct, int limit, int CW, int CCW);
+		MotorBatch(int pulse, int direct, int limit, int CW, int CCW);
+		int timePy[NUM_BYTES];
+		int dirPy[NUM_BYTES];
+		void showTimePy();
+		void showDirPy();
 		
-		void enqueTime(int incomingTime);
-		void enqueDir(int incomingDir);
-		void dequeTime();
-		void dequeDir();
-		int getTime();
-		int getDir();
+		void setReceivedTime(int incomingTime);
+		void setReceivedDir(int incomingDir);
+		int getReceivedTime();
+		int getReceivedDir();
+		
+		int getTimePyCounter();
+		void incrementTimePyCounter();
+		void setStartReceivingByte(byte incomingStartByte);
+		byte getStartReceivingByte();
 
 		void directionForward(); // CCW
 		void directionBackward(); // CW
@@ -25,8 +34,10 @@ class Motor {
 		
 		int getLimitPin();
 
+		
 		void setStep(int incomingStep);
 		int getStep();
+		
 		
 		void setState(int incomingState);
 		int getState();
@@ -40,19 +51,22 @@ class Motor {
 		int getRelativeMoveCounter();
 		void setRelativeMoveCounter(int incomingCounter);
 
+
+
 		unsigned long previousTime;
+		int previousMajorStep;
 		
 	private:
 		
 		int _pulsePin;
 		int _directionPin;
 		int _limitPin;
+		int _startReceivingByte;
 
-		int _time;
-		int _timeNext;
-		int _dir;
-		int _dirNext;
+		int _receivedTime;
+		int _receivedDir;
 
+		int _timePyCounter;
 		int _relativeMoveCounter;
 		bool _direction;
 		int _step;
