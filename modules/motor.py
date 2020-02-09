@@ -9,6 +9,7 @@ class Motor:
         self.frameList = []
         self.timeList = []
         self.stepList = []
+        self.stepTuple = []
         self.stepDict = {}
         
     def listSteps(self):
@@ -43,6 +44,39 @@ class Motor:
         self.stepList[0] = smath.nearestStep(self.frameList[0])
         self.stepList.append(smath.nearestStep(self.frameList[-1]))
         self.timeList.append(smath.frameTime*(len(self.frameList)-1))
+
+    def tupleSteps(self):
+        angleNext = self.frameList[1]
+        angleCurrent = self.frameList[0]
+        stepIter = smath.ceilStep(angleCurrent) if (angleNext - angleCurrent < 0) else smath.floorStep(angleCurrent)
+        self.stepTuple.append((0,stepIter))
+
+        for i in range(len(self.frameList)-1):
+            frameCurrent = self.frameList[i]
+            frameNext = self.frameList[i+1]
+            frameMin = min(frameCurrent, frameNext)
+            # counts the number of motor steps (1.8 degrees) that are in the frame, by subtracting the upper number of steps and the lower number of steps
+            # the end case is if the lower number of steps is an actual multiple, which should be impossible with floats but just an if
+            stepsInFrame = int(abs(frameNext//smath.stepAngle - frameCurrent//smath.stepAngle)) + (1 if frameMin%smath.stepAngle == 0 else 0)
+
+            if stepsInFrame > 0:
+                stepIter = smath.ceilStep(frameCurrent) if (frameNext - frameCurrent > 0) else smath.floorStep(frameCurrent)
+                firstT = (stepIter - frameCurrent)/(frameNext - frameCurrent) * smath.frameTime + i*smath.frameTime
+                self.stepTuple.append((firstT, stepIter))
+
+                for j in range(1, stepsInFrame):
+                    s = self.stepTuple[-1][1] + smath.stepAngle*np.sign(frameNext - frameCurrent)
+                    t = (self.stepTuple[-1][1] - frameCurrent)/(frameNext - frameCurrent) * smath.frameTime + i*smath.frameTime
+                    self.stepTuple.append((t,s))
+            else:
+                s = smath.nearestStep(frameCurrent)
+                t = i*smath.frameTime
+                self.stepTuple.append((t,s))
+
+        self.stepTuple[0] = (0,smath.nearestStep(self.frameList[0]))
+        s = smath.nearestStep(self.frameList[-1])
+        t = smath.frameTime*(len(self.frameList)-1)
+        self.stepTuple.append((t,s))
 
     def dictSteps(self):
 

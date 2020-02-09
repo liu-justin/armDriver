@@ -1,6 +1,6 @@
 import modules.stepFinder as s
 import modules.pointFinder as p
-import modules.sendToArduino as a
+#import modules.sendToArduino as a
 import modules.motor as motor
 
 import time
@@ -26,7 +26,7 @@ def main():
 	else:
 		s.getSteps(motorList)
 
-		a.waitForArduino("Arduino is ready!")
-		a.sendToArduinoDict(motorList)
+		#a.waitForArduino("Arduino is ready!")
+		#a.sendToArduinoDict(motorList)
 		
 main()

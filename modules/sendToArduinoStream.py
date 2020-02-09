@@ -64,3 +64,6 @@ def sendToArduinoDict(motorList):
 
 	while 1==1:
 		waitForTilde()
+
+def communicateWithArduino(motorList):
+	

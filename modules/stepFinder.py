@@ -10,9 +10,10 @@ def getSteps(motorList):
 
     for m in motorList:
         #m.listSteps()
+        m.tupleSteps()
         #plt.scatter(m.timeList, m.stepList, label=f"{m.motorIndex}")
 
-        m.dictSteps()
+        #m.dictSteps()
         # plt.scatter(list(m.stepDict.keys()), list(m.stepDict.values()), label=f"{m.motorIndex}")       
 
     # end = time.perf_counter()
