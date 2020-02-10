@@ -9,7 +9,7 @@ class Motor:
         self.frameList = []
         self.timeList = []
         self.stepList = []
-        self.stepTuple = []
+        self.stepTuple = [] #(time, step, time from last time, step from last step)
         self.tupleCounter = 0
         self.stepDict = {}
         
@@ -63,21 +63,29 @@ class Motor:
             if stepsInFrame > 0:
                 stepIter = smath.ceilStep(frameCurrent) if (frameNext - frameCurrent > 0) else smath.floorStep(frameCurrent)
                 firstT = (stepIter - frameCurrent)/(frameNext - frameCurrent) * smath.frameTime + i*smath.frameTime
-                self.stepTuple.append((firstT, stepIter))
+                deltaT = int(round(1000*(firstT - self.stepTuple[-1][0])))
+                deltaS = int(np.sign(stepIter - self.stepTuple[-1][1]))
+                self.stepTuple.append((firstT, stepIter, deltaT, deltaS))
 
                 for j in range(1, stepsInFrame):
                     s = self.stepTuple[-1][1] + smath.stepAngle*np.sign(frameNext - frameCurrent)
-                    t = (self.stepTuple[-1][1] - frameCurrent)/(frameNext - frameCurrent) * smath.frameTime + i*smath.frameTime
-                    self.stepTuple.append((t,s))
+                    t = (s - frameCurrent)/(frameNext - frameCurrent) * smath.frameTime + i*smath.frameTime
+                    deltaT = int(round(1000*(t - self.stepTuple[-1][0])))
+                    deltaS = int(np.sign(s - self.stepTuple[-1][1]))
+                    self.stepTuple.append((t,s, deltaT, deltaS))
             else:
                 s = smath.nearestStep(frameCurrent)
                 t = i*smath.frameTime
-                self.stepTuple.append((t,s))
+                deltaT = int(round(1000*(t - self.stepTuple[-1][0])))
+                deltaS = int(np.sign(s - self.stepTuple[-1][1]))
+                self.stepTuple.append((t,s, deltaT, deltaS))
 
         self.stepTuple[0] = (0,smath.nearestStep(self.frameList[0]))
         s = smath.nearestStep(self.frameList[-1])
         t = smath.frameTime*(len(self.frameList)-1)
-        self.stepTuple.append((t,s))
+        deltaT = int(round(1000*(t - self.stepTuple[-1][0])))
+        deltaS = int(np.sign(s - self.stepTuple[-1][1]))
+        self.stepTuple.append((t,s, deltaT, deltaS))
 
     def dictSteps(self):
 
