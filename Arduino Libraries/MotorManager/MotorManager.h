@@ -20,6 +20,7 @@ class MotorManager {
 		void revertAllStatesBut(int index);
 
 		bool checkStates(int incomingState);
+		bool checkTimes();
 		// need to change to different sizes when I use more motors
 		
 		

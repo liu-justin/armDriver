@@ -14,6 +14,9 @@ Motor::Motor(int pulse, int direct, int limit, int CW, int CCW) {
 
 	_state = 1;
 	_statePrevious = 1;
+
+	_time = -1;
+	_timeNext = -1;
 }
 
 // forward is positive angle, so CCW
