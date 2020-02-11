@@ -31,13 +31,12 @@ def initiateWithArduinoCalcInside(motorList):
 
 # stepTuple is a list of tuples, of form (time, step, deltatime, deltastep), this function uses the delta
 def initiateWithArduino(motorList):
-for m in motorList:
-	for _ in range(2):
-		
-		m.tupleCounter += 1 # get off index 0, because the deltas are zero
-		ser.write((m.arduinoStartByte).to_bytes(1, byteorder="big")) # start byte
-		ser.write((m.stepTuple[m.tupleCounter][2]).to_bytes(1, byteorder="big")) # delta time byte
-		ser.write((m.stepTuple[m.tupleCounter][3]).to_bytes(1, byteorder="big")) # delta dir byte
+	for m in motorList:
+		for _ in range(2):
+			m.tupleCounter += 1 # get off index 0, because the deltas are zero
+			ser.write((m.arduinoStartByte).to_bytes(1, byteorder="big")) # start byte
+			ser.write((m.stepTuple[m.tupleCounter][2]).to_bytes(1, byteorder="big")) # delta time byte
+			ser.write((m.stepTuple[m.tupleCounter][3]).to_bytes(1, byteorder="big")) # delta dir byte
 
 waitForArduino("Ready to receive real data")
 

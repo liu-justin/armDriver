@@ -13,7 +13,7 @@ void setup() {
   
   // setting state to homing intialization
   mm.setAllStates(45);
-  Serial.print("Arduino is ready!");
+  Serial.println("Arduino is ready!");
 
 }
 

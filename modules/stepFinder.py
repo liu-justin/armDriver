@@ -5,7 +5,6 @@ import modules.stepMath as smath
 
 def getSteps(motorList):
         # step angle in radians
-    stepAngle = smath.stepAngle
     start = time.perf_counter()
 
     for m in motorList:

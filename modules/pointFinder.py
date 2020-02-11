@@ -206,15 +206,17 @@ def linearTravel(startPoint, endPoint, motorList):
     totalLength = math.sqrt(xLength**2 + yLength**2 + zLength**2)
     totalTime = totalLength/speed
 
-    # frames set the angle coordinates for lineangleR0interpolation 
+    # this is to set a minumum number of frames for the steps to work on, but with a smaller step size I don't think it is necessary
     if (totalTime/40 < smath.frameTime):
         smath.frameTime = totalTime/40
 
-    frameSteps = math.ceil(totalTime/smath.frameTime)   
-    xFrame = xLength/frameSteps
+    
+    frameSteps = math.ceil(totalTime/smath.frameTime)   # number of frames
+
+    xFrame = xLength/frameSteps # caculating the distance each frame will go
     yFrame = yLength/frameSteps
     zFrame = zLength/frameSteps
-    xIter = startPoint.x
+    xIter = startPoint.x          # intializing the variables that will iterate
     yIter = startPoint.y
     zIter = startPoint.z
     test = Point(xIter, yIter, zIter)
@@ -223,6 +225,7 @@ def linearTravel(startPoint, endPoint, motorList):
     tIter = 0
     tList = []
 
+    # dont know why we need all 3, can probably just check one
     while (abs(xIter - startPoint.x) < abs(xLength) or abs(yIter - startPoint.y) < abs(yLength) or abs(zIter - startPoint.z < abs(zLength))):
         
         angles = findAngle2D(test)
