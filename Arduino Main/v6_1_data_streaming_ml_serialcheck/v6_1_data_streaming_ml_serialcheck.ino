@@ -107,7 +107,7 @@ void loop() {
             mm.getMotor(i)->previousTime = currentTime;
             mm.getMotor(i)->consumeTime();
             mm.getMotor(i)->consumeDir();
-            Serial.println(i);
+            Serial.print(i);
         }
         if (digitalRead(mm.getMotor(i)->getLimitPin()) == 1){
           mm.getMotor(i)->setState(99);

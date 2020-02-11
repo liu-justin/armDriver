@@ -29,10 +29,10 @@ def main():
 		print(motorList[0].stepTuple)
 
 
-		#a.waitForArduino("Arduino is ready!")
-		#a.initiateWithArduino(motorList)
-		#while 1==1:
-		#	a.communicateWithArduino(motorList)
+		a.waitForArduino("Arduino is ready!")
+		a.initiateWithArduino(motorList)
+		while 1==1:
+			a.communicateWithArduino(motorList)
 
 		#a.sendToArduinoDict(motorList)
 		
