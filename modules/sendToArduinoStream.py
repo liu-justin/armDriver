@@ -3,7 +3,7 @@ import numpy as np
 import time
 
 # for the comport, look in Arduino IDE when the arduino is connected
-ser = serial.Serial("COM8", 57600);
+ser = serial.Serial("COM4", 57600);
 
 def waitForArduino(passcode):
 	msg = ser.read().decode("unicode_escape")
@@ -14,7 +14,7 @@ def waitForArduino(passcode):
 			print(f"Periodic update: {msg}")
 			msg = ""
 
-	print(f"---------------------------------------Out of waiting! msg is: {msg}")
+	print(f"msg is: {msg}")
 
 # dir is sent tail end, where the change in step happens at the end of the period
 def initiateWithArduinoCalcInside(motorList):
@@ -40,21 +40,22 @@ def initiateWithArduino(motorList):
 			ser.write((m.stepTuple[m.tupleCounter][2]).to_bytes(1, byteorder="big")) # delta time byte
 			ser.write((m.stepTuple[m.tupleCounter][3]).to_bytes(1, byteorder="big")) # delta dir byte
 
-	waitForArduino("Ready to receive real data")
+	waitForArduino("}")
 
 def communicateWithArduino(motorList):
-	if ser.available():
-		# msg received will be an index, need to navigate to the correct motor and send the correct values
-		index = ser.read().decode("unicode_escape")
-		print(f"received index {index}")
+	# msg received will be an index, need to navigate to the correct motor and send the correct values
+	index = int.from_bytes(ser.read(), byteorder='big')
+	#index = ser.read()
+	#print(f"index type: {type(index)}")
+	print(f"received index {index}")
 
-		motorList[index].tupleCounter += 1
-		ser.write((motorList[index].arduinoStartByte).to_bytes(1, byteorder="big")) # start byte
-		ser.write((motorList[index].stepTuple[motorList[index].tupleCounter][2]).to_bytes(1, byteorder="big")) # delta time byte
-		ser.write((motorList[index].stepTuple[motorList[index].tupleCounter][3]).to_bytes(1, byteorder="big")) # delta dir byte
+	motorList[index].tupleCounter += 1
+	ser.write((motorList[index].arduinoStartByte).to_bytes(1, byteorder="big")) # start byte
+	ser.write((motorList[index].stepTuple[motorList[index].tupleCounter][2]).to_bytes(1, byteorder="big")) # delta time byte
+	ser.write((motorList[index].stepTuple[motorList[index].tupleCounter][3]).to_bytes(1, byteorder="big")) # delta dir byte
 
-		# timeSent = int(round(motorList[index].stepTuple[motorList[index].tupleCounter][0] - motorList[index].stepTuple[motorList[index].tupleCounter-1][0]))
-		# ser.write((timeSent).to_bytes(1, byteorder="big")) # time byte
-		# dirSent = int(np.sign(motorList[index].stepTuple[motorList[index].tupleCounter][1] - motorList[index].stepTuple[motorList[index].tupleCounter-1][1])) + 121
-		# ser.write(().to_bytes(1, byteorder="big")) # dir byte
+	# timeSent = int(round(motorList[index].stepTuple[motorList[index].tupleCounter][0] - motorList[index].stepTuple[motorList[index].tupleCounter-1][0]))
+	# ser.write((timeSent).to_bytes(1, byteorder="big")) # time byte
+	# dirSent = int(np.sign(motorList[index].stepTuple[motorList[index].tupleCounter][1] - motorList[index].stepTuple[motorList[index].tupleCounter-1][1])) + 121
+	# ser.write(().to_bytes(1, byteorder="big")) # dir byte
 

@@ -26,10 +26,10 @@ def main():
 	else:
 		#print(motorList[0].frameList)
 		s.getSteps(motorList)
-		print(motorList[0].stepTuple)
+		#print(motorList[0].stepTuple)
 
 
-		a.waitForArduino("Arduino is ready!")
+		a.waitForArduino("{") # Arduino is ready! 
 		a.initiateWithArduino(motorList)
 		while 1==1:
 			a.communicateWithArduino(motorList)

@@ -51,7 +51,7 @@ class Motor:
         angleCurrent = self.frameList[0]
         stepIter = smath.ceilStep(angleCurrent) if (angleNext - angleCurrent < 0) else smath.floorStep(angleCurrent)
         self.stepTuple.append((0,stepIter))
-        print(f"First tuple: {self.stepTuple}")
+        #print(f"First tuple: {self.stepTuple}")
 
         for i in range(len(self.frameList)-1):
             frameCurrent = self.frameList[i]
@@ -60,7 +60,6 @@ class Motor:
             # counts the number of motor steps (1.8 degrees) that are in the frame, by subtracting the upper number of steps and the lower number of steps
             # the end case is if the lower number of steps is an actual multiple, which should be impossible with floats but just an if
             stepsInFrame = int(abs(frameNext//smath.stepAngle - frameCurrent//smath.stepAngle)) + (1 if frameMin%smath.stepAngle == 0 else 0)
-            #print(f"stepsInFrame: {stepsInFrame}")
 
             if stepsInFrame > 0:
                 stepIter = smath.ceilStep(frameCurrent) if (frameNext - frameCurrent > 0) else smath.floorStep(frameCurrent)
@@ -70,6 +69,7 @@ class Motor:
                 self.stepTuple.append((firstT, stepIter, deltaT, deltaS))
                 #print(f"If stepsInFrame is > 0, then this is the first tuple: {self.stepTuple}")
 
+                # if there are any intersection points in the current frameTime, then grab them here
                 for j in range(1, stepsInFrame):
                     s = self.stepTuple[-1][1] + smath.stepAngle*np.sign(frameNext - frameCurrent)
                     t = (s - frameCurrent)/(frameNext - frameCurrent) * smath.frameTime + i*smath.frameTime
@@ -77,13 +77,12 @@ class Motor:
                     deltaS = int(np.sign(s - self.stepTuple[-1][1])) + 121
                     self.stepTuple.append((t,s, deltaT, deltaS))
                     #print(f"This is the {j} tuple: {self.stepTuple}")
-            else:
-                s = smath.nearestStep(frameCurrent)
-                t = i*smath.frameTime
-                deltaT = int(round(1000*(t - self.stepTuple[-1][0])))
-                deltaS = int(np.sign(s - self.stepTuple[-1][1])) + 121
-                self.stepTuple.append((t,s, deltaT, deltaS))
-                #print(self.stepTuple)
+            
+            s = smath.nearestStep(frameNext)
+            t = (i+1)*smath.frameTime
+            deltaT = int(round(1000*(t - self.stepTuple[-1][0])))
+            deltaS = int(np.sign(s - self.stepTuple[-1][1])) + 121
+            self.stepTuple.append((t,s, deltaT, deltaS))
 
         self.stepTuple[0] = (0,smath.nearestStep(self.frameList[0]))
         s = smath.nearestStep(self.frameList[-1])
@@ -91,7 +90,7 @@ class Motor:
         deltaT = int(round(1000*(t - self.stepTuple[-1][0])))
         deltaS = int(np.sign(s - self.stepTuple[-1][1])) + 121
         self.stepTuple.append((t,s, deltaT, deltaS))
-        #print(self.stepTuple)
+        #print(f" last step: {self.stepTuple}")
 
     def dictSteps(self):
 

@@ -13,8 +13,11 @@ void setup() {
   
   // setting state to homing intialization
   mm.setAllStates(45);
-  Serial.println("Arduino is ready!");
-
+  Serial.write("{"); // Arduino is ready! {
+  while(!mm.checkTimes()) {
+    waitAndReadInit();
+  }
+  Serial.write("}"); //}
 }
 
 void loop() {
@@ -27,8 +30,8 @@ void loop() {
  
     switch(mm.getMotor(i)->getState()){
       case 0: // error
-        Serial.print(i);
-        Serial.println(" errored, limit switch was pressed");
+        //Serial.print(i);
+        //Serial.println(" errored, limit switch was pressed");
         break;
       case 1: // ready
         // might have a UI control, in which it sends data to motors and case 1 reads it
@@ -83,15 +86,7 @@ void loop() {
         break;
       case 35: // initialization of relative movement
         break;
-      case 45: // init for data streaming
-      // keep in the state until all time/dir timeNext/dirNext is filled
-        waitAndReadInit();
-        if (mm.checkTimes()){
-          mm.setAllStates(46);
-          Serial.print("Ready to receive real data");
-            
-        }
-      case 46: // data streaming from Python
+      case 45: // data streaming from Python
         
         if (currentTime - mm.getMotor(i)->previousTime > mm.getMotor(i)->getTime()) {
           
@@ -107,7 +102,7 @@ void loop() {
             mm.getMotor(i)->previousTime = currentTime;
             mm.getMotor(i)->consumeTime();
             mm.getMotor(i)->consumeDir();
-            Serial.print(i);
+            Serial.write(i);
         }
         if (digitalRead(mm.getMotor(i)->getLimitPin()) == 1){
           mm.getMotor(i)->setState(99);
@@ -130,7 +125,7 @@ void waitAndRead() {
           int index = rb - 105;
           mm.getMotor(index)->receiveTime(Serial.read()); // grabs the time byte
           mm.getMotor(index)->receiveDir(Serial.read());  // grabs the dir byte
-          Serial.println(index);
+          //Serial.println(index); // dunno why this is here, ill just comment it out
         }
         else {
           //Serial.println("Serial did not start with a start byte");
@@ -139,14 +134,16 @@ void waitAndRead() {
 }
 
 void waitAndReadInit() {
-    //Serial.print("while waiting for a byte, ");
+    Serial.print("while waiting for a byte in init, ");
     while (Serial.available() >= 3) { // need the start byte, time byte, and dir byte; safeguard for when Arduino clears the buffer faster than Python can fill it
         byte rb = Serial.peek(); // peek instead of read, so I don't have to send two from Python
-        //Serial.print("got the following byte: "); Serial.print(rb); Serial.print(", ");
+        Serial.print("got the following byte: "); Serial.print(rb); Serial.print(", ");
         if (rb >= 105 && rb < 105 + MOTOR_COUNT) {
           rb = Serial.read(); // clears the start byte
           int index = rb - 105;
+          Serial.print("enquing into Time: "); Serial.print(Serial.peek()); Serial.print(",");
           mm.getMotor(index)->enqueTime(Serial.read()); // grabs the time byte
+          Serial.print("enquing into Dir: "); Serial.print(Serial.peek()); Serial.println(",");
           mm.getMotor(index)->enqueDir(Serial.read());  // grabs the dir byte
         }
         else {

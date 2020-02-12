@@ -245,8 +245,8 @@ def linearTravel(startPoint, endPoint, motorList):
     # fig, ax = plt.subplots()
 
     # for motor in motorList:
-    #     #ax.plot(tList, motor.frameList, label=f"{motor.motorIndex}")
-    #     ax.scatter(tList, motor.frameList, s=4, label=f"{motor.motorIndex}")
+    #     ax.plot(tList, motor.frameList, label=f"Motor {motor.motorIndex} frameList")
+    #     #ax.scatter(tList, motor.frameList, s=4, label=f"{motor.motorIndex}")
 
     # plt.xlabel("time (secs)")
     # plt.ylabel("angle from east (radians)")
@@ -254,7 +254,6 @@ def linearTravel(startPoint, endPoint, motorList):
     # ax.set_yticks(minorTicks, minor=True)
     # plt.grid(b=True, which="minor")
     # plt.legend()
-    #plt.show()
     #--------------PLOTTING LINEangleR0POINT2POINT GRAPHS------------------
 
 
