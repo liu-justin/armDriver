@@ -50,9 +50,11 @@ def communicateWithArduino(motorList):
 	print(f"received index {index}")
 
 	motorList[index].tupleCounter += 1
-	ser.write((motorList[index].arduinoStartByte).to_bytes(1, byteorder="big")) # start byte
-	ser.write((motorList[index].stepTuple[motorList[index].tupleCounter][2]).to_bytes(1, byteorder="big")) # delta time byte
-	ser.write((motorList[index].stepTuple[motorList[index].tupleCounter][3]).to_bytes(1, byteorder="big")) # delta dir byte
+	if (motorList[index].tupleCounter < motorList[index].stepTuple.length):
+		ser.write((motorList[index].arduinoStartByte).to_bytes(1, byteorder="big")) # start byte
+		ser.write((motorList[index].stepTuple[motorList[index].tupleCounter][2]).to_bytes(1, byteorder="big")) # delta time byte
+		ser.write((motorList[index].stepTuple[motorList[index].tupleCounter][3]).to_bytes(1, byteorder="big")) # delta dir byte
+	
 
 	# timeSent = int(round(motorList[index].stepTuple[motorList[index].tupleCounter][0] - motorList[index].stepTuple[motorList[index].tupleCounter-1][0]))
 	# ser.write((timeSent).to_bytes(1, byteorder="big")) # time byte
