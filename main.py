@@ -18,7 +18,7 @@ def main():
 	# maybe I see when stepsInFrame = 0, and the starting tuple combined messes some stuff up
 
 	while 1==1:
-		first = p.Point(2, 4)
+		first = p.Point(2,4)
 		second = p.Point(0,8)
 
 		p.linearTravel(first, second, motorList)

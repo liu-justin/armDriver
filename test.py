@@ -1,3 +1,4 @@
+# region
 # import serial
 
 # ser = serial.Serial("COM4", 9600);
@@ -14,8 +15,8 @@ import math
 
 def splitTime(x):
 	divisor = x//60+1
-	exact = x/divisor
-	roundedFract = x%divisor
+	#exact = x/divisor
+	#roundedFract = x%divisor
 	#return(x, divisor, exact, roundedFract, math.ceil(exact)*(roundedFract)+math.floor(exact)*(divisor - roundedFract))
 	return divisor
 
@@ -26,6 +27,16 @@ for i in range(1,a+1):
 	b = int(round(469*i/a))
 	sumA += b
 	print (f"b: {b}")
+#endregion
 
-	3.8328
-	3.5149
+import modules.pointFinder as p
+
+while 1==1:
+	userInput = input("Home or Point: ")
+	print(userInput)
+	if (userInput == "Home"):
+		print("homing")
+	elif ("," in userInput):
+		userList = list(map(float, userInput.split(",")))
+		print(userList)
+		userPoint = p.Point(userList[0], userList[1])
