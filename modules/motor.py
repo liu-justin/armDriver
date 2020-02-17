@@ -1,5 +1,6 @@
 import modules.stepMath as smath
 import numpy as np
+import math
 
 class Motor:
     def __init__(self, motorIndex):
@@ -98,7 +99,7 @@ class Motor:
         angleCurrent = self.frameList[0]
         #stepIter = smath.ceilStep(angleCurrent) if (angleNext - angleCurrent < 0) else smath.floorStep(angleCurrent)
         stepIter = smath.nearestStep(self.frameList[0])
-        self.stepTuple.append((0,stepIter))
+        self.stepTuple.append((0,stepIter,0,121))
         #print(f"First tuple: {self.stepTuple}")
 
         for i in range(len(self.frameList)-1):
@@ -109,13 +110,6 @@ class Motor:
             #print(f"i: {i} frameCurrent: {frameCurrent} frameNext: {frameNext} stepsInFrame: {stepsInFrame}")
 
             if stepsInFrame > 0:
-                # if slope is +, then do ceil, if slope is -, then do floor
-                # stepIter = smath.ceilStep(frameCurrent) if (frameNext - frameCurrent > 0) else smath.floorStep(frameCurrent)
-                # firstT = (stepIter - frameCurrent)/(frameNext - frameCurrent) * smath.frameTime + i*smath.frameTime
-                # deltaT = int(round(1000*(firstT - self.stepTuple[-1][0])))
-                # deltaS = int(np.sign(stepIter - self.stepTuple[-1][1])) + 121
-                # self.stepTuple.append((firstT, stepIter+(np.sign(frameNext-frameCurrent)*smath.stepAngle/2), deltaT, deltaS))
-                #print(f"If stepsInFrame is > 0, then this is the first tuple: {self.stepTuple}")
 
                 # if there are any intersection points in the current frameTime, then grab them here
                 for j in range(0, stepsInFrame):
@@ -124,15 +118,22 @@ class Motor:
                     deltaT = int(round(1000*(t - self.stepTuple[-1][0])))
                     deltaS = int(np.sign(s - self.stepTuple[-1][1])) + 121 # maybe np.sign(frameNext - frameCurrent)
                     #print(f"s: {s} previousStepTuple: {self.stepTuple[-1][1]} halfway point: {((self.stepTuple[-1][1] + s)/2)} frameCurrent: {(frameCurrent)} frameNext: {frameNext}")
-                    self.stepTuple.append((t,s, deltaT, deltaS))
-            
-            # s = smath.nearestStep(frameNext)
-            # t = (i+1)*smath.frameTime
-            # deltaT = int(round(1000*(t - self.stepTuple[-1][0])))
-            # deltaS = int(np.sign(s - self.stepTuple[-1][1])) + 121
-            # self.stepTuple.append((t,s, deltaT, deltaS))
+                    
+                    # want to keep steps under a set number(frame length*1000), so any deltaT that are greater than that set number is going to get cut down as evenly as possible
+                    # there is one function in stepMath, calcSplitTimesIfElse, that seems faster, but ill just use this one for now
+                    zeroSteps = smath.calcZeroSteps(deltaT)
+                    previousRoundedTime = 0
+                    for k in range(0,zeroSteps):
+                        roundedTime = int(round(deltaT*(k+1)/(zeroSteps+1)))
+                        self.stepTuple.append((self.stepTuple[-1-k][0]+roundedTime/1000, self.stepTuple[-1][1] , roundedTime-previousRoundedTime, 121))
+                        #print(f"after the zeroTime k={k} stepTuple appended:")
+                        #print(self.stepTuple)
+                        previousRoundedTime = roundedTime
 
-        self.stepTuple[0] = (0,smath.nearestStep(self.frameList[0]))
+                    self.stepTuple.append((t,s, deltaT-previousRoundedTime, deltaS))
+                    #print(f"after the last on in frame j={j} frame: ")
+                    #print(self.stepTuple)
+
         s = smath.nearestStep(self.frameList[-1])
         t = smath.frameTime*(len(self.frameList)-1)
         deltaT = int(round(1000*(t - self.stepTuple[-1][0])))

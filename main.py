@@ -1,6 +1,6 @@
 import modules.stepFinder as s
 import modules.pointFinder as p
-#import modules.sendToArduinoStream as a
+import modules.sendToArduinoStream as a
 import modules.motor as motor
 
 import time
@@ -18,8 +18,8 @@ def main():
 	# maybe I see when stepsInFrame = 0, and the starting tuple combined messes some stuff up
 
 	while 1==1:
-		first = p.Point(7.781, 7.085)
-		second = p.Point(10,0)
+		first = p.Point(2, 4)
+		second = p.Point(0,8)
 
 		p.linearTravel(first, second, motorList)
 
@@ -29,13 +29,11 @@ def main():
 		else:
 			#print(motorList[0].frameList)
 			s.getSteps(motorList)
-			print(motorList[0].stepTuple)
 
-
-			# a.waitForArduino("{") # Arduino is ready! 
-			# a.initiateWithArduino(motorList)
-			# while 1==1:
-			# 	a.communicateWithArduino(motorList)
+			a.waitForArduino("{") # Arduino is ready! 
+			a.initiateWithArduino(motorList)
+			while 1==1:
+				a.communicateWithArduino(motorList)
 
 			#a.sendToArduinoDict(motorList)
 		
