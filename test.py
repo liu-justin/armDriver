@@ -13,20 +13,20 @@
 
 import math
 
-def splitTime(x):
-	divisor = x//60+1
-	#exact = x/divisor
-	#roundedFract = x%divisor
-	#return(x, divisor, exact, roundedFract, math.ceil(exact)*(roundedFract)+math.floor(exact)*(divisor - roundedFract))
-	return divisor
+# def splitTime(x):
+# 	divisor = x//60+1
+# 	#exact = x/divisor
+# 	#roundedFract = x%divisor
+# 	#return(x, divisor, exact, roundedFract, math.ceil(exact)*(roundedFract)+math.floor(exact)*(divisor - roundedFract))
+# 	return divisor
 
-a = splitTime(469)
-print(a)
-sumA = 0
-for i in range(1,a+1):
-	b = int(round(469*i/a))
-	sumA += b
-	print (f"b: {b}")
+# a = splitTime(469)
+# print(a)
+# sumA = 0
+# for i in range(1,a+1):
+# 	b = int(round(469*i/a))
+# 	sumA += b
+# 	print (f"b: {b}")
 #endregion
 
 import modules.pointFinder as p
@@ -46,7 +46,7 @@ import modules.MotorList as MotorList
 mm = MotorList.MotorList()
 a = motor.Motor(mm)
 b = motor.Motor(mm)
-print(mm)
+print(mm[0].state)
 
 for m in mm:
 	print(m.state)

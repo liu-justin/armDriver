@@ -25,7 +25,7 @@ def initiateWithArduinoCalcInside(motorList):
 			timeSent = int(round(1000*(m.stepTuple[m.tupleCounter][0] - m.stepTuple[m.tupleCounter-1][0])))
 			ser.write((timeSent).to_bytes(1, byteorder="big")) # time byte
 			dirSent = int(np.sign(m.stepTuple[m.tupleCounter][1] - m.stepTuple[m.tupleCounter-1][1])) + 121
-			ser.write(().to_bytes(1, byteorder="big")) # dir byte
+			ser.write((dirSent).to_bytes(1, byteorder="big")) # dir byte
 
 	waitForArduino("}")
 

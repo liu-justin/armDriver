@@ -5,9 +5,9 @@ import math
 class Motor:
     def __init__(self, motorList):
         motorList.append(self)
-        self.__motorIndex = len(motorList)-1
+        self._motorIndex = len(motorList)-1
         # Arduino start reading bytes start at R0 motor, byte 103
-        self.arduinoStartByte = self.__motorIndex + 105
+        self.arduinoStartByte = self._motorIndex + 105
         self.frameList = []
         self.timeList = []
         self.stepList = []
@@ -97,10 +97,9 @@ class Motor:
         #print(f" last step: {self.stepTuple}")
 
     def tupleStepsHalfwayBtwnChange(self):
-        #stepIter = smath.ceilStep(angleCurrent) if (angleNext - angleCurrent < 0) else smath.floorStep(angleCurrent)
+        # appends the first step to the tupleStep list, deltaT is 0, and direction is 0
         stepIter = smath.nearestStep(self.frameList[0])
         self.stepTuple.append((0,stepIter,0,121))
-        #print(f"First tuple: {self.stepTuple}")
 
         for i in range(len(self.frameList)-1):
             frameCurrent = self.frameList[i]
@@ -119,27 +118,34 @@ class Motor:
                     deltaS = int(np.sign(s - self.stepTuple[-1][1])) + 121 # maybe np.sign(frameNext - frameCurrent)
                     #print(f"s: {s} previousStepTuple: {self.stepTuple[-1][1]} halfway point: {((self.stepTuple[-1][1] + s)/2)} frameCurrent: {(frameCurrent)} frameNext: {frameNext}")
                     
-                    # want to keep steps under a set number(frame length*1000), so any deltaT that are greater than that set number is going to get cut down as evenly as possible
-                    # there is one function in stepMath, calcSplitTimesIfElse, that seems faster, but ill just use this one for now
-                    zeroSteps = smath.calcZeroSteps(deltaT)
-                    previousRoundedTime = 0
-                    for k in range(0,zeroSteps):
-                        roundedTime = int(round(deltaT*(k+1)/(zeroSteps+1)))
-                        self.stepTuple.append((self.stepTuple[-1-k][0]+roundedTime/1000, self.stepTuple[-1][1] , roundedTime-previousRoundedTime, 121))
-                        #print(f"after the zeroTime k={k} stepTuple appended:")
-                        #print(self.stepTuple)
-                        previousRoundedTime = roundedTime
+                    # want to keep steps under a set number(frame length*1000),
+                    # so any deltaT that are greater than that set number is going to get cut down as evenly as possible
+                    self.appendFillerSteps(t,s,deltaT, deltaS)
 
-                    self.stepTuple.append((t,s, deltaT-previousRoundedTime, deltaS))
-                    #print(f"after the last on in frame j={j} frame: ")
-                    #print(self.stepTuple)
+                    
 
         s = smath.nearestStep(self.frameList[-1])
         t = smath.frameTime*(len(self.frameList)-1)
         deltaT = int(round(1000*(t - self.stepTuple[-1][0])))
         deltaS = int(np.sign(s - self.stepTuple[-1][1])) + 121
-        self.stepTuple.append((t,s, deltaT, deltaS))
+        self.appendFillerSteps(t,s,deltaT, deltaS)
         #print(f" last step: {self.stepTuple}")
+
+    def appendFillerSteps(self,t,s,deltaT, deltaS):
+        # there is one function in stepMath, calcSplitTimesIfElse, that seems faster
+        # but can't get the last value that uses t,s,deltaT-last
+
+        fillerSteps = smath.calcFillerSteps(deltaT)
+        previousRoundedTime = 0
+        for k in range(0,fillerSteps):
+            roundedTime = int(round(deltaT*(k+1)/(fillerSteps+1)))
+            self.stepTuple.append((self.stepTuple[-1-k][0]+roundedTime/1000, self.stepTuple[-1][1] , roundedTime-previousRoundedTime, 121))
+            #print(f"after the zeroTime k={k} stepTuple appended:")
+            #print(self.stepTuple)
+            previousRoundedTime = roundedTime
+        self.stepTuple.append((t,s, deltaT-previousRoundedTime, deltaS))
+        #print(f"after the last on in frame j={j} frame: ")
+        #print(self.stepTuple)
 
     def dictSteps(self):
 
@@ -178,8 +184,8 @@ class Motor:
 
     @property
     def motorIndex(self):
-        return self.__motorIndex
+        return self._motorIndex
 
     @motorIndex.setter
     def motorIndex(self, mi):
-        __motorIndex = mi
+        _motorIndex = mi

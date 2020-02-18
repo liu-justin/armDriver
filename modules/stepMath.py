@@ -35,10 +35,9 @@ def calcStepsInFrame(frameCurrent, frameNext):
 	return int(abs(frameNext//stepAngle - frameCurrent//stepAngle)) + (1 if frameMin%stepAngle == 0 else 0)
 
 def calcHalfStepsInFrame(frameCurrent, frameNext):
-	frameMin = min(frameCurrent, frameNext)
 	return int(round(abs(floorHalfStep(frameNext) - floorHalfStep(frameCurrent))/stepAngle)) + (1 if (frameCurrent-stepAngle/2)%stepAngle == 0 else 0)
 
-def calcZeroSteps(time):
+def calcFillerSteps(time):
 	return time//int(frameTime*1000)
 
 def calcRoundedTime(k, zeroSteps, deltaT):
@@ -78,12 +77,13 @@ def calcSplitTimesIfElse(time, stepTuple):
 	for i in range(0,divisor):
 		stepTuple.append((stepTuple[-1][0]+ rounded + (0 if remainder <= 0 else 1), stepTuple[-1][1], rounded + (0 if remainder <= 0 else 1), 121))
 		remainder -= 1
+	stepTuple.append((stepTuple[-1][0]+time, stepTuple[-1][1], rounded, 120))
 
 # stepTuple = [(0,0.1245333), (0.039353591123, 0.1245669, 10, 121)]
-# deltaT = 185
+# deltaT = 240
 
 # startB = time.perf_counter()
-# zeroSteps = calcZeroSteps(deltaT)
+# zeroSteps = calcFillerSteps(deltaT)
 # previousRoundedTime = 0
 # for k in range(0,zeroSteps):
 #     roundedTime = int(round(deltaT*(k+1)/(zeroSteps+1)))
@@ -120,12 +120,6 @@ def calcSplitTimesIfElse(time, stepTuple):
 # endAIf = time.perf_counter()
 # print(f"timeAIf: {endAIf-startAIf}")
 # print(stepTuple)
-
-# def splitTime(x):
-# 	divisor = x//50+1
-# 	exact = x/divisor
-# 	roundedFract = x%divisor
-# 	return(x, divisor, exact, roundedFract, math.ceil(exact)*(roundedFract)+math.floor(exact)*(divisor - roundedFract))
 
 # stepsInFrame = int(abs(frameNext//smath.stepAngle - frameCurrent//smath.stepAngle)) + (1 if frameMin%smath.stepAngle == 0 else 0)
 # print(round((floorHalfStep(2.3291313354487455) - floorHalfStep(2.3241447965846715))/stepAngle))

@@ -1,6 +1,6 @@
 import modules.stepFinder as s
 import modules.pointFinder as p
-import modules.sendToArduinoStream as a
+#import modules.sendToArduinoStream as a
 import modules.motor as motor
 import modules.MotorList as MotorList
 
@@ -8,34 +8,36 @@ import time
 
 def main():
 
-	# test = p.Point(7,0)
-	# result = p.findAngle2D(test)
-	# print(result)
 	mm = MotorList.MotorList()
 	R0 = motor.Motor(mm)
 	RA = motor.Motor(mm)
 	#motorList = [R0, RA]
 
-	# maybe I see when stepsInFrame = 0, and the starting tuple combined messes some stuff up
+	testingTimes = []
 
-	while 1==1:
-		first = p.Point(2,4)
-		second = p.Point(3,8)
+	#while 1==1:
+	first = p.Point(2,4)
+	second = p.Point(0,8)
+	testingTimes.append(time.perf_counter())
+	p.linearTravel(first, second, mm)
+	testingTimes.append(time.perf_counter())
 
-		p.linearTravel(first, second, mm)
+	if mm[0].frameList == []:
+		print("angles is None, the linearTravel didn't go through the loop")
+		exit()
+	else:
+		#print(motorList[0].frameList)
+		s.getSteps(mm)
+		testingTimes.append(time.perf_counter())
 
-		if mm[0].frameList == []:
-		    print("angles is None, the linearTravel didn't go through the loop")
-		    exit()
-		else:
-			#print(motorList[0].frameList)
-			s.getSteps(mm)
+		# a.waitForArduino("{") # Arduino is ready! 
+		# a.initiateWithArduino(mm)
+		# while 1==1:
+		# 	a.communicateWithArduino(mm)
 
-			a.waitForArduino("{") # Arduino is ready! 
-			a.initiateWithArduino(mm)
-			while 1==1:
-				a.communicateWithArduino(mm)
+	testingDifference = [j-i for i,j in zip(testingTimes[:-1], testingTimes[1:])]
+	print(testingDifference)
+	print(testingDifference[1]/testingDifference[0])
 
-			#a.sendToArduinoDict(motorList)
 		
 main()
