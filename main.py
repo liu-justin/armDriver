@@ -2,6 +2,7 @@ import modules.stepFinder as s
 import modules.pointFinder as p
 import modules.sendToArduinoStream as a
 import modules.motor as motor
+import modules.motorManager as motorManager
 
 import time
 
@@ -14,6 +15,9 @@ def main():
 	R0 = motor.Motor(0)
 	RA = motor.Motor(1)
 	motorList = [R0, RA]
+	mm = motorManager.MotorManager()
+	mm.append(R0)
+	mm.append(RA)
 
 	# maybe I see when stepsInFrame = 0, and the starting tuple combined messes some stuff up
 

@@ -259,7 +259,7 @@ def linearTravel(startPoint, endPoint, motorList):
     #--------------PLOTTING LINEangleR0POINT2POINT GRAPHS------------------
 
 
-
+#region
 
 class MyTurtle(turtle.Turtle):
      
@@ -344,7 +344,7 @@ def singlePoint(x,y):
     
     testArc = Circle(ORIGIN,test.distanceTo(ORIGIN), 0)
 
-    angles = findAngle(test)
+    angles = findAngle2D(test)
     linkR.angle = angles[0]
     linkC.angle = angles[1]
     #linkC.angle = -test.angle
@@ -386,3 +386,4 @@ def drawAngleList(motorList):
 
     turtle.getscreen()._root.mainloop()
 
+#endregion

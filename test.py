@@ -30,13 +30,19 @@ for i in range(1,a+1):
 #endregion
 
 import modules.pointFinder as p
+import modules.motor as motor
+import modules.motorManager as motorManager
 
-while 1==1:
-	userInput = input("Home or Point: ")
-	print(userInput)
-	if (userInput == "Home"):
-		print("homing")
-	elif ("," in userInput):
-		userList = list(map(float, userInput.split(",")))
-		print(userList)
-		userPoint = p.Point(userList[0], userList[1])
+# while 1==1:
+# 	userInput = input("Home or Point: ")
+# 	print(userInput)
+# 	if (userInput == "Home"):
+# 		print("homing")
+# 	elif ("," in userInput):
+# 		userList = list(map(float, userInput.split(",")))
+# 		print(userList)
+# 		userPoint = p.Point(userList[0], userList[1])
+
+a = motor.Motor(0)
+b = motor.Motor(1)
+mm = motorManager.MotorManager()

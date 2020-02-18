@@ -14,7 +14,8 @@ class Motor:
         self.tupleCounter = 0
         self.stepDict = {}
 
-        self.state = 1
+        # 1:ready, 2:moving, 3:not homed 4: error
+        self.state = 3
         
     def listSteps(self):
         self.timeList.append(0)
@@ -95,8 +96,6 @@ class Motor:
         #print(f" last step: {self.stepTuple}")
 
     def tupleStepsHalfwayBtwnChange(self):
-        angleNext = self.frameList[1]
-        angleCurrent = self.frameList[0]
         #stepIter = smath.ceilStep(angleCurrent) if (angleNext - angleCurrent < 0) else smath.floorStep(angleCurrent)
         stepIter = smath.nearestStep(self.frameList[0])
         self.stepTuple.append((0,stepIter,0,121))
