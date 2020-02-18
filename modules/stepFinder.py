@@ -13,7 +13,7 @@ def getSteps(motorList):
         # m.tupleSteps()
         # plt.scatter([elem[0] for elem in m.stepTuple], [elem[1] for elem in m.stepTuple], label=f"Motor {m.motorIndex} tupleList")
         m.tupleStepsHalfwayBtwnChange()
-        #plt.scatter([elem[0] for elem in m.stepTuple], [elem[1] for elem in m.stepTuple], label=f"Motor {m.motorIndex} tupleList half")
+        plt.scatter([elem[0] for elem in m.stepTuple], [elem[1] for elem in m.stepTuple], label=f"Motor {m.motorIndex} tupleList half")
         
 
         #m.dictSteps()
@@ -22,7 +22,7 @@ def getSteps(motorList):
     # end = time.perf_counter()
     # print(f"dictionary route: {end-start}")
 
-    #plt.legend()
-    #plt.show() 
+    plt.legend()
+    plt.show() 
     
 

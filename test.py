@@ -31,7 +31,7 @@ for i in range(1,a+1):
 
 import modules.pointFinder as p
 import modules.motor as motor
-import modules.motorManager as motorManager
+import modules.MotorList as MotorList
 
 # while 1==1:
 # 	userInput = input("Home or Point: ")
@@ -43,6 +43,11 @@ import modules.motorManager as motorManager
 # 		print(userList)
 # 		userPoint = p.Point(userList[0], userList[1])
 
-a = motor.Motor(0)
-b = motor.Motor(1)
-mm = motorManager.MotorManager()
+mm = MotorList.MotorList()
+a = motor.Motor(mm)
+b = motor.Motor(mm)
+print(mm)
+
+for m in mm:
+	print(m.state)
+

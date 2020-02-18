@@ -81,7 +81,7 @@ linkR = Circle(ORIGIN, 7.39183102,0)
 #linkR = Circle(ORIGIN, 6.92335156,0)
 linkC = Circle(linkR.outside, 6.5,0)
 
-# lengths of the 4bangleR0linkage above the main arm
+# lengths of the 4angleR0linkage above the main arm
 aLength = 2.75
 bLength = 9.5
 cLength = 2.5
@@ -242,19 +242,19 @@ def linearTravel(startPoint, endPoint, motorList):
         tIter += smath.frameTime
     
     #--------------PLOTTING LINEAR POINT2POINT GRAPHS------------------
-    # fig, ax = plt.subplots()
+    fig, ax = plt.subplots()
 
-    # for motor in motorList:
-    #     ax.plot(tList, motor.frameList, label=f"Motor {motor.motorIndex} frameList")
-    #     #ax.scatter(tList, motor.frameList, s=4, label=f"{motor.motorIndex}")
+    for motor in motorList:
+        ax.plot(tList, motor.frameList, label=f"Motor {motor.motorIndex} frameList")
+        #ax.scatter(tList, motor.frameList, s=4, label=f"{motor.motorIndex}")
 
-    # plt.xlabel("time (secs)")
-    # plt.ylabel("angle from east (radians)")
-    # minorTicks = np.arange(-np.pi, np.pi, smath.stepAngle/2)
-    # #minorTicks = np.arange(1, 5, smath.stepAngle/2)
-    # ax.set_yticks(minorTicks, minor=True)
-    # plt.grid(b=True, which="minor")
-    # plt.legend()
+    plt.xlabel("time (secs)")
+    plt.ylabel("angle from east (radians)")
+    minorTicks = np.arange(-np.pi, np.pi, smath.stepAngle/2)
+    #minorTicks = np.arange(1, 5, smath.stepAngle/2)
+    ax.set_yticks(minorTicks, minor=True)
+    plt.grid(b=True, which="minor")
+    plt.legend()
   
     #--------------PLOTTING LINEangleR0POINT2POINT GRAPHS------------------
 
