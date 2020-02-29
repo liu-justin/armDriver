@@ -3,7 +3,7 @@ import numpy as np
 import time
 
 # for the comport, look in Arduino IDE when the arduino is connected
-ser = serial.Serial("COM4", 57600);
+ser = serial.Serial("COM4", 57600)
 
 def waitForArduino(passcode):
 	msg = ser.read().decode("unicode_escape")
