@@ -1,8 +1,12 @@
 import modules.basicShapes as bs
 import modules.pointFinder as p
+import modules.weightManager as wm
 import turtle
 import math
 import numpy as np
+
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 ORIGIN = bs.ORIGIN
 linkR = bs.linkR
@@ -114,8 +118,10 @@ def findAngle2D(test, newzero=False):
 
     except ValueError:
         print("math domain error")
+        return "error"
     except ZeroDivisionError:
         print("divide by zero")
+        return "error"
     
     mangleRR = np.pi/2 - (mangleRR + bs.MAINARM.angle_RO_RR_RC) #90 degrees, getting the angle for the vertical piece in mainArm
 
@@ -141,12 +147,13 @@ def findAngle2D(test, newzero=False):
 
 # uses findAngle and draws the correct links to the point
 def singlePoint(test):
+
+    weighter = wm.WeightManager()
     
-    testArc = bs.Circle(ORIGIN,test.distanceTo(ORIGIN), 0)
     angles = findAngle2D(test, True)
     bs.MAINARM.angle_VT_RR_RO = angles[0]
-    # linkR = bs.Circle(bs.ORIGIN, bs.MAINARM.length_RR_RC, 0)
-    # linkR.angle = angles[0]
+    weighter.appendPoint(bs.MAINARM.RA, 36.4) # 36.4 oz is weight of a NEMA23
+    print(f"total torque in ozin: {weighter.calcTorque()}")
     linkC = bs.Circle(bs.MAINARM.RC, 6.5, bs.MAINARM.vangle_RA_RC)
     linkC.angle = angles[1]
     print(f"angles: {angles[0]}, {angles[1]}")
@@ -158,10 +165,7 @@ def singlePoint(test):
     t.drawMainArm(bs.MAINARM)
     t.drawCircle(linkC, "black")
     t.drawCross(ORIGIN, "black")
-    t.drawCross(linkC.outside, "black")
-    t.drawCross(linkC.center, "black")
     t.drawCross(test, "red")
-    # t.drawCross(testArc.intersectionPoint(linkC))
 
     t.getscreen()._root.mainloop()
 
@@ -196,6 +200,39 @@ def multiplePoint():
                 # t.write(linkR.angle * 360/(2*np.pi)) # prints the angle number
 
     t.getscreen()._root.mainloop()
+
+def torquePointPlot(): # doesnt really work how I want it, cant visualize the code
+    w = wm.WeightManager()
+    # iterate through a grid of points, black points are reachable and grey points are not
+    for i in range(0,26):
+        for j in range(-26,26):
+            w.clear()
+
+            test = bs.Point(i/2,j/2)
+            angles = findAngle2D(test, True)
+            if angles == "error":
+                continue
+
+            bs.MAINARM.angle_VT_RR_RO = angles[0]
+            w.appendPoint(bs.MAINARM.RA, 36.4) # 36.4 oz is weight of a NEMA23
+            w.appendTorquePlot(i,j)
+
+    xPlot = np.array([i[0] for i in w.torquePlot])
+    yPlot = np.array([i[1] for i in w.torquePlot])
+    tqPlot = np.array([i[2] for i in w.torquePlot])
+
+    fig = plt.figure()
+    # ax = fig.add_subplot(111, projection='3d')
+    # ax.scatter(xPlot, yPlot, tqPlot)
+
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(xPlot, yPlot, tqPlot)
+
+    ax.set_xlabel('X (in)')
+    ax.set_ylabel('Y (in)')
+    ax.set_zlabel('Torque about RR (oz-in)')
+
+    plt.show()
 
 # draws the path of the point in turtle
 def drawAngleList(motorList):
