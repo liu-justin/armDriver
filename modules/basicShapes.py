@@ -19,13 +19,13 @@ class Circle(Point):
         self.radius = r
 
         # angle for _angle to reference off of (2nd tilt motor is referenced off of 1st tilt motor angle)
-        self.baseAngle = a
+        self.refAngle = a
 
         # angle controls where the outside point is in the angulangleR0coordinate
-        self._angle = a
+        self._angle = 0
 
         # outside point will sit on the circle circumference, always radius length away from center point
-        self.outside = Point(self.x + r*math.cos(self.angle),self.y + r*math.sin(self.angle))
+        self.outside = Point(self.x + r*math.cos(self.refAngle+self.angle),self.y + r*math.sin(self.refAngle+self.angle))
     
     # returns one of the intersection points between two circles, obsolete i think
     def intersectionPoint(self, other):
@@ -52,8 +52,8 @@ class Circle(Point):
     @angle.setter
     def angle(self, a):
         self._angle = a
-        self.outside.x = self.x + self.radius*math.cos(self._angle)
-        self.outside.y = self.y + self.radius*math.sin(self._angle)
+        self.outside.x = self.x + self.radius*math.cos(self.refAngle+self._angle)
+        self.outside.y = self.y + self.radius*math.sin(self.refAngle+self._angle)
 
     @property
     def x(self):
@@ -93,15 +93,18 @@ class MainArm:
         self.point_RA_x = self.RO.x - self.length_RO_RA * math.sin(self.angle_RR_RO_RA+self.angle_VT_RR_RO)
         self.point_RA_y = self.RO.y - self.length_RO_RA * math.cos(self.angle_RR_RO_RA+self.angle_VT_RR_RO) #!!!        
         self.RA = Point(self.point_RA_x, self.point_RA_y)
+        self.vector_RA_RC = np.array([self.RC.x - self.RA.x, self.RC.y - self.RA.y])
+        self.vangle_RA_RC = np.tan(self.vector_RA_RC[1]/self.vector_RA_RC[0])
 
     def refindPoints(self):
-        self.RO = Point(self.length_RR_RO*math.sin(self.angle_VT_RR_RO),self.length_RR_RO*math.cos(self.angle_VT_RR_RO))
-        self.point_RC_x = self.RO.x + self.length_RO_RC * math.sin(self.angle_RR_RO_RC-self.angle_VT_RR_RO)
-        self.point_RC_y = self.RO.y - self.length_RO_RC * math.cos(self.angle_RR_RO_RC-self.angle_VT_RR_RO) #!!!
-        self.RC = Point(self.point_RC_x, self.point_RC_y)
-        self.point_RA_x = self.RO.x - self.length_RO_RA * math.sin(self.angle_RR_RO_RA-self.angle_VT_RR_RO)
-        self.point_RA_y = self.RO.y + self.length_RO_RA * math.cos(self.angle_RR_RO_RA-self.angle_VT_RR_RO) #!!!        
-        self.RA = Point(self.point_RA_x, self.point_RA_y)
+        self.RO.x = self.length_RR_RO*math.sin(self.angle_VT_RR_RO)
+        self.RO.y = self.length_RR_RO*math.cos(self.angle_VT_RR_RO)
+        self.RC.x = self.RO.x + self.length_RO_RC * math.sin(self.angle_RR_RO_RC-self.angle_VT_RR_RO)
+        self.RC.y = self.RO.y - self.length_RO_RC * math.cos(self.angle_RR_RO_RC-self.angle_VT_RR_RO) #!!!
+        self.RA.x = self.RO.x - self.length_RO_RA * math.sin(self.angle_RR_RO_RA-self.angle_VT_RR_RO)
+        self.RA.y = self.RO.y + self.length_RO_RA * math.cos(self.angle_RR_RO_RA-self.angle_VT_RR_RO) #!!!        
+        self.vector_RA_RC = np.array([self.RC.x - self.RA.x, self.RC.y - self.RA.y])
+        self.vangle_RA_RC = math.atan2(self.vector_RA_RC[1],self.vector_RA_RC[0])
 
 
     @property
@@ -115,7 +118,6 @@ class MainArm:
 
 ORIGIN = Point(0, 0)
 linkR = Circle(ORIGIN, 7.39183102,0)
-#linkR = Circle(ORIGIN, 6.92335156,0)
 linkC = Circle(linkR.outside, 6.5,0)
 MAINARM = MainArm()
 print(MAINARM.length_RR_RC)

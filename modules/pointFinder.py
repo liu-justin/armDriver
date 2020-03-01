@@ -7,7 +7,7 @@ import modules.stepMath as smath
 
 import modules.basicShapes as bs
 
-# lengths of the 4angleR0linkage above the main arm
+# lengths of the 4mangleRRlinkage above the main arm
 aLength = 2.75
 bLength = 9.5
 cLength = 2.5
@@ -26,8 +26,8 @@ def findAngle2D(test, newzero=False):
     x = math.sqrt(z**2 + x**2)
 
     # initializing final tuple to return
-    angleR0= 0
-    angleRA= 0
+    mangleRR= 0
+    mangleRA= 0
 
     # equation k1 = k2*cos + k3*sin, came from circle equation from circle C
     k1 = x**2 + y**2 + (rR**2) - (rC**2)
@@ -45,7 +45,7 @@ def findAngle2D(test, newzero=False):
 
             quad = (-b + math.sqrt(b**2 - 4*a*c))/(2*a) # quadratic formula, get the lower right most solutiion
             #linkR.angle = np.arccos(quad)
-            angleR0= np.arccos(quad)
+            mangleRR= np.arccos(quad)
         else:
             # a*sin^2 + b*sin + c = 0
             a = -(k2**2)-(k3**2)
@@ -55,7 +55,7 @@ def findAngle2D(test, newzero=False):
             quad = (-b - math.sqrt(b**2 - 4*a*c))/(2*a)
 
             #linkR.angle = np.arcsin(quad)
-            angleR0= np.arcsin(quad)
+            mangleRR= np.arcsin(quad)
 
     except ValueError:
         print("math domain error")
@@ -63,38 +63,38 @@ def findAngle2D(test, newzero=False):
         print("divide by zero")
     
     # setting the angle on Circle R (necessary to get linkR.outside updated, so that linkC.center is updated)
-    bs.linkR.angle = angleR0
-    bs.linkC.baseAngle = angleR0
+    bs.linkR.angle = mangleRR
+    bs.linkC.baseAngle = mangleRR
 
     # finding the angle on Circle C
     distY = y - bs.linkR.outside.y
     distX = x - bs.linkR.outside.x
 
-    # this angle is referenced to the global reference plane, needs to be from angleR0angle reference plane
+    # this angle is referenced to the global reference plane, needs to be from mangleRRangle reference plane
     # angleD is the angle inside the upper quad, so we have to reverse the angle
-    angleD = angleR0- math.atan2(distY,distX)
+    angleD = mangleRR- math.atan2(distY,distX)
 
     # geometry to get input stepper angle, using law of sines and cosines
     midLine = math.sqrt(cLength**2 + dLength**2 - 2*cLength*dLength*math.cos(angleD))
     angleCAD = np.arcsin(cLength*math.sin(angleD)/midLine)
     angleBAC = np.arccos((aLength**2 + midLine**2 - bLength**2)/(2*aLength*midLine))
-    angleRA = angleCAD + angleBAC
+    mangleRA = angleCAD + angleBAC
 
-    # not necessary when filling out angles from lineangleR0travel, only for drawing
-    bs.linkC.angle = angleRA
+    # not necessary when filling out angles from linemangleRRtravel, only for drawing
+    bs.linkC.angle = mangleRA
 
     if (newzero):
-        angleR0 = 90 - (angleR0 + bs.MAINARM.angle_RO_RR_RC)
-        #angleRA = 90 - (angleRA + bs.MAINARM.angle_RO_RR_RA)
-        return (angleR0, angleD)
+        mangleRR = 90 - (mangleRR + bs.MAINARM.angle_RO_RR_RC)
+        #mangleRA = 90 - (mangleRA + bs.MAINARM.angle_RO_RR_RA)
+        return (mangleRR, angleD)
 
     # adding missing radians(angle from base circle to RA to RC)
-    angleRA += 0.1931807502
+    mangleRA += 0.1931807502
 
     # adding the missing radians from main amrs weird geometry (angle from base circle to R0 to RC)
-    angleR0 += 1.243288929048
+    mangleRR += 1.243288929048
 
-    return (angleR0, angleRA)
+    return (mangleRR, mangleRA)
 
 # looks like this is slower than what is already at line 148, uses a constraint equation
 def findAngleRA(theta):
@@ -113,7 +113,7 @@ def findAngleRA(theta):
 def withinRange(test):
     return (bs.linkR.radius - bs.linkC.radius < test.distanceTo(bs.ORIGIN) and test.distanceTo(bs.ORIGIN) < bs.linkR.radius + bs.linkC.radius)
 
-# getting the proper step angle values for lineangleR0interpolation
+# getting the proper step angle values for linemangleRRinterpolation
 def linearTravel(startPoint, endPoint, motorList):
 
     # startPoint check the two points to see if they are reachable, do a within range
@@ -186,4 +186,4 @@ def linearTravel(startPoint, endPoint, motorList):
     plt.grid(b=True, which="minor")
     plt.legend()
   
-    #--------------PLOTTING LINEangleR0POINT2POINT GRAPHS------------------
+    #--------------PLOTTING LINEmangleRRPOINT2POINT GRAPHS------------------

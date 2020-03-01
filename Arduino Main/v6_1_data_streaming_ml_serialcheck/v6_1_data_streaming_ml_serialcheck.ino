@@ -12,12 +12,12 @@ void setup() {
   Serial.begin(57600);
   
   // setting state to homing intialization
-  mm.setAllStates(45);
-  Serial.write("{"); // Arduino is ready! {
-  while(!mm.checkTimes()) {
-    waitAndReadInit();
-  }
-  Serial.write("}"); //}
+  mm.setAllStates(15);
+//  Serial.write("{"); // Arduino is ready! {
+//  while(!mm.checkTimes()) {
+//    waitAndReadInit();
+//  }
+//  Serial.write("}"); //}
 }
 
 void loop() {

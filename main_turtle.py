@@ -4,6 +4,6 @@ import modules.motor as motor
 import modules.MotorList as MotorList
 
 def main():
-	first = bs.Point(4,5)
+	first = bs.Point(4,1)
 	p.singlePoint(first)
 main()
