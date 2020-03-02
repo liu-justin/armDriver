@@ -117,10 +117,10 @@ def findAngle2D(test, newzero=False):
             mangleRR= np.arcsin(quad)
 
     except ValueError:
-        print("math domain error")
+        # print("math domain error")
         return "error"
     except ZeroDivisionError:
-        print("divide by zero")
+        # print("divide by zero")
         return "error"
     
     mangleRR = np.pi/2 - (mangleRR + bs.MAINARM.angle_RO_RR_RC) #90 degrees, getting the angle for the vertical piece in mainArm
@@ -201,7 +201,8 @@ def multiplePoint():
 
     t.getscreen()._root.mainloop()
 
-def torquePointPlot(): # doesnt really work how I want it, cant visualize the code
+# shows the torque about RR at each of the test Points available
+def torquePointPlot():
     w = wm.WeightManager()
     # iterate through a grid of points, black points are reachable and grey points are not
     for i in range(0,26):
@@ -233,6 +234,44 @@ def torquePointPlot(): # doesnt really work how I want it, cant visualize the co
     ax.set_zlabel('Torque about RR (oz-in)')
 
     plt.show()
+
+def adjustmentsPlot(param): # no need for kwargs here, because we can only have one args
+    # getattr(bs.MAINARM, param)
+    middle = bs.MAINARM.d[param]
+    
+    rangeParam = np.arange(middle*0.5, middle*1.5, middle*0.1)
+
+    adjustmentList = [] # list of tuples, (param, max)
+
+    w = wm.WeightManager()
+    # iterate through a grid of points, black points are reachable and grey points are not
+    for p in rangeParam:
+        bs.MAINARM.d[param] = p
+        w.clearTorquePlot()
+        for i in range(0,13):
+            for j in range(-13,13):
+                w.clear()
+
+                test = bs.Point(i,j)
+                angles = findAngle2D(test, True)
+                if angles == "error":
+                    continue
+
+                bs.MAINARM.angle_VT_RR_RO = angles[0]
+                w.appendPoint(bs.MAINARM.RA, 36.4) # 36.4 oz is weight of a NEMA23
+                w.appendTorquePlot(i,j)
+        tqArray = np.array([a[2] for a in w.torquePlot])
+        tqMax = np.max(tqArray)
+        tqMin = np.min(tqArray)
+
+        adjustmentList.append((p, max(tqMax, tqMin)))
+
+    fig = plt.figure()
+    plt.plot([i[0] for i in adjustmentList], [i[1] for i in adjustmentList])
+    plt.xlabel(param)
+    plt.ylabel("Torque (ozin)")
+    plt.show()
+
 
 # draws the path of the point in turtle
 def drawAngleList(motorList):

@@ -75,7 +75,8 @@ class Circle(Point):
 # RR is at Point(0,0), RO is the middle point, RA is the back point, and RC is the front point, VT is the zero angle, straight up
 class MainArm:
     def __init__(self):
-        self._angle_VT_RR_RO = 0
+        self.d = {}
+        self.d["angle_VT_RR_RO"] = 0
         self.length_RR_RO = 2.5
         self.length_RO_RC = 7
         self.length_RO_RA = 2.5
@@ -106,15 +107,55 @@ class MainArm:
         self.vector_RA_RC = np.array([self.RC.x - self.RA.x, self.RC.y - self.RA.y])
         self.vangle_RA_RC = math.atan2(self.vector_RA_RC[1],self.vector_RA_RC[0])
 
-
     @property
     def angle_VT_RR_RO(self):
-        return self._angle_VT_RR_RO
+        return self.d["angle_VT_RR_RO"]
 
     @angle_VT_RR_RO.setter
     def angle_VT_RR_RO(self, a):
-        self._angle_VT_RR_RO = a
+        self.d["angle_VT_RR_RO"] = a
         self.refindPoints()
+
+    @property
+    def length_RR_RO(self):
+        return self.d["length_RR_RO"]
+
+    @length_RR_RO.setter
+    def length_RR_RO(self, l):
+        self.d["length_RR_RO"] = l  
+    
+    @property
+    def length_RO_RC(self):
+        return self.d["length_RO_RC"]
+
+    @length_RO_RC.setter
+    def length_RO_RC(self, l):
+        self.d["length_RO_RC"] = l  
+
+    @property
+    def length_RO_RA(self):
+        return self.d["length_RO_RA"]
+
+    @length_RO_RA.setter
+    def length_RO_RA(self, l):
+        self.d["length_RO_RA"] = l 
+
+    @property
+    def angle_RR_RO_RC(self):
+        return self.d["angle_RR_RO_RC"]
+
+    @angle_RR_RO_RC.setter
+    def angle_RR_RO_RC(self, a):
+        self.d["angle_RR_RO_RC"] = a
+
+    @property
+    def angle_RR_RO_RA(self):
+        return self.d["angle_RR_RO_RA"]
+
+    @angle_RR_RO_RA.setter
+    def angle_RR_RO_RA(self, a):
+        self.d["angle_RR_RO_RA"] = a
+
 
 ORIGIN = Point(0, 0)
 linkR = Circle(ORIGIN, 7.39183102,0)

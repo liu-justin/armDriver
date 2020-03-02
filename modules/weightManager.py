@@ -16,6 +16,8 @@ class WeightManager:
     def clear(self):
         self.pointList = []
 
+    def clearTorquePlot(self):
+        self.torquePlot = []
 
     def calcTorque(self):
         totalTorque = 0
