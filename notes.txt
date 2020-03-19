@@ -321,6 +321,8 @@ WSL doesnt allow access to comports, so I cant communicate with my arduino
 - says rosed isn't a recognized command, thats not good
 - the ports aren't tty/blah, its just COM5, or COM4
 
+- to rosrun, need to add scripts/{filename}
+
 --------------------------------------------
 rosserial
 -------------------
@@ -400,3 +402,33 @@ void loop()
   nh.spinOnce(); // all ROS communication callbacks are handled, will pass messages to subscriber sub
   delay(1);
 }
+############################
+
+Push Button tutorial is good for the limit switches
+
+----------------------
+added 'call catkin_ws/dev/setup.bat' to the opt/ros/melodic/x64/setup.bat, now roscd works on startup
+- rosed still doesn't work
+
+changed EndpointsToSteps.srv --> EndpointsTest.srv
+- made decision that the client would only provide the endpoints, then the main_server would do the rest and communicate with the arduino
+
+Python 2 doesn't have time.perf_counter, very bad
+- have to use time.clock() for windows, time.time() for unix
+
+getting ready for blind publisher subscriber to arduino
+
+----------------------------
+in Motor.py, my setter for tupleIndex wasn't working, it was just creating a new variable m.tupleIndex instead of editing the existing m._tupleIndex
+- fixed it by changing the top class Motor: --> class Motor(object):
+
+------------------------------
+message filters are good for bundling data coming from multiple subscribers
+
+----------------
+ring buffers
+- array with a fixed size, like a bounded queue
+- has a read position and write position which marks the next position to read/write to ring buffer
+    - when either position reaches the end of the array, it continues from the beginning of the array
+
+- all the data is to the right of the read position, up to the write position 
