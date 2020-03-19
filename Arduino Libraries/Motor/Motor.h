@@ -27,6 +27,10 @@ class Motor {
 		
 		int getLimitPin();
 
+		void pushLimitValue(int incoming);
+		bool checkLimitValues();
+		void printLimitValues();
+
 		void setStep(int incomingStep);
 		int getStep();
 		
@@ -62,6 +66,11 @@ class Motor {
 		int _statePrevious;
 		int _ccwFlag;
 		int _cwFlag;
+
+		int _limitValuesWritePointer = 0;
+		static const int _limitValuesSize = 4;
+		int _limitValues[_limitValuesSize] = {0,0,0,0};
+
 
 };
 

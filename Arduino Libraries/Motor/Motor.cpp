@@ -127,3 +127,26 @@ void Motor::setRelativeMoveCounter(int incomingCounter) {
 void Motor::decrementRelativeMoveCounter() {
 	_relativeMoveCounter -= 1;
 }
+
+void Motor::pushLimitValue(int incoming) {
+	_limitValues[_limitValuesWritePointer] = incoming;
+	_limitValuesWritePointer++;
+	if (_limitValuesWritePointer >= _limitValuesSize) {
+		_limitValuesWritePointer = 0;
+	}
+}
+
+void Motor::printLimitValues() {
+	for (int i = 0; i < _limitValuesSize; i++) {
+		Serial.print(_limitValues[i]);
+		Serial.print(", ");
+	}
+	Serial.println(" ");
+}
+
+bool Motor::checkLimitValues() {
+	for (int i = 0; i < _limitValuesSize; i++) {
+		if (_limitValues[i] == 1) return true;
+	}
+	return false;
+}

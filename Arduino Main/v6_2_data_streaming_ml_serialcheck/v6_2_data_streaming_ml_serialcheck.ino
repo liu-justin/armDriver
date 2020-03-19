@@ -104,7 +104,7 @@ void loop() {
             mm.getMotor(i)->consumeDir();
             Serial.write(i);
         }
-        if (digitalRead(mm.getMotor(i)->getLimitPin()) == 1){
+        if (mm.getMotor(i)->checkLimitValues()){
           mm.getMotor(i)->setState(99);
         }
         break;
