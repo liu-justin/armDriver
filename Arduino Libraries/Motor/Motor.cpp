@@ -128,8 +128,8 @@ void Motor::decrementRelativeMoveCounter() {
 	_relativeMoveCounter -= 1;
 }
 
-void Motor::pushLimitValue(int incoming) {
-	_limitValues[_limitValuesWritePointer] = incoming;
+void Motor::pushLimitValue() {
+	_limitValues[_limitValuesWritePointer] = digitalRead(_limitPin);
 	_limitValuesWritePointer++;
 	if (_limitValuesWritePointer >= _limitValuesSize) {
 		_limitValuesWritePointer = 0;
@@ -145,6 +145,9 @@ void Motor::printLimitValues() {
 }
 
 bool Motor::checkLimitValues() {
+	for (int i = 0; i < _limitValuesSize; i++) {
+		pushLimitValue();
+	}
 	for (int i = 0; i < _limitValuesSize; i++) {
 		if (_limitValues[i] == 1) return true;
 	}
