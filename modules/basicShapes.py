@@ -26,7 +26,10 @@ class Circle(Point):
 
         # outside point will sit on the circle circumference, always radius length away from center point
         self.outside = Point(self.x + r*math.cos(self.refAngle+self.angle),self.y + r*math.sin(self.refAngle+self.angle))
-    
+
+    def __str__(self):
+        return f"(center: {self.center}, refAngle: {self.refAngle}, angle: {self.angle})"
+
     # returns one of the intersection points between two circles, obsolete i think
     def intersectionPoint(self, other):
         x1 = 0.5*(self.x + other.x)
@@ -106,6 +109,8 @@ class MainArm:
         self.RA.y = self.RO.y + self.length_RO_RA * math.cos(self.angle_RR_RO_RA-self.angle_VT_RR_RO) #!!!        
         self.vector_RA_RC = np.array([self.RC.x - self.RA.x, self.RC.y - self.RA.y])
         self.vangle_RA_RC = math.atan2(self.vector_RA_RC[1],self.vector_RA_RC[0])
+        linkC.center = self.RC
+        linkC.refAngle = self.vangle_RA_RC    
 
     @property
     def angle_VT_RR_RO(self):

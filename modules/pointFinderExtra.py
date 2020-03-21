@@ -135,6 +135,11 @@ def findAngle2D(test, newzero=False):
     # this angle is referenced to the global reference plane, needs to be from mangleRRangle reference plane
     # angleD is the angle inside the upper quad, so we have to reverse the angle
     angleD = math.atan2(distY,distX) - bs.MAINARM.vangle_RA_RC
+    # bs.linkC.center = bs.MAINARM.RC
+    # bs.linkC.refAngle = bs.MAINARM.vangle_RA_RC
+    bs.linkC.angle = angleD # setting the angle finds outside again, so make sure to do it last
+    # print(bs.linkC)
+    
 
     # geometry to get input stepper angle, using law of sines and cosines
     # midLine = math.sqrt(cLength**2 + dLength**2 - 2*cLength*dLength*math.cos(angleD))
@@ -151,19 +156,20 @@ def singlePoint(test):
     weighter = wm.WeightManager()
     
     angles = findAngle2D(test, True)
-    bs.MAINARM.angle_VT_RR_RO = angles[0]
     weighter.appendPoint(bs.MAINARM.RA, 36.4) # 36.4 oz is weight of a NEMA23
     print(f"total torque in ozin: {weighter.calcTorque()}")
-    linkC = bs.Circle(bs.MAINARM.RC, 6.5, bs.MAINARM.vangle_RA_RC)
-    linkC.angle = angles[1]
+    # linkC = bs.Circle(bs.MAINARM.RC, 6.5, bs.MAINARM.vangle_RA_RC)
+    # linkC.angle = angles[1]
+    # print(linkC)
     print(f"angles: {angles[0]}, {angles[1]}")
 
+    print(f"linkC outside point: {bs.linkC.outside}")
 
     t = MyTurtle()
     t.speed(0)
     t.hideturtle()
     t.drawMainArm(bs.MAINARM)
-    t.drawCircle(linkC, "black")
+    t.drawCircle(bs.linkC, "black")
     t.drawCross(ORIGIN, "black")
     t.drawCross(test, "red")
 
