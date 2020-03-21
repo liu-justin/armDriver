@@ -1,4 +1,4 @@
-import modules.pointFinderExtra as p
+import modules.pointFinder as p
 import modules.basicShapes as bs
 import modules.motor as motor
 import modules.MotorList as MotorList

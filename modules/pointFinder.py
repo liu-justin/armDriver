@@ -1,17 +1,75 @@
+import modules.basicShapes as bs
+import modules.weightManager as wm
+import turtle
 import math
 import numpy as np
-import time
 
 import matplotlib.pyplot as plt
-import modules.stepMath as smath
+from mpl_toolkits.mplot3d import Axes3D
 
-import modules.basicShapes as bs
+ORIGIN = bs.ORIGIN
+linkR = bs.linkR
+linkC = bs.linkC
 
-# lengths of the 4mangleRRlinkage above the main arm
-aLength = 2.75
-bLength = 9.5
-cLength = 2.5
-dLength = 9.43702304
+class MyTurtle(turtle.Turtle):
+     
+    def __init__(self):
+        """Turtle Constructor"""
+        turtle.Turtle.__init__(self, shape="turtle")
+
+    def pointPosition(self, point):
+        self.setposition(point.x*10,point.y*10)
+ 
+    #Moves the turtle to the correct position and draws a circle    
+    def drawCircle(self, circle, color="black"):
+        
+
+        self.color(color)
+        self.penup()
+
+        # drawing line from center to outside
+        self.setposition(circle.x*10, circle.y*10)
+        self.pendown()
+        self.setposition(circle.outside.x*10, circle.outside.y*10)
+        self.penup()
+
+        # drawing circle
+        self.setposition(circle.x*10, 10*(circle.y - circle.radius))
+        self.pendown()
+        self.setheading(0)
+        self.circle(circle.radius*10)
+
+    # draws a cross at the correct location
+    def drawCross(self, other, color="black"):
+        self.color(color)
+        self.penup()
+        self.setposition(other.x*10, 10*other.y)
+        self.setheading(0)
+        self.pendown()
+        self.forward(2)
+        self.backward(4)
+        self.setposition(other.x*10, other.y*10)
+        self.setheading(90)
+        self.forward(2)
+        self.backward(4)
+        self.penup()
+
+        # set up for drawing text next to the cross
+        self.setposition(other.x*10+6, other.y*10-5)
+
+    def drawMainArm(self, main, color="black"):
+        self.color(color)
+        self.penup()
+        self.pointPosition(bs.ORIGIN)
+        self.pendown()
+        self.pointPosition(main.RO)
+        self.pointPosition(main.RC)
+        self.penup()
+        self.pointPosition(main.RO)
+        self.pendown()
+        self.pointPosition(main.RA)
+        self.penup()
+
 
 # find the angles of startPoint tilt and endPoint tilt motor
 def findAngle2D(test, newzero=False):
@@ -58,132 +116,184 @@ def findAngle2D(test, newzero=False):
             mangleRR= np.arcsin(quad)
 
     except ValueError:
-        print("math domain error")
+        # print("math domain error")
+        return "error"
     except ZeroDivisionError:
-        print("divide by zero")
+        # print("divide by zero")
+        return "error"
     
-    # setting the angle on Circle R (necessary to get linkR.outside updated, so that linkC.center is updated)
-    bs.linkR.angle = mangleRR
-    bs.linkC.baseAngle = mangleRR
+    mangleRR = np.pi/2 - (mangleRR + bs.MAINARM.angle_RO_RR_RC) #90 degrees, getting the angle for the vertical piece in mainArm
 
-    # finding the angle on Circle C
-    distY = y - bs.linkR.outside.y
-    distX = x - bs.linkR.outside.x
+    # setting the mangle for mainarm and getting all of the subsequent variables of mainarm
+    bs.MAINARM.angle_VT_RR_RO = mangleRR
+
+    distY = y - bs.MAINARM.RC.y
+    distX = x - bs.MAINARM.RC.x
+    #tempVector = np.array([distX, distY])
 
     # this angle is referenced to the global reference plane, needs to be from mangleRRangle reference plane
     # angleD is the angle inside the upper quad, so we have to reverse the angle
-    angleD = mangleRR- math.atan2(distY,distX)
+    angleD = math.atan2(distY,distX) - bs.MAINARM.vangle_RA_RC
+    # bs.linkC.center = bs.MAINARM.RC
+    # bs.linkC.refAngle = bs.MAINARM.vangle_RA_RC
+    bs.linkC.angle = angleD # setting the angle finds outside again, so make sure to do it last
+    # print(bs.linkC)
+    
 
     # geometry to get input stepper angle, using law of sines and cosines
-    midLine = math.sqrt(cLength**2 + dLength**2 - 2*cLength*dLength*math.cos(angleD))
-    angleCAD = np.arcsin(cLength*math.sin(angleD)/midLine)
-    angleBAC = np.arccos((aLength**2 + midLine**2 - bLength**2)/(2*aLength*midLine))
-    mangleRA = angleCAD + angleBAC
+    # midLine = math.sqrt(cLength**2 + dLength**2 - 2*cLength*dLength*math.cos(angleD))
+    # angleCAD = np.arcsin(cLength*math.sin(angleD)/midLine)
+    # angleBAC = np.arccos((aLength**2 + midLine**2 - bLength**2)/(2*aLength*midLine))
+    # mangleRA = angleCAD + angleBAC
 
-    # not necessary when filling out angles from linemangleRRtravel, only for drawing
-    bs.linkC.angle = mangleRA
-
-    if (newzero):
-        mangleRR = 90 - (mangleRR + bs.MAINARM.angle_RO_RR_RC)
-        #mangleRA = 90 - (mangleRA + bs.MAINARM.angle_RO_RR_RA)
-        return (mangleRR, angleD)
-
-    # adding missing radians(angle from base circle to RA to RC)
-    mangleRA += 0.1931807502
-
-    # adding the missing radians from main amrs weird geometry (angle from base circle to R0 to RC)
-    mangleRR += 1.243288929048
-
-    return (mangleRR, mangleRA)
-
-# looks like this is slower than what is already at line 148, uses a constraint equation
-def findAngleRA(theta):
-    start = time.perf_counter()    
-    A = -2*aLength*dLength + 2*aLength*cLength*math.cos(theta)
-    B = -2*aLength*cLength*math.sin(theta)
-    C = aLength**2 - bLength**2 + cLength**2 + dLength**2 - 2*cLength*dLength*math.cos(theta)
-
-    ending =  math.atan2(B,A) + np.arccos(-1*C/math.sqrt(A**2 + B**2))
-    end = time.perf_counter()
-
-    return ending, end-start
+    return (mangleRR, angleD)
 
 
-# determines if test point is within circle C
-def withinRange(test):
-    return (bs.linkR.radius - bs.linkC.radius < test.distanceTo(bs.ORIGIN) and test.distanceTo(bs.ORIGIN) < bs.linkR.radius + bs.linkC.radius)
+# uses findAngle and draws the correct links to the point
+def singlePoint(test):
 
-# getting the proper step angle values for linemangleRRinterpolation
-def linearTravel(startPoint, endPoint, motorList):
-
-    # startPoint check the two points to see if they are reachable, do a within range
-    returnString = "the following points are out of range: "
-    if (not withinRange(startPoint)):
-        returnString += str(startPoint)
-    if (not withinRange(endPoint)):
-        returnString += str(endPoint)
-
-    # if returnString has changed, that means one of the points aren't within range
-    if (len(returnString) != 39):
-        print(returnString)
-        return
+    weighter = wm.WeightManager()
     
-    speed = smath.speed
+    angles = findAngle2D(test, True)
+    weighter.appendPoint(bs.MAINARM.RA, 36.4) # 36.4 oz is weight of a NEMA23
+    print(f"total torque in ozin: {weighter.calcTorque()}")
+    # linkC = bs.Circle(bs.MAINARM.RC, 6.5, bs.MAINARM.vangle_RA_RC)
+    # linkC.angle = angles[1]
+    # print(linkC)
+    print(f"angles: {angles[0]}, {angles[1]}")
+
+    print(f"linkC outside point: {bs.linkC.outside}")
+
+    t = MyTurtle()
+    t.speed(0)
+    t.hideturtle()
+    t.drawMainArm(bs.MAINARM)
+    t.drawCircle(bs.linkC, "black")
+    t.drawCross(ORIGIN, "black")
+    t.drawCross(test, "red")
+
+    t.getscreen()._root.mainloop()
+
+# shows the range of the machine
+def multiplePoint():
     
-    xLength = endPoint.x - startPoint.x
-    yLength = endPoint.y - startPoint.y
-    zLength = endPoint.z - startPoint.z
-    totalLength = math.sqrt(xLength**2 + yLength**2 + zLength**2)
-    totalTime = totalLength/speed
+    # initialize turtle
+    t = MyTurtle()
+    t.speed(0)
+    t.hideturtle()
 
-    # this is to set a minumum number of frames for the steps to work on, but with a smaller step size I don't think it is necessary
-    if (totalTime/40 < smath.frameTime):
-        smath.frameTime = totalTime/40
+    t.drawCircle(linkR, "black")
+    t.drawCross(ORIGIN, "black")
 
+    # iterate through a grid of points, black points are reachable and grey points are not
+    for i in range(0,13):
+        for j in range(-12,12):
+            test = bs.Point(i,j)
+            angle = findAngle2D(test, True)
+
+            # if the linkC overlaps directly ontop of test
+            if (abs(linkR.outside.distanceTo(test)-6.5) <=0.0001):
+                t.drawCross(test, "black")
+                #t.write(linkR.angle *360/(2*np.pi))  # prints the angle number next to the cross, only use when i is limited to 1 increment
+                #linkT = Circle(linkR.outside.x,linkR.outside.y,6.5,0) # initialize and draw the circle to see movement
+                #t.drawCircle(linkT,"grey")
+
+            # if linkC doesn't overlap with test
+            else:
+                t.drawCross(test, "red")
+                # linkR.angle = linkR.angle + np.pi/4 # I dunno what this is, so I just comment it out
+                # t.write(linkR.angle * 360/(2*np.pi)) # prints the angle number
+
+    t.getscreen()._root.mainloop()
+
+# shows the torque about RR at each of the test Points available
+def torquePointPlot():
+    w = wm.WeightManager()
+    # iterate through a grid of points, black points are reachable and grey points are not
+    for i in range(0,26):
+        for j in range(-26,26):
+            w.clear()
+
+            test = bs.Point(i/2,j/2)
+            angles = findAngle2D(test, True)
+            if angles == "error":
+                continue
+
+            bs.MAINARM.angle_VT_RR_RO = angles[0]
+            w.appendPoint(bs.MAINARM.RA, 36.4) # 36.4 oz is weight of a NEMA23
+            w.appendTorquePlot(i,j)
+
+    xPlot = np.array([i[0] for i in w.torquePlot])
+    yPlot = np.array([i[1] for i in w.torquePlot])
+    tqPlot = np.array([i[2] for i in w.torquePlot])
+
+    fig = plt.figure()
+    # ax = fig.add_subplot(111, projection='3d')
+    # ax.scatter(xPlot, yPlot, tqPlot)
+
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(xPlot, yPlot, tqPlot)
+
+    ax.set_xlabel('X (in)')
+    ax.set_ylabel('Y (in)')
+    ax.set_zlabel('Torque about RR (oz-in)')
+
+    plt.show()
+
+def adjustmentsPlot(param): # no need for kwargs here, because we can only have one args
+    # getattr(bs.MAINARM, param)
+    middle = bs.MAINARM.d[param]
     
-    frameSteps = math.ceil(totalTime/smath.frameTime)   # number of frames
+    rangeParam = np.arange(middle*0.5, middle*1.5, middle*0.1)
 
-    xFrame = xLength/frameSteps # caculating the distance each frame will go
-    yFrame = yLength/frameSteps
-    zFrame = zLength/frameSteps
-    xIter = startPoint.x          # intializing the variables that will iterate
-    yIter = startPoint.y
-    zIter = startPoint.z
-    test = bs.Point(xIter, yIter, zIter)
+    adjustmentList = [] # list of tuples, (param, max)
 
-    # just for the graph
-    tIter = 0
-    tList = []
+    w = wm.WeightManager()
+    # iterate through a grid of points, black points are reachable and grey points are not
+    for p in rangeParam:
+        bs.MAINARM.d[param] = p
+        w.clearTorquePlot()
+        for i in range(0,13):
+            for j in range(-13,13):
+                w.clear()
 
-    # need all 3 because of p2p where a dimension doesn't change but others do
-    while (abs(xIter - startPoint.x) < abs(xLength) or abs(yIter - startPoint.y) < abs(yLength) or abs(zIter - startPoint.z < abs(zLength))):
-        
-        angles = findAngle2D(test)
-        for motor in motorList:
-            motor.frameList.append(angles[motor.motorIndex])
+                test = bs.Point(i,j)
+                angles = findAngle2D(test, True)
+                if angles == "error":
+                    continue
 
-        xIter += xFrame
-        yIter += yFrame
-        zIter += zFrame
-        test = bs.Point(xIter, yIter, zIter)
+                bs.MAINARM.angle_VT_RR_RO = angles[0]
+                w.appendPoint(bs.MAINARM.RA, 36.4) # 36.4 oz is weight of a NEMA23
+                w.appendTorquePlot(i,j)
+        tqArray = np.array([a[2] for a in w.torquePlot])
+        tqMax = np.max(tqArray)
+        tqMin = np.min(tqArray)
 
-        # for the graph
-        tList.append(tIter)
-        tIter += smath.frameTime
-    
-    #--------------PLOTTING LINEAR POINT2POINT GRAPHS------------------
-    fig, ax = plt.subplots()
+        adjustmentList.append((p, max(tqMax, tqMin)))
 
-    for motor in motorList:
-        plt.plot(tList, motor.frameList, label=f"Motor {motor.motorIndex} frameList")
-        #ax.scatter(tList, motor.frameList, s=4, label=f"{motor.motorIndex}")
+    fig = plt.figure()
+    plt.plot([i[0] for i in adjustmentList], [i[1] for i in adjustmentList])
+    plt.xlabel(param)
+    plt.ylabel("Torque (ozin)")
+    plt.show()
 
-    plt.xlabel("time (secs)")
-    plt.ylabel("angle from east (radians)")
-    minorTicks = np.arange(-np.pi, 1.5*np.pi, smath.stepAngle/2)
-    #minorTicks = np.arange(1, 5, smath.stepAngle/2)
-    ax.set_yticks(minorTicks, minor=True)
-    plt.grid(b=True, which="minor")
-    plt.legend()
-  
-    #--------------PLOTTING LINEmangleRRPOINT2POINT GRAPHS------------------
+
+# draws the path of the point in turtle
+def drawAngleList(motorList):
+    t = MyTurtle()
+    t.speed(0)
+    t.hideturtle()
+
+    t.drawCircle(linkR, "black")
+    t.drawCross(ORIGIN, "black")
+
+    for i in motorList:
+        # x = linkR.radius * math.cos(i[0]) + linkC.radius * math.cos(i[1])
+        # y = linkR.radius * math.sin(i[0]) + linkC.radius * math.sin(i[1])
+        linkR.angle = i[0]
+        linkC.angle = i[1]
+
+        #t.drawCircle(linkC)
+        t.drawCross(linkC.outside)
+
+    t.getscreen()._root.mainloop()
