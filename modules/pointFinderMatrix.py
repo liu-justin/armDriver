@@ -21,44 +21,60 @@ A_RC_translate = np.array([[1,0,0,RC[0]],
                            [0,1,0,RC[1]],
                            [0,0,1,RC[2]],
                            [0,0,0,    1]])
-A_RC = np.dot(A_RC_translate, A_RC_rotation)
-print(A_RC)
+A_RC_RR = np.dot(A_RC_translate, A_RC_rotation)
 length_RC_CE = 6
+CE = np.array([6, 0, 0, 1])
 
-def getArrayRT(angleRT):
+class coordinateSystem(object):
+    def __init__(self, m):
+        self.matrix = m
+        self.points = []
+        self.angle = 0
+
+    def addPoint(self, point):
+        self.points.append(point)
+
+def rotateRT(angleRT):
     return np.array([[ np.cos(angleRT), -np.sin(angleRT), 0, 0],
                      [np.sin(angleRT) , np.cos(angleRT) , 0, 0],
                      [0               ,                0, 1, 0],
                      [0               ,                0, 0, 1]])
 
-def getArrayRR(angleRR):
+def rotateRR(angleRR):
     return np.array([[np.cos(angleRR) , 0, np.sin(angleRR), 0],
                      [0               , 1,               0, 0],
                      [-np.sin(angleRR), 0, np.cos(angleRR), 0],
                      [0               , 0,               0, 1]])
 
+def rotateRC(angleRC):
+    return np.array([[np.cos(angleRC) , 0, -np.sin(angleRC), 0],
+                     [0               , 1,               0, 0],
+                     [np.sin(angleRC), 0, np.cos(angleRC), 0],
+                     [0               , 0,               0, 1]])
+
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
-for i in np.arange(0, 100*1.8*np.pi/180, 5*1.8*np.pi/180):
+for i in np.arange(0, 25*1.8*np.pi/180, 5*1.8*np.pi/180):
 
     #rotation at RC motor
     angleRC = -np.pi/2
-    CE = np.array([length_RC_CE*np.cos(angleRC), 0, length_RC_CE*np.sin(angleRC), 1])
+    A_RC = rotateRC(angleRC)
     CE_new = np.dot(A_RC, CE)
+    CE_new = np.dot(A_RC_RR, CE_new)
 
     # rotation at RR motor
     angleRR = -i
-    A_RR = getArrayRR(angleRR)
+    A_RR = rotateRR(angleRR)
 
     RO_new = np.dot(A_RR, RO)
     RA_new = np.dot(A_RR, RA)
     RC_new = np.dot(A_RR, RC)
     CE_new = np.dot(A_RR, CE_new)
 
-    # rotation theta
+    # rotation theta at the bottom
     angleRT = i
-    A_RT = getArrayRT(angleRT)
+    A_RT = rotateRT(angleRT)
 
     RO_new = np.dot(A_RT, RO_new)
     RA_new = np.dot(A_RT, RA_new)
