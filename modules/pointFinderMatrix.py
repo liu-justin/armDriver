@@ -27,12 +27,20 @@ CE = np.array([6, 0, 0, 1])
 
 class coordinateSystem(object):
     def __init__(self, m):
-        self.matrix = m
         self.points = []
-        self.angle = 0
+        self._angle = 0
+        self.rotationMatrix = np.array([[np.cos(self._angle), -np.sin(self._angle)],
+                                        [np.sin(self._angle), np.cos(self._angle)]])
 
     def addPoint(self, point):
         self.points.append(point)
+
+    @property
+    def angle(self):
+        return self._angle
+    @angle.setter
+    def angle(self, a):
+        self._angle = a
 
 def rotateRT(angleRT):
     return np.array([[ np.cos(angleRT), -np.sin(angleRT), 0, 0],
