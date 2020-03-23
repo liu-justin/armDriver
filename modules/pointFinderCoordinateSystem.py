@@ -28,7 +28,7 @@ class coordinateSystem(object):
     def plotAllPoints(self, ax):
         for k,v in self.points.items():
             ax.scatter3D(v[0], v[1], v[2])
-# ax.plot3D(list(motorRR.points.values())[:,0], list(motorRR.points.values())[:,1], list(motorRR.points.values())[:,2])
+            ax.text(v[0], v[1], v[2], k)
 
     @property
     def angle(self):
@@ -45,6 +45,25 @@ def getTranslateMatrix(x,y,z):
                      [0,0,1,z],
                      [0,0,0,1]])
 
+def getRotationMatrix(angleX, angleY, angleZ):
+    a = np.array([[              1,               0,               0, 0],
+                  [              0,  np.cos(angleX), -np.sin(angleX), 0],
+                  [              0,  np.sin(angleX),  np.cos(angleX), 0],
+                  [              0,               0,               0, 1]])
+
+    b = np.array([[ np.cos(angleY),               0,  np.sin(angleY), 0],
+                  [              0,               1,               0, 0],
+                  [-np.sin(angleY),               0,  np.cos(angleY), 0],
+                  [              0,               0,               0, 1]])
+
+    c = np.array([[ np.cos(angleZ), -np.sin(angleZ),               0, 0],
+                  [ np.sin(angleZ),  np.cos(angleZ),               0, 0],
+                  [              0,               0,               1, 0],
+                  [              0,               0,               0, 1]])
+
+    return np.dot(c, np.dot(b, a))
+
+
 def getXYRotationMatrix(angle):
     return np.array([[np.cos(angle), -np.sin(angle), 0, 0],
                      [np.sin(angle),  np.cos(angle), 0, 0],
@@ -56,15 +75,18 @@ motorRC = coordinateSystem()
 motorRR = coordinateSystem()
 motorRT = coordinateSystem()
 
-# first coordinate system
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
 
-CE = np.array([0,6,0,1])
+# first coordinate system --------------------------------
+
+CE = np.array([6,0,0,1])
 motorRC.addPoint('CE', CE) # add points to the coordinate system
 
 motorRC.angle = -np.pi/4 # rotate all the points; can maybe squish these two together, this and the line below
 motorRC.rotatePoints()
 
-# second coordinate system
+# second coordinate system ---------------------------------
 
 RO = np.array([0, 2.5, 0, 1])
 RA = np.array([-2.40315424, 3.18909339, 0, 1])
@@ -72,19 +94,21 @@ RC = np.array([6.99893387, 2.37783316, 0, 1])
 motorRR.addPoint('RO', RO)
 motorRR.addPoint('RA', RA)
 motorRR.addPoint('RC', RC) # add points to the coordinate system
+motorRR.addPoint("OO", np.array([0,0,0,0]))
 
-angle_HH_RA_RC = np.tan((RC[2]-RA[2])/(RC[0]-RA[0]))
-A_RC_RR_1 = getXYRotationMatrix(angle_HH_RA_RC)
+angle_HH_RA_RC = np.tan((RC[1]-RA[1])/(RC[0]-RA[0]))
+# A_RC_RR_1_prev = getXYRotationMatrix(angle_HH_RA_RC)
+A_RC_RR_1= getRotationMatrix(0,0,angle_HH_RA_RC)
 A_RC_RR_2 = getTranslateMatrix(RC[0], RC[1], RC[2])
 A_RC_RR = np.dot(A_RC_RR_2, A_RC_RR_1) # get the transformation matrix from coordinate system RC to RR
 
 motorRR.updatePoints(motorRC, A_RC_RR)
 
-motorRR.angle = np.pi/4
+motorRR.angle = -np.pi/3
 motorRR.rotatePoints() # rotate all the points
 
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+# third coordinate system ---------------------------------
+A_RR_RT = getRotationMatrix(np.pi/2, 0,0)
 
 motorRR.plotAllPoints(ax)
 
