@@ -11,10 +11,7 @@ class coordinateSystem(object):
         # z will always be the axis for rotation
         self.rotationMatrix = getRotationMatrix(0,0,self._angle)
 
-    def addPoint(self, key, point):
-        self.points[key] = point
-
-    def addPointNew(self, key, x, y=0, z=0):
+    def addPoint(self, key, x, y=0, z=0):
         self.points[key] = np.array([x, y, z, 1])
 
     def rotatePoints(self, angle):
@@ -77,9 +74,8 @@ ax = fig.add_subplot(111, projection='3d')
 
 # first coordinate system --------------------------------
 
-CE = np.array([6,0,0,1])
-motorRC.addPoint('CE', CE) # add points to the coordinate system
-motorRC.addPointNew('BC', -2, 0)
+motorRC.addPoint('CE', 6, 0) # add points to the coordinate system
+motorRC.addPoint('BC', -2, 0)
 
 # motorRC.angle =  # rotate all the points; can maybe squish these two together, this and the line below
 motorRC.rotatePoints(-np.pi/4)
@@ -89,26 +85,26 @@ motorRC.rotatePoints(-np.pi/4)
 RO = np.array([0, 2.5, 0, 1])
 RA = np.array([-2.40315424, 3.18909339, 0, 1])
 RC = np.array([6.99893387, 2.37783316, 0, 1])
-motorRR.addPoint('RO', RO)
-motorRR.addPoint('RA', RA)
-motorRR.addPoint('RC', RC) # add points to the coordinate system
-motorRR.addPoint("OO", np.array([0,0,0,0]))
+motorRR.addPoint('RO', 0, 2.5)
+motorRR.addPoint('RA', -2.40315424, 3.18909339)
+motorRR.addPoint('RC', 6.99893387, 2.37783316) # add points to the coordinate system
+motorRR.addPoint('OO', 0, 0)
 
-angle_HH_RA_RC = np.tan((RC[1]-RA[1])/(RC[0]-RA[0]))
-# A_RC_RR_1_prev = getXYRotationMatrix(angle_HH_RA_RC)
+angle_HH_RA_RC = np.tan((motorRR.points['RC'][1]-motorRR.points['RA'][1])/(motorRR.points['RC'][0]-motorRR.points['RA'][0]))
 A_RC_RR_1= getRotationMatrix(0,0,angle_HH_RA_RC)
-A_RC_RR_2 = getTranslateMatrix(RC[0], RC[1], RC[2])
+A_RC_RR_2 = getTranslateMatrix(motorRR.points['RC'][0], motorRR.points['RC'][1], motorRR.points['RC'][2])
 A_RC_RR = np.dot(A_RC_RR_2, A_RC_RR_1) # get the transformation matrix from coordinate system RC to RR
+motorRR.updatePoints(motorRC, A_RC_RR) # bring in points from coordinate system RC
 
-motorRR.updatePoints(motorRC, A_RC_RR)
-
-motorRR.rotatePoints(-np.pi/3) # rotate all the points
+motorRR.rotatePoints(np.pi/-6) # rotate all the points
 
 # third coordinate system ---------------------------------
 A_RR_RT = getRotationMatrix(np.pi/2, 0, 0)
 motorRT.updatePoints(motorRR, A_RR_RT)
 
-motorRT.rotatePoints(np.pi/4)
+motorRT.rotatePoints(np.pi/2)
+
+# plotting --------------------------------------------------
 
 motorRT.plotAllPoints(ax)
 
