@@ -20,18 +20,25 @@ class coordinateSystem(object):
     def addPoint(self, key, point):
         self.points[key] = point
 
-    def rotatePointsTo(self, angle):
-        self.angle = angle
+    def rotatePoints(self):
+        # self.angle = angle
         # self.points = {p:np.dot(self.rotationMatrix, self.points[p]) for p in self.points}
         self.points = {key:np.dot(self.rotationMatrix, value) for key,value in self.points.items()}
 
+    # trying recursion: reason it doesn't work is because it doesn't rotate the points
     def updatePoints(self):
+        if ( not self.children ):
+            self.rotatePoints()
+            return
         # for every child, create a dict of new transformed points based on the transformation that comes with the child, then update self.points
         for cs,matrix in self.children:
+            cs.updatePoints()
             newPoints = {key:np.dot(matrix, value) for key,value in cs.points.items()}
 
             # then transfer the points
             self.points.update(newPoints)
+
+        self.rotatePoints()
 
     def plotAllPoints(self, ax):
         for k,v in self.points.items():

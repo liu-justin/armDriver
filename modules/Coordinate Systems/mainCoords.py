@@ -20,22 +20,24 @@ A_RR_RT = cs.getRotationMatrix( np.pi/2, 0, 0 )
 
 motorRT = cs.coordinateSystem(( motorRR, A_RR_RT ))
 
-motorRC.addPoint('CE', csc.CE) # add points to the coordinate system
+# adding points -----------------------------------------
+
+motorRC.addPoint('CE', csc.CE)
 motorRC.addPoint('BC', csc.BC)
 
 motorRR.addPoint('RO', csc.RO)
 motorRR.addPoint('RA', csc.RA)
-motorRR.addPoint('RC', csc.RC) # add points to the coordinate system
+motorRR.addPoint('RC', csc.RC)
 motorRR.addPoint('OO', csc.OO)
 
 # changing motor angles-----------------------------------------
-motorRC.rotatePointsTo(-np.pi/4)
+motorRC.angle = -np.pi/2
+motorRR.angle = np.pi/4 # rotate all the points in RC
+motorRT.angle = np.pi/3
 
-motorRR.updatePoints() # bring in points from coordinate system RC
-motorRR.rotatePointsTo(np.pi/-6) # rotate all the points in RC
-
+# update the most parent coordinate system, it will propogate thru the rest
 motorRT.updatePoints()
-motorRT.rotatePointsTo(np.pi/3)
+
 
 # plotting --------------------------------------------------
 
