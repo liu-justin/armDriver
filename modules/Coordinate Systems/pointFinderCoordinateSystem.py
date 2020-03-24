@@ -1,6 +1,6 @@
 # import modules.basicShapes as bs
 # import modules.weightManager as wm
-import CoordinateSystem as cs
+import CoordinateSystemConstants as csc
 import turtle
 import math
 import numpy as np
@@ -12,13 +12,13 @@ ORIGIN = bs.ORIGIN
 linkR = bs.linkR
 linkC = bs.linkC
 
-def findAngle2D(test, newzero=False):
+def findAngle2D(test, csm):
     # renaming variables for the equation in the notebook
     x = test.x
     y = test.y # y is up
     z = test.z
-    rR = bs.linkR.radius
-    rC = bs.linkC.radius
+    rR = math.sqrt(csm.motorRR.RC[0]**2 + csm.motorRR.RC[1]**2)
+    rC = math.sqrt(csm.motorRR.RC[0]**2 + csm.motorRR.RC[1]**2)
 
     angleRotation = math.atan2(z,x)
     x = math.sqrt(z**2 + x**2)

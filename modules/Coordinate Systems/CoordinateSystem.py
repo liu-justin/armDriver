@@ -58,5 +58,6 @@ class coordinateSystemManager(coordinateSystem):
     def __init__(self):
         self.coordinateSystemDict = {}
 
-    def addCoordinateSystem(self,key, *args):
-        self.coordinateSystemDict[key] = coordinateSystem(args)
+    def addCoordinateSystem(self, **kwargs):
+        # self.coordinateSystemDict.update(kwargs)
+        self.__dict__.update(kwargs)
