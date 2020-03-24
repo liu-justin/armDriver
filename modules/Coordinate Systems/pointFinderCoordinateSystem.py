@@ -8,10 +8,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-ORIGIN = bs.ORIGIN
-linkR = bs.linkR
-linkC = bs.linkC
-
 def findAngle2D(test, csm):
     # renaming variables for the equation in the notebook
     x = test.x

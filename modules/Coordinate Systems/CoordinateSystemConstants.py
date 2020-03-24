@@ -25,8 +25,11 @@ RA = p.Point(-2.40315424, 3.18909339)
 RC = p.Point(6.99893387, 2.37783316)
 OO = p.Point(0, 0)
 
-angle_RO_RR_RC = np.arccos(np.dot(RO.regular, RC.regular)/(RO.mag()*RC.mag()))
-print(angle_RO_RR_RC)
+a = p.Point(1,2,3)
+
+print(RC.distanceTo(OO) )
+
+angle_RO_RR_RC = np.arccos(np.dot(RO.regular, RC.regular)/(RO.magnitude()*RC.magnitude()))
 
 # matrix for children of this coordinate system, only RC
 angle_HH_RA_RC = np.tan(( RC.y - RA.y )/( RC.x - RA.x ))
