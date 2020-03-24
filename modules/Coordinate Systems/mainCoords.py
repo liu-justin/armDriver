@@ -27,8 +27,8 @@ csm.addCoordinateSystem(motorRC = motorRC, motorRR = motorRR, motorRT = motorRT)
 
 # changing motor angles-----------------------------------------
 csm.motorRC.angle = -np.pi/2
-csm.motorRR.angle = -np.pi/3 # rotate all the points in RC
-csm.motorRT.angle = np.pi/3
+csm.motorRR.angle = np.pi/3 # rotate all the points in RC
+csm.motorRT.angle = 0
 
 # update the most parent coordinate system, it will propogate thru the rest
 # if i can figure out if the coordinate system is a child of another, then i can make updatePoints from csm

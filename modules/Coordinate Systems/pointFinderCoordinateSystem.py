@@ -60,23 +60,30 @@ def findAngle2D(test, csm):
         # print("divide by zero")
         return "error"
     
-    mangleRR = np.pi/2 - (mangleRR + bs.MAINARM.angle_RO_RR_RC) #90 degrees, getting the angle for the vertical piece in mainArm
+    mangleRR = np.pi/2 - (mangleRR + csc.angle_RO_RR_RC) #90 degrees, getting the angle for the vertical piece in mainArm
 
-    # setting the mangle for mainarm and getting all of the subsequent variables of mainarm
-    csm.RR.angle = mangleRR
+    # just have to reverse it in here, because model thinks that CCW is positive
+    csm.motorRR.angle = -mangleRR
+    # just used the last matrix RT because it catches all the changes to angles
+    csm.motorRT.update()
 
-    distY = y - csm.RR.points("RC")[1]
-    distX = x - csm.RR.points("RC")[0]
+    # make a couple of points dicts in csm, one updates parent with child (absolute), other updates child with parent (relative)
+    distY = y - csm.RR.points["RC"][1]
+    distX = x - csm.RR.points["RC"][0]
     # distY = y - bs.MAINARM.RC.y
     # distX = x - bs.MAINARM.RC.x
     #tempVector = np.array([distX, distY])
 
-    # this angle is referenced to the global reference plane, needs to be from mangleRRangle reference plane
-    # angleD is the angle inside the upper quad, so we have to reverse the angle
-    angleD = math.atan2(distY,distX) - bs.MAINARM.vangle_RA_RC
-    bs.linkC.center = bs.MAINARM.RC
-    bs.linkC.refAngle = bs.MAINARM.vangle_RA_RC
-    bs.linkC.angle = angleD # setting the angle finds outside again, so make sure to do it last
+    angleD = math.atan2(distY,distX) - csc.angle_HH_RA_RC
+    csm.motorRC.angle = angleD # setting the angle finds outside again, so make sure to do it last
+    csm.motorRT.update() # fixes all the angles for all the coordinate systems
+
+
+    # want to replace this with something else in csm
+    aLength = 2.75
+    bLength = 9.5
+    cLength = 2.5
+    dLength = 9.43702304
     
     # geometry to get input stepper angle, using law of sines and cosines
     midLine = math.sqrt(cLength**2 + dLength**2 - 2*cLength*dLength*math.cos(angleD))

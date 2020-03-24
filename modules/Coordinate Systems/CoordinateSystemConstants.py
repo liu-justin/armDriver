@@ -6,6 +6,7 @@ class Point:
         self.x = x
         self.y = y
         self.z = z
+        self.normalarray = np.array([x,y,z])
         self.nparray = np.array([x,y,z,1])
     
     def __str__(self):
@@ -41,11 +42,14 @@ def getRotationMatrix(angleX, angleY, angleZ):
 
     return np.dot(c, np.dot(b, a))
 
+lengthB = 9.5
+lengthA = 2.75
+
 # first coordinate system, motor RC ---------------------------------------------------------------
 
 # points
-CE = Point(6, 0)
-BC = Point(-2, 0)
+CE = Point(6.5, 0)
+BC = Point(-2.5, 0)
 
 # matrix for children of this coordinate system, motor RC has no children
 
@@ -56,6 +60,8 @@ RO = Point(0, 2.5)
 RA = Point(-2.40315424, 3.18909339)
 RC = Point(6.99893387, 2.37783316)
 OO = Point(0, 0)
+
+angle_RO_RR_RC = np.arccos(np.dot(RO.normalarray, RC.normalarray)/(RO.mag()*RC.mag()))
 
 # matrix for children of this coordinate system, only RC
 angle_HH_RA_RC = np.tan(( RC.y - RA.y )/( RC.x - RA.x ))
