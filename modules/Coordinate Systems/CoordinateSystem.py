@@ -1,6 +1,6 @@
 import numpy as np
 import time
-import CoordinateSystemConstants as csc
+import Point as p
 
 # each child can only have one parent, so should each coordinate system have a matrix to get to the parent coordinateSystem
 # - no, because the coordinate system has no idea how to get to the parent coordinateSystem without the parents points
@@ -11,7 +11,7 @@ class coordinateSystem(object):
         self.points = {}
         self._angle = 0
         # z will always be the axis for rotation
-        self.rotationMatrix = csc.getRotationMatrix(0,0,self._angle)
+        self.rotationMatrix = getRotationMatrix(0,0,self._angle)
         self.children = args # [tuple(coordinateSystem, matrix)]
 
     def addPointCoords(self, key, x, y=0, z=0):
@@ -20,10 +20,11 @@ class coordinateSystem(object):
     def addPoint(self, key, point):
         self.points[key] = point
 
-    def rotatePoints(self):
-        # self.angle = angle
-        # self.points = {p:np.dot(self.rotationMatrix, self.points[p]) for p in self.points}
-        self.points = {key:np.dot(self.rotationMatrix, value) for key,value in self.points.items()}
+    def rotatePoints(self): # looks like if I want to use Points, i have to edit the dict values instead of make a new dict
+        # self.points = {key:np.dot(self.rotationMatrix, value) for key,value in self.points.items()}
+        for point in self.points.values():
+            point.nparray = np.dot(self.rotationMatrix, point.nparray)
+        # self.points = {key:p.Point(np.dot(self.rotationMatrix, value))for key,value in self.points.items()}
 
     # trying recursion: reason it doesn't work is because it doesn't rotate the points
     def updatePoints(self):
@@ -52,7 +53,7 @@ class coordinateSystem(object):
     def angle(self, a):
         self._angle = a
         # this reassignment has around the same runtime as reassigning each entry individually
-        self.rotationMatrix = csc.getRotationMatrix(0,0,self._angle)
+        self.rotationMatrix = getRotationMatrix(0,0,self._angle)
 
 class coordinateSystemManager(coordinateSystem):
     def __init__(self):
@@ -61,3 +62,27 @@ class coordinateSystemManager(coordinateSystem):
     def addCoordinateSystem(self, **kwargs):
         # self.coordinateSystemDict.update(kwargs)
         self.__dict__.update(kwargs)
+
+def getTranslateMatrix(x,y,z):
+    return np.array([[1,0,0,x],
+                     [0,1,0,y],
+                     [0,0,1,z],
+                     [0,0,0,1]])
+
+def getRotationMatrix(angleX, angleY, angleZ):
+    a = np.array([[              1,               0,               0, 0],
+                  [              0,  np.cos(angleX), -np.sin(angleX), 0],
+                  [              0,  np.sin(angleX),  np.cos(angleX), 0],
+                  [              0,               0,               0, 1]])
+
+    b = np.array([[ np.cos(angleY),               0,  np.sin(angleY), 0],
+                  [              0,               1,               0, 0],
+                  [-np.sin(angleY),               0,  np.cos(angleY), 0],
+                  [              0,               0,               0, 1]])
+
+    c = np.array([[ np.cos(angleZ), -np.sin(angleZ),               0, 0],
+                  [ np.sin(angleZ),  np.cos(angleZ),               0, 0],
+                  [              0,               0,               1, 0],
+                  [              0,               0,               0, 1]])
+
+    return np.dot(c, np.dot(b, a))
