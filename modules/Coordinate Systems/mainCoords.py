@@ -13,13 +13,13 @@ motorRT = cs.coordinateSystem(( motorRR, csc.A_RR_RT ))
 
 # adding points -----------------------------------------
 
-motorRC.addPoint('CE', csc.CE.nparray)
-motorRC.addPoint('BC', csc.BC.nparray)
+motorRC.addPoint('CE', csc.CE)
+motorRC.addPoint('BC', csc.BC)
 
-motorRR.addPoint('RO', csc.RO.nparray)
-motorRR.addPoint('RA', csc.RA.nparray)
-motorRR.addPoint('RC', csc.RC.nparray)
-motorRR.addPoint('OO', csc.OO.nparray)
+motorRR.addPoint('RO', csc.RO)
+motorRR.addPoint('RC', csc.RC)
+motorRR.addPoint('OO', csc.OO)
+motorRR.addPoint('RA', csc.RA)
 
 csm.addCoordinateSystem(motorRC = motorRC, motorRR = motorRR, motorRT = motorRT)
 # csm.addCoordinateSystem("motorRR", motorRR)

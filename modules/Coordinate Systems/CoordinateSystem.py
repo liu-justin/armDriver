@@ -23,7 +23,7 @@ class coordinateSystem(object):
     def rotatePoints(self): # looks like if I want to use Points, i have to edit the dict values instead of make a new dict
         # self.points = {key:np.dot(self.rotationMatrix, value) for key,value in self.points.items()}
         for point in self.points.values():
-            point.nparray = np.dot(self.rotationMatrix, point.nparray)
+            point.homogeneous = np.dot(self.rotationMatrix, point.homogeneous)
         # self.points = {key:p.Point(np.dot(self.rotationMatrix, value))for key,value in self.points.items()}
 
     # trying recursion: reason it doesn't work is because it doesn't rotate the points
@@ -34,7 +34,10 @@ class coordinateSystem(object):
         # for every child, create a dict of new transformed points based on the transformation that comes with the child, then update self.points
         for cs,matrix in self.children:
             cs.updatePoints()
-            newPoints = {key:np.dot(matrix, value) for key,value in cs.points.items()}
+            newPoints = cs.points
+            # newPoints = {key:np.dot(matrix, value) for key,value in newPoints.items()}
+            for point in newPoints.values():
+                point.homogeneous = np.dot(matrix, point.homogeneous)
 
             # then transfer the points
             self.points.update(newPoints)
@@ -43,8 +46,8 @@ class coordinateSystem(object):
 
     def plotAllPoints(self, ax):
         for k,v in self.points.items():
-            ax.scatter3D(v[0], v[1], v[2])
-            ax.text(v[0], v[1], v[2], k)
+            ax.scatter3D(v.homogeneous[0], v.homogeneous[1], v.homogeneous[2])
+            ax.text(v.homogeneous[0], v.homogeneous[1], v.homogeneous[2], k)
 
     @property
     def angle(self):
