@@ -1,4 +1,18 @@
 import numpy as np
+import math
+
+class Point:
+    def __init__(self, x, y, z=0):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.nparray = np.array([x,y,z,1])
+    
+    def __str__(self):
+        return f"({self.x}, {self.y}, {self.z})"
+    
+    def mag(self):
+        return math.sqrt( self.x**2 + self.y**2 + self.z**2 )
 
 def toPoint(x,y,z=0):
     return np.array([x,y,z,1])
@@ -30,23 +44,23 @@ def getRotationMatrix(angleX, angleY, angleZ):
 # first coordinate system, motor RC ---------------------------------------------------------------
 
 # points
-CE = toPoint(6, 0)
-BC = toPoint(-2, 0)
+CE = Point(6, 0)
+BC = Point(-2, 0)
 
 # matrix for children of this coordinate system, motor RC has no children
 
 # second coordinate system, motor RR ------------------------------------------------------------------
 
 # points
-RO = toPoint(0, 2.5)
-RA = toPoint(-2.40315424, 3.18909339)
-RC = toPoint(6.99893387, 2.37783316)
-OO = toPoint(0, 0)
+RO = Point(0, 2.5)
+RA = Point(-2.40315424, 3.18909339)
+RC = Point(6.99893387, 2.37783316)
+OO = Point(0, 0)
 
 # matrix for children of this coordinate system, only RC
-angle_HH_RA_RC = np.tan(( RC[1] - RA[1] )/( RC[0] - RA[0] ))
+angle_HH_RA_RC = np.tan(( RC.y - RA.y )/( RC.x - RA.x ))
 A_RC_RR_1 = getRotationMatrix( 0, 0, angle_HH_RA_RC )
-A_RC_RR_2 = getTranslateMatrix( RC[0], RC[1], RC[2] )
+A_RC_RR_2 = getTranslateMatrix( RC.x, RC.y, RC.z )
 A_RC_RR = np.dot( A_RC_RR_2, A_RC_RR_1 )
 
 # third coordinate system, motor RT ----------------------------------------------------------------------

@@ -17,8 +17,8 @@ def findAngle2D(test, csm):
     x = test.x
     y = test.y # y is up
     z = test.z
-    rR = math.sqrt(csm.motorRR.RC[0]**2 + csm.motorRR.RC[1]**2)
-    rC = math.sqrt(csm.motorRR.RC[0]**2 + csm.motorRR.RC[1]**2)
+    rR = math.sqrt(csc.RC.x**2 + csc.RC.y**2)
+    rC = math.sqrt(csc.CE.x**2 + csc.CE.y**2)
 
     angleRotation = math.atan2(z,x)
     x = math.sqrt(z**2 + x**2)
@@ -51,7 +51,7 @@ def findAngle2D(test, csm):
 
             quad = (-b - math.sqrt(b**2 - 4*a*c))/(2*a)
 
-            mangleRR= np.arcsin(quad)
+            mangleRR = np.arcsin(quad)
 
     except ValueError:
         # print("math domain error")
@@ -63,10 +63,12 @@ def findAngle2D(test, csm):
     mangleRR = np.pi/2 - (mangleRR + bs.MAINARM.angle_RO_RR_RC) #90 degrees, getting the angle for the vertical piece in mainArm
 
     # setting the mangle for mainarm and getting all of the subsequent variables of mainarm
-    bs.MAINARM.angle_VT_RR_RO = mangleRR
+    csm.RR.angle = mangleRR
 
-    distY = y - bs.MAINARM.RC.y
-    distX = x - bs.MAINARM.RC.x
+    distY = y - csm.RR.points("RC")[1]
+    distX = x - csm.RR.points("RC")[0]
+    # distY = y - bs.MAINARM.RC.y
+    # distX = x - bs.MAINARM.RC.x
     #tempVector = np.array([distX, distY])
 
     # this angle is referenced to the global reference plane, needs to be from mangleRRangle reference plane
