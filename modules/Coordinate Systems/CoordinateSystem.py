@@ -11,7 +11,7 @@ class coordinateSystem(object):
         self.points = {}
         self._angle = 0
         # z will always be the axis for rotation
-        self.rotationMatrix = getRotationMatrix(0,0,self._angle)
+        self.rotationMatrix = csc.getRotationMatrix(0,0,self._angle)
         self.children = args # [tuple(coordinateSystem, matrix)]
 
     def addPointCoords(self, key, x, y=0, z=0):
@@ -52,7 +52,7 @@ class coordinateSystem(object):
     def angle(self, a):
         self._angle = a
         # this reassignment has around the same runtime as reassigning each entry individually
-        self.rotationMatrix = getRotationMatrix(0,0,self._angle)
+        self.rotationMatrix = csc.getRotationMatrix(0,0,self._angle)
 
 class coordinateSystemManager(coordinateSystem):
     def __init__(self):
@@ -60,27 +60,3 @@ class coordinateSystemManager(coordinateSystem):
 
     def addCoordinateSystem(self,key, *args):
         self.coordinateSystemDict[key] = coordinateSystem(args)
-
-def getTranslateMatrix(x,y,z):
-    return np.array([[1,0,0,x],
-                     [0,1,0,y],
-                     [0,0,1,z],
-                     [0,0,0,1]])
-
-def getRotationMatrix(angleX, angleY, angleZ):
-    a = np.array([[              1,               0,               0, 0],
-                  [              0,  np.cos(angleX), -np.sin(angleX), 0],
-                  [              0,  np.sin(angleX),  np.cos(angleX), 0],
-                  [              0,               0,               0, 1]])
-
-    b = np.array([[ np.cos(angleY),               0,  np.sin(angleY), 0],
-                  [              0,               1,               0, 0],
-                  [-np.sin(angleY),               0,  np.cos(angleY), 0],
-                  [              0,               0,               0, 1]])
-
-    c = np.array([[ np.cos(angleZ), -np.sin(angleZ),               0, 0],
-                  [ np.sin(angleZ),  np.cos(angleZ),               0, 0],
-                  [              0,               0,               1, 0],
-                  [              0,               0,               0, 1]])
-
-    return np.dot(c, np.dot(b, a))
