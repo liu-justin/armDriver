@@ -21,9 +21,13 @@ motorRR.addPoint('RC', csc.RC)
 motorRR.addPoint('OO', csc.OO)
 motorRR.addPoint('RA', csc.RA)
 
+# print(motorRR.points["BC"].homogeneous)
+# print(motorRR.points["RO"].homogeneous)
+
+# ar = motorRR.points["BC"].intersectionPoint(motorRR.points["RA"])
+# print(ar)
+
 csm.addCoordinateSystem(motorRC = motorRC, motorRR = motorRR, motorRT = motorRT)
-# csm.addCoordinateSystem("motorRR", motorRR)
-# csm.addCoordinateSystem("motorRT", motorRT)
 
 # changing motor angles-----------------------------------------
 csm.motorRC.angle = -np.pi/2

@@ -13,7 +13,7 @@ lengthA = 2.75
 
 # points
 CE = p.Point(6.5, 0)
-BC = p.Point(-2.5, 0)
+BC = p.Circle(9.5, -2.5, 0)
 
 # matrix for children of this coordinate system, motor RC has no children
 
@@ -21,7 +21,8 @@ BC = p.Point(-2.5, 0)
 
 # points
 RO = p.Point(0, 2.5)
-RA = p.Point(-2.40315424, 3.18909339)
+RA = p.Circle(2.75, -2.40315424, 3.18909339)
+print(RA.regular)
 RC = p.Point(6.99893387, 2.37783316)
 OO = p.Point(0, 0)
 

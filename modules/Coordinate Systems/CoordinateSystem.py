@@ -9,7 +9,7 @@ import Point as p
 class coordinateSystem(object):
     def __init__(self, *args):
         self.points = {}
-        self._angle = 0
+        self._angle = -np.pi/4
         # z will always be the axis for rotation
         self.rotationMatrix = getRotationMatrix(0,0,self._angle)
         self.children = args # [tuple(coordinateSystem, matrix)]
