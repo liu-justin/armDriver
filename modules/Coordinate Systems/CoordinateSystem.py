@@ -16,11 +16,7 @@ class coordinateSystem(object):
         self._angle = 0
         # z will always be the axis for rotation
         self.rotationMatrix = getRotationMatrix(0,0,self._angle)
-        self.parent = None
-        self.children = args # [tuple(coordinateSystem, matrix)]
-        for cs,matrix in self.children:
-            cs.parent = self
-        self.updatePointsChildren()
+        self.parent = args # [tuple(coordinateSystem, matrix)]
 
     def addPointCoords(self, key, x, y=0, z=0):
         self.points[key] = np.array([x, y, z, 1])
@@ -35,28 +31,8 @@ class coordinateSystem(object):
         # self.points = {key:p.Point(np.dot(self.rotationMatrix, value))for key,value in self.points.items()}
 
     # trying recursion: reason it doesn't work is because it doesn't rotate the points
-    def updatePointsChildren(self):
-        if ( not self.children ):
-            print("zero case for recursion")
-            return
-        # for every child, create a dict of new transformed points based on the transformation that comes with the child, then update self.points
-        for cs,matrix in self.children:
-            cs.updatePointsChildren()
-            # newPoints = cs.points[:] # copying arrays also copies the reference, needed to copy by value
-            newPoints = {key:copy.deepcopy(value) for key,value in cs.points.items()}
-            print("new points gathered from children")
-            print([(a[0], a[1].homogeneous) for a in newPoints.items()])
-            for point in newPoints.values():
-                point.homogeneous = np.dot(matrix, point.homogeneous)
-                point.regular = point.homogeneous[:-1]
-
-            # then transfer the points
-            self.points.update(newPoints)
-            print("after updating self.points with new points: ")
-            print([(a[0], a[1].homogeneous) for a in self.points.items()])
-
-    def updatePointsParent(self):
-        if (self.parent == None):
+    def updatePoints(self):
+        if (not self.parent):
             print("zero case for updating Parent direction")
             return
 
@@ -64,14 +40,19 @@ class coordinateSystem(object):
         print("new points gathered from self")
         print([(a[0], a[1].homogeneous) for a in newPoints.items()])
         for point in newPoints.values():
-            point.homogeneous = np.dot(self.rotationMatrix, point.homogeneous)
+            point.homogeneous = np.dot(self.parent[1], np.dot(self.rotationMatrix, point.homogeneous))
             point.regular = point.homogeneous[:-1]
 
         # then transfer the points
-        self.parents.points.update(newPoints)
+        print(self.parent[0].points)
+        self.parent[0].points.update(newPoints)
         print("after updating self.points with new points: ")
         print([(a[0], a[1].homogeneous) for a in self.points.items()])
-        self.parent.updatePointsParent()
+
+        # then let the parents update their parents
+        self.parent[0].updatePoints()
+
+        return
 
 
     def plotPoints(self):
@@ -101,7 +82,7 @@ class coordinateSystem(object):
         self._angle = a - self._angle
         # this reassignment has around the same runtime as reassigning each entry individually
         self.rotationMatrix = getRotationMatrix(0,0,self._angle)
-        # self.updatePointsChildren()
+        self.updatePoints()
         self.rotatePoints()
 
 class coordinateSystemManager(coordinateSystem):
