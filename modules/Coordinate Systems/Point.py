@@ -19,10 +19,6 @@ class Point:
     def __str__(self):
         return f"({self.x}, {self.y}, {self.z})"
 
-# class Circle(Point):
-#     def __init__(self):
-#         Point.__init__(self)
-
 class Circle(Point):
     def __init__(self, r, x, y, z=0):
         Point.__init__(self, x, y, z=0)

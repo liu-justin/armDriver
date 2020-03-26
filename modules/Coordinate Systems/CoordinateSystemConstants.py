@@ -35,7 +35,6 @@ motorRR.addPoint('RO', RO)
 motorRR.addPoint('RC', RC)
 motorRR.addPoint('OO', OO)
 motorRR.addPoint('RA', RA)
-motorRR.updatePoints()
 
 # third coordinate system, motor RC ---------------------------------------------------------------
 
@@ -55,9 +54,14 @@ print("declaring motorRC now ---------------------------------------------------
 motorRC = cs.coordinateSystem( motorRR, A_RC_RR )
 motorRC.addPoint('CE', CE)
 motorRC.addPoint('BC', BC)
-motorRC.updatePoints()
 
-# -------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------
+# adding pointAB
+AB = motorRR.points["RA"].intersectionPoint(motorRR.points["BC"])
+motorRR.addPoint('AB', AB)
+print(AB.distanceTo(RA))
+
+
 print("start of angle turning --------------------------------------------------------------")
 motorRC.angle = -np.pi/3
 # # after I set an angle, I need to update the parents; I cant have parents instead of children in Coordinate System,

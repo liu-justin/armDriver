@@ -23,6 +23,7 @@ class coordinateSystem(object):
 
     def addPoint(self, key, point):
         self.points[key] = point
+        self.updatePoints()
 
     def rotatePoints(self): # looks like if I want to use Points, i have to edit the dict values instead of make a new dict; alternative was np.array
         # self.points = {key:np.dot(self.rotationMatrix, value) for key,value in self.points.items()}
