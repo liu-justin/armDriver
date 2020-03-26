@@ -16,6 +16,9 @@ class Point:
         distance = self.regular - otherPoint.regular
         return np.sqrt(np.einsum('i,i', distance, distance))
 
+    def __str__(self):
+        return f"({self.x}, {self.y}, {self.z})"
+
 # class Circle(Point):
 #     def __init__(self):
 #         Point.__init__(self)

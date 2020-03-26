@@ -1,6 +1,10 @@
 import numpy as np
 import time
 import Point as p
+import copy 
+
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 # each child can only have one parent, so should each coordinate system have a matrix to get to the parent coordinateSystem
 # - no, because the coordinate system has no idea how to get to the parent coordinateSystem without the parents points
@@ -9,10 +13,11 @@ import Point as p
 class coordinateSystem(object):
     def __init__(self, *args):
         self.points = {}
-        self._angle = -np.pi/4
+        self._angle = 0
         # z will always be the axis for rotation
         self.rotationMatrix = getRotationMatrix(0,0,self._angle)
         self.children = args # [tuple(coordinateSystem, matrix)]
+        self.updatePoints()
 
     def addPointCoords(self, key, x, y=0, z=0):
         self.points[key] = np.array([x, y, z, 1])
@@ -29,20 +34,24 @@ class coordinateSystem(object):
     # trying recursion: reason it doesn't work is because it doesn't rotate the points
     def updatePoints(self):
         if ( not self.children ):
-            self.rotatePoints()
+            print("zero case for recursion")
             return
         # for every child, create a dict of new transformed points based on the transformation that comes with the child, then update self.points
         for cs,matrix in self.children:
             cs.updatePoints()
-            newPoints = cs.points
-            # newPoints = {key:np.dot(matrix, value) for key,value in newPoints.items()}
+            # newPoints = cs.points[:] # copying arrays also copies the reference, needed to copy by value
+            newPoints = {key:copy.deepcopy(value) for key,value in cs.points.items()}
+            print("new points gathered from children")
+            print([(a[0], a[1].homogeneous) for a in newPoints.items()])
             for point in newPoints.values():
                 point.homogeneous = np.dot(matrix, point.homogeneous)
+                point.regular = point.homogeneous[:-1]
 
             # then transfer the points
             self.points.update(newPoints)
+            print("after updating self.points with new points: ")
+            print([(a[0], a[1].homogeneous) for a in self.points.items()])
 
-        self.rotatePoints()
 
     def plotAllPoints(self, ax):
         for k,v in self.points.items():
@@ -54,9 +63,12 @@ class coordinateSystem(object):
         return self._angle
     @angle.setter
     def angle(self, a):
-        self._angle = a
+        print("going in setter")
+        self._angle = self._angle - a
         # this reassignment has around the same runtime as reassigning each entry individually
         self.rotationMatrix = getRotationMatrix(0,0,self._angle)
+        self.updatePoints()
+        self.rotatePoints()
 
 class coordinateSystemManager(coordinateSystem):
     def __init__(self):
@@ -65,6 +77,22 @@ class coordinateSystemManager(coordinateSystem):
     def addCoordinateSystem(self, **kwargs):
         # self.coordinateSystemDict.update(kwargs)
         self.__dict__.update(kwargs)
+
+    def plotAllPoints(self):
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
+        motorRT.plotAllPoints(ax)
+
+        ax.set_xlabel('X (in)')
+        ax.set_ylabel('Y (in)')
+        ax.set_zlabel('Z (in)')
+
+        ax.set_xlim3d(-15, 15)
+        ax.set_ylim3d(-15, 15)
+        ax.set_zlim3d(-15, 15)
+
+        plt.show()
 
 def getTranslateMatrix(x,y,z):
     return np.array([[1,0,0,x],
