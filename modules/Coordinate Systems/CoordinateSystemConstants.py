@@ -3,9 +3,6 @@ import math
 import CoordinateSystem as cs
 import Point as p
 
-def toPoint(x,y,z=0):
-    return np.array([x,y,z,1])
-
 # first coordinate system, motor RC ---------------------------------------------------------------
 
 # points
@@ -14,8 +11,6 @@ BC = p.Circle(9.5, -2.5, 0)
 
 # matrix for children of this coordinate system, motor RC has no children
 # declaring coordinate system and adding points
-print("")
-print("creating RC coordinate system")
 motorRC = cs.coordinateSystem()
 motorRC.addPoint('CE', CE)
 motorRC.addPoint('BC', BC)
@@ -37,17 +32,13 @@ A_RC_RR_2 = cs.getTranslateMatrix( RC.x, RC.y, RC.z )
 A_RC_RR = np.dot( A_RC_RR_2, A_RC_RR_1 )
 
 # declaring coordinate system and adding points
-print(" ")
-print("creating RR coordinate system")
 motorRR = cs.coordinateSystem(( motorRC, A_RC_RR ))
-print("This is RC after creation of RR, checking for to see if RC points are updated")
-print([(a[0], a[1].homogeneous) for a in motorRC.points.items()])
 motorRR.addPoint('RO', RO)
 motorRR.addPoint('RC', RC)
 motorRR.addPoint('OO', OO)
 motorRR.addPoint('RA', RA)
 
-# motorRR.updatePoints()
+# motorRR.updatePointsChildren()
 
 # third coordinate system, motor RT ----------------------------------------------------------------------
 
@@ -57,8 +48,13 @@ motorRR.addPoint('RA', RA)
 A_RR_RT = cs.getRotationMatrix( np.pi/2, 0, 0 )
 
 # declaring coordinate system and adding points
-print("")
-print("creating RT coordinate system")
 motorRT = cs.coordinateSystem(( motorRR, A_RR_RT ))
 
 # -------------------------------------------------------------
+print("start of angle turning --------------------------------------------------------------")
+motorRC.angle = -np.pi/3
+# after I set an angle, I need to update the parents; I cant have parents instead of children in Coordinate System,
+# because the child doesnt know how to get to where it needs to be in the parent coordinate system
+motorRR.angle = np.pi/4
+motorRR.angle = -np.pi/4
+motorRR.plotPoints()
