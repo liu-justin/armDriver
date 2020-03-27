@@ -25,7 +25,9 @@ RA = p.Circle(2.75, -2.40315424, 3.18909339)
 RC = p.Point(6.99893387, 2.37783316)
 OO = p.Point(0, 0)
 
-angle_RO_RR_RC = np.arccos(np.dot( RO.homogeneous[:-1] , RC.homogeneous[:-1] ) / (RO.magnitude() * RC.magnitude()) )
+# angle_RO_RR_RC = np.arccos(np.dot( RO.homogeneous[:-1] , RC.homogeneous[:-1] ) / (RO.magnitude() * RC.magnitude()) )
+angle_RO_RR_RC = p.getAngleBetween(RO, OO, RC)
+print(angle_RO_RR_RC)
 
 # matrix to transfer from this coordinate system, to its parent RT
 A_RR_RT = cs.getRotationMatrix( np.pi/2, 0, 0 )
@@ -62,13 +64,13 @@ print("adding dependent point AB now -------------------------------------------
 
 motorRR.addDependentPoint('AB', 'RA', 'BC')
 
-print("start of angle turning --------------------------------------------------------------")
-motorRC.angle = -2*np.pi/4
+# print("start of angle turning --------------------------------------------------------------")
+# motorRC.angle = -2*np.pi/4
 
-# # # after I set an angle, I need to update the parents; I cant have parents instead of children in Coordinate System,
-# # # because the child doesnt know how to get to where it needs to be in the parent coordinate system
-motorRR.angle = np.pi/3
-motorRR.angle = -np.pi/6
-# motorRT.angle = np.pi/4
-cs.printPoints(mainCS.points)
-mainCS.plotPoints()
+# # # # after I set an angle, I need to update the parents; I cant have parents instead of children in Coordinate System,
+# # # # because the child doesnt know how to get to where it needs to be in the parent coordinate system
+# motorRR.angle = np.pi/3
+# motorRR.angle = -np.pi/6
+# motorRT.angle = np.pi/7
+# cs.printPoints(mainCS.points)
+# mainCS.plotPoints()

@@ -56,3 +56,5 @@ class Circle(Point):
 
         return Point(x1+x2-x3, y1+y2-y3)
 
+def getAngleBetween(a, pivot, b):
+    return np.arccos(np.dot( a.homogeneous[:-1] - pivot.homogeneous[:-1], b.homogeneous[:-1] - pivot.homogeneous[:-1]) / (a.magnitude() * b.magnitude()) )

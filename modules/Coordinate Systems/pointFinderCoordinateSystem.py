@@ -1,6 +1,7 @@
 # import modules.basicShapes as bs
 # import modules.weightManager as wm
 import CoordinateSystemConstants as csc
+import Point as p
 import turtle
 import math
 import numpy as np
@@ -59,9 +60,7 @@ def findAngle2D(test, csm):
     mangleRR = np.pi/2 - (mangleRR + csc.angle_RO_RR_RC) #90 degrees, getting the angle for the vertical piece in mainArm
 
     # just have to reverse it in here, because model thinks that CCW is positive
-    csm.motorRR.angle = -mangleRR
-    # just used the last matrix RT because it catches all the changes to angles
-    csm.motorRT.update()
+    csm.motorRR.angle = -mangleRR # after the angle is set, all the parent coordinate systems will update their points
 
     # make a couple of points dicts in csm, one updates parent with child (absolute), other updates child with parent (relative)
     distY = y - csm.RR.points["RC"][1]
@@ -71,20 +70,20 @@ def findAngle2D(test, csm):
     #tempVector = np.array([distX, distY])
 
     angleD = math.atan2(distY,distX) - csc.angle_HH_RA_RC
-    csm.motorRC.angle = angleD # setting the angle finds outside again, so make sure to do it last
-    csm.motorRT.update() # fixes all the angles for all the coordinate systems
+    csm.motorRC.angle = -angleD # setting this angle will update points CE and BC, and will propagate changes up the parent tree
 
-
-    # want to replace this with something else in csm
-    aLength = 2.75
-    bLength = 9.5
-    cLength = 2.5
-    dLength = 9.43702304
+    # # want to replace this with something else in csm
+    # aLength = 2.75
+    # bLength = 9.5
+    # cLength = 2.5
+    # dLength = 9.43702304
     
-    # geometry to get input stepper angle, using law of sines and cosines
-    midLine = math.sqrt(cLength**2 + dLength**2 - 2*cLength*dLength*math.cos(angleD))
-    angleCAD = np.arcsin(cLength*math.sin(angleD)/midLine)
-    angleBAC = np.arccos((aLength**2 + midLine**2 - bLength**2)/(2*aLength*midLine))
-    mangleRA = angleCAD + angleBAC
+    # # geometry to get input stepper angle, using law of sines and cosines
+    # midLine = math.sqrt(cLength**2 + dLength**2 - 2*cLength*dLength*math.cos(angleD))
+    # angleCAD = np.arcsin(cLength*math.sin(angleD)/midLine)
+    # angleBAC = np.arccos((aLength**2 + midLine**2 - bLength**2)/(2*aLength*midLine))
+    # mangleRA = angleCAD + angleBAC
+
+    mangleRA = np.pi/2 - p.getAngleBetween(csm.mainCS.points["AB"], csm.mainCS.points["RA"], csm.mainCS.points["RO"] )
 
     return (mangleRR, mangleRA)

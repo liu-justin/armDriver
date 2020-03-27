@@ -92,28 +92,16 @@ class coordinateSystem(object):
         # self.rotatePoints()
 
 class coordinateSystemManager(coordinateSystem):
-    def __init__(self):
+    def __init__(self, mainCS):
         self.coordinateSystemDict = {}
+        self.mainCS = mainCS
 
     def addCoordinateSystem(self, **kwargs):
         # self.coordinateSystemDict.update(kwargs)
         self.__dict__.update(kwargs)
 
     def plotAllPoints(self):
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-
-        motorRT.plotPoints()
-
-        ax.set_xlabel('X (in)')
-        ax.set_ylabel('Y (in)')
-        ax.set_zlabel('Z (in)')
-
-        ax.set_xlim3d(-15, 15)
-        ax.set_ylim3d(-15, 15)
-        ax.set_zlim3d(-15, 15)
-
-        plt.show()
+        self.mainCS.plotPoints()
 
 def getTranslateMatrix(x,y,z):
     return np.array([[1,0,0,x],
