@@ -38,23 +38,18 @@ class coordinateSystem(object):
             return
 
         newPoints = {key:copy.deepcopy(value) for key,value in self.points.items()}
-        print("new points gathered from self")
-        print([(a[0], a[1].homogeneous) for a in newPoints.items()])
         for point in newPoints.values():
             point.homogeneous = np.dot(self.parent[1], np.dot(self.rotationMatrix, point.homogeneous))
-            point.regular = point.homogeneous[:-1]
 
+        # for k,v in newPoints.items():
+        #     newPoints[k].homogeneous = np.dot(self.parent[1], np.dot(self.rotationMatrix, newPoints[k].homogeneous))
+        #     newPoints[k].regular = newPoints[k].homogeneous[:-1]
         # then transfer the points
-        print(self.parent[0].points)
         self.parent[0].points.update(newPoints)
-        print("after updating self.points with new points: ")
-        print([(a[0], a[1].homogeneous) for a in self.points.items()])
-
         # then let the parents update their parents
         self.parent[0].updatePoints()
 
         return
-
 
     def plotPoints(self):
         fig = plt.figure()
@@ -133,3 +128,9 @@ def getRotationMatrix(angleX, angleY, angleZ):
                   [              0,               0,               0, 1]])
 
     return np.dot(c, np.dot(b, a))
+
+def printPoints(points):
+    print("<<<")
+    for k,v in points.items():
+        print(f"{k}: {v}")
+    print(">>>")
