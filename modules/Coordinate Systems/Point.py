@@ -18,7 +18,7 @@ class Point:
         # return math.sqrt((otherPoint.x - self.x)**2 +(otherPoint.y - self.y)**2 +(otherPoint.z - self.z)**2)
 
     def __str__(self):
-        return f"({self.homogeneous[0]}, {self.homogeneous[1]}, {self.homogeneous[2]})"
+        return f"({self.x}, {self.y}, {self.z})"
 
     @property
     def homogeneous(self):
@@ -39,8 +39,6 @@ class Circle(Point):
 
     # returns one of the intersection points between two circles, obsolete i think
     def intersectionPoint(self, other):
-        print(f"firstx: {self.x} firsty: {self.y}")
-        print(f"nextx: {other.x} nexty: {other.y}")
         x1 = 0.5*(self.x + other.x)
         y1 = 0.5*(self.y + other.y)
 

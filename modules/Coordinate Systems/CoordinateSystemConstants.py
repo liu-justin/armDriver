@@ -58,25 +58,28 @@ motorRC.addPoint('CE', CE)
 motorRC.addPoint('BC', BC)
 
 # -------------------------------------------------------------------------------------------------------
-# adding pointAB
-print(motorRR.points["RA"])
-print(motorRR.points["BC"])
-AB = motorRR.points["RA"].intersectionPoint(motorRR.points["BC"])
-motorRR.addPoint('AB', AB)
-print(motorRR.points["AB"])
-print(motorRR.points["RA"])
-print(motorRR.points["BC"])
-print("distancing")
-print(AB.distanceTo(RA))
-print(AB.distanceTo(BC))
-print(f"RA radius: {RA.radius}, BC radius: {BC.radius}")
+# adding dependent point AB to motor RR
+print("adding dependent point AB now -------------------------------------------------------------")
+# AB = motorRR.points["RA"].intersectionPoint(motorRR.points["BC"])
+# motorRR.addPoint('AB', AB)
+
+# motorRR.addDependentPoint('AB', 'RA', 'BC')
+
+# print(motorRR.points["AB"])
+# print(motorRR.points["RA"])
+# print(motorRR.points["BC"])
+# print("distancing")
+# print(motorRR.points["AB"].distanceTo(motorRR.points["RA"]))
+# print(motorRR.points["AB"].distanceTo(motorRR.points["BC"]))
+# print(f"RA radius: {RA.radius}, BC radius: {BC.radius}")
 
 
 print("start of angle turning --------------------------------------------------------------")
-# motorRC.angle = -2*np.pi/4
+motorRC.angle = -2*np.pi/4
+
 # # # after I set an angle, I need to update the parents; I cant have parents instead of children in Coordinate System,
 # # # because the child doesnt know how to get to where it needs to be in the parent coordinate system
-# motorRR.angle = np.pi/4
-# motorRT.angle = 0
+motorRR.angle = np.pi/3
+motorRT.angle = -np.pi/4
 cs.printPoints(motorRT.points)
 motorRT.plotPoints()

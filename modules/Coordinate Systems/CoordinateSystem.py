@@ -13,16 +13,19 @@ from mpl_toolkits.mplot3d import Axes3D
 class coordinateSystem(object):
     def __init__(self, *args):
         self.points = {}
+        self.dependents = {}
         self._angle = 0
         # z will always be the axis for rotation
         self.rotationMatrix = getRotationMatrix(0,0,self._angle)
         self.parent = args # [tuple(coordinateSystem, matrix)]
 
-    def addPointCoords(self, key, x, y=0, z=0):
-        self.points[key] = np.array([x, y, z, 1])
-
     def addPoint(self, key, point):
         self.points[key] = point
+        self.updatePoints()
+
+    def addDependentPoint(self, key, pointA, pointB):
+        self.dependents[key] = (pointA, pointB)
+        self.points[key] = self.points[pointA].intersectionPoint(self.points[pointB])
         self.updatePoints()
 
     def rotatePoints(self): # looks like if I want to use Points, i have to edit the dict values instead of make a new dict; alternative was np.array
@@ -31,12 +34,19 @@ class coordinateSystem(object):
             point.homogeneous = np.dot(self.rotationMatrix, point.homogeneous)
         # self.points = {key:p.Point(np.dot(self.rotationMatrix, value))for key,value in self.points.items()}
 
-    # trying recursion: reason it doesn't work is because it doesn't rotate the points
-    def updatePoints(self):
+    def updateDependents(self):
+        newDependents = {key:self.points[value[0]].intersectionPoint(self.points[value[1]]) for key, value in self.dependents.items()}
+        print(newDependents)
+        self.points.update(newDependents)
+
+    def updatePoints(self): # recursively update parents with new points
         if (not self.parent):
             print("zero case for updating Parent direction")
             return
 
+        self.updateDependents()
+
+        # create a copy of self.points to modify with matrices and send to parents
         newPoints = {key:copy.deepcopy(value) for key,value in self.points.items()}
         for point in newPoints.values():
             point.homogeneous = np.dot(self.parent[1], np.dot(self.rotationMatrix, point.homogeneous))
@@ -44,7 +54,8 @@ class coordinateSystem(object):
         # for k,v in newPoints.items():
         #     newPoints[k].homogeneous = np.dot(self.parent[1], np.dot(self.rotationMatrix, newPoints[k].homogeneous))
         #     newPoints[k].regular = newPoints[k].homogeneous[:-1]
-        # then transfer the points
+
+        # then transfer the points to parents
         self.parent[0].points.update(newPoints)
         # then let the parents update their parents
         self.parent[0].updatePoints()
