@@ -56,22 +56,3 @@ class Circle(Point):
 
         return Point(x1+x2-x3, y1+y2-y3)
 
-        # d = self.distanceTo(other)
-        # print(d)
-        # a = (self.radius**2 - other.radius**2 + d**2)/(2*d)
-        # h = math.sqrt(self.radius**2 - a**2)
-        # x2 = self.x + a*(other.x - self.x)/d
-        # y2 = self.y + a*(other.y - self.y)/d
-        # x3 = x2 - h*(other.x - self.x)/d
-        # y3 = y2 - h*(other.y - self.y)/d
-
-        # return Point(x3, y3)
-
-BC = Circle(9.5, 4.50828, 2.59381)
-RA = Circle(2.75, -2.4032, 3.18909)
-AB = RA.intersectionPoint(BC)
-print(AB)
-print(RA)
-print(BC)
-print(AB.distanceTo(RA))
-print(AB.distanceTo(BC))

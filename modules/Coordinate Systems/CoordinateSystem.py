@@ -36,7 +36,6 @@ class coordinateSystem(object):
 
     def updateDependents(self):
         newDependents = {key:self.points[value[0]].intersectionPoint(self.points[value[1]]) for key, value in self.dependents.items()}
-        print(newDependents)
         self.points.update(newDependents)
 
     def updatePoints(self): # recursively update parents with new points
@@ -86,11 +85,11 @@ class coordinateSystem(object):
     @angle.setter
     def angle(self, a):
         print("setting angle to : %s", a)
-        self._angle = a - self._angle
+        self._angle = a
         # this reassignment has around the same runtime as reassigning each entry individually
         self.rotationMatrix = getRotationMatrix(0,0,self._angle)
         self.updatePoints()
-        self.rotatePoints()
+        # self.rotatePoints()
 
 class coordinateSystemManager(coordinateSystem):
     def __init__(self):
