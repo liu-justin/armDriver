@@ -14,10 +14,19 @@ class coordinateSystem(object):
     def __init__(self, *args):
         self.points = {}
         self.dependents = {}
+        self.children = []
+
         self._angle = 0
         # z will always be the axis for rotation
         self.rotationMatrix = getRotationMatrix(0,0,self._angle)
-        self.parent = args # [tuple(coordinateSystem, matrix)]
+
+        if not args:
+            self.parent = None
+            self.parentMatrix = None
+        else:
+            self.parent = args[0]
+            self.parentMatrix = args[1]
+            self.parent.children.append(self)
 
     def addPoint(self, key, point):
         self.points[key] = point
@@ -40,7 +49,6 @@ class coordinateSystem(object):
 
     def updatePoints(self): # recursively update parents with new points
         if (not self.parent):
-            print("zero case for updating Parent direction")
             return
 
         self.updateDependents()
@@ -48,16 +56,16 @@ class coordinateSystem(object):
         # create a copy of self.points to modify with matrices and send to parents
         newPoints = {key:copy.deepcopy(value) for key,value in self.points.items()}
         for point in newPoints.values():
-            point.homogeneous = np.dot(self.parent[1], np.dot(self.rotationMatrix, point.homogeneous))
+            point.homogeneous = np.dot(self.parentMatrix, np.dot(self.rotationMatrix, point.homogeneous))
 
         # for k,v in newPoints.items():
         #     newPoints[k].homogeneous = np.dot(self.parent[1], np.dot(self.rotationMatrix, newPoints[k].homogeneous))
         #     newPoints[k].regular = newPoints[k].homogeneous[:-1]
 
         # then transfer the points to parents
-        self.parent[0].points.update(newPoints)
+        self.parent.points.update(newPoints)
         # then let the parents update their parents
-        self.parent[0].updatePoints()
+        self.parent.updatePoints()
 
         return
 
@@ -93,15 +101,30 @@ class coordinateSystem(object):
 
 class coordinateSystemManager(coordinateSystem):
     def __init__(self, mainCS):
-        self.coordinateSystemDict = {}
+        self.csDict = {}
         self.mainCS = mainCS
 
     def addCoordinateSystem(self, **kwargs):
-        # self.coordinateSystemDict.update(kwargs)
-        self.__dict__.update(kwargs)
+        self.csDict.update(kwargs)
+        # self.__dict__.update(kwargs)
 
     def plotAllPoints(self):
         self.mainCS.plotPoints()
+
+    def findPointCS(self, pointa):
+        for coord in self.csDict.values():
+            if pointa in coord.points.keys():
+                return coord
+
+    def findPoint(self, pointa):
+        coord = self.findPointCS(pointa)
+        transformedPoint = np.dot(coord.parentMatrix, np.dot(coord.rotationMatrix, coord.points[pointa].homogeneous))
+        coord = coord.parent
+        while coord != self.mainCS:
+            transformedPoint = np.dot(coord.parentMatrix, np.dot(coord.rotationMatrix, transformedPoint))
+            coord = coord.parent
+        return transformedPoint            
+
 
 def getTranslateMatrix(x,y,z):
     return np.array([[1,0,0,x],
