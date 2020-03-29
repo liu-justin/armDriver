@@ -63,33 +63,41 @@ class coordinateSystem(object):
     #     return
 
     def findCSOfPoint(self, p):
-        print(p)
-        print(self.points.keys())
         if p in self.points.keys():
             return self
-        if self.children == []:
+        if self.children == []: # if this coordinate system doesn't have any children
             return None
         for child in self.children:
             return child.findCSOfPoint(p)
 
-    def transformPoint(self, p): # returns the transformed point, point must be in this coordinate system or its children
-        coord = self.findCSOfPoint(p)
+    def transformPointUsingName(self, p, coord = None): # returns the transformed point, point must be in this coordinate system or its children
+        if coord == None:
+            coord = self.findCSOfPoint(p)
+        # coord = self.findCSOfPoint(p)
         newPoint = copy.deepcopy(coord.points[p])
         while coord != self:
             newPoint.homogeneous = np.dot(coord.parentMatrix, np.dot(coord.rotationMatrix, newPoint.homogeneous))
             coord = coord.parent
         return newPoint
 
+    def transformPointUsingPoint(self, p, coord): # only if you know the point and coord directly, use this one; otherwise use the one above
+        newPoint = copy.deepcopy(p)
+        while coord != self:
+            newPoint.homogeneous = np.dot(coord.parentMatrix, np.dot(coord.rotationMatrix, newPoint.homogeneous))
+            coord = coord.parent
+        return newPoint
+
     def updateDependentsOnly(self):
+        if (self.parent == None):
+            return
         # key is the actual point, value is the points that are needed for intersectionPoint
         for key, value in self.dependents.items():
-            a = self.transformPoint(value[0])
-            print(a)
-            b = self.transformPoint(value[1])
-            print(b)
-            print("finished getting both points")
+            a = self.transformPointUsingName(value[0])
+            b = self.transformPointUsingName(value[1])
 
             self.points[key] = a.intersectionPoint(b)
+        
+        self.parent.updateDependentsOnly()
 
     def plotPoints(self):
         fig = plt.figure()
@@ -126,13 +134,33 @@ class coordinateSystemManager(coordinateSystem):
     def __init__(self, mainCS):
         self.csDict = {}
         self.mainCS = mainCS
+        self.pointNames = []
 
     def addCoordinateSystem(self, **kwargs):
         self.csDict.update(kwargs)
+        for cs in kwargs.values():
+            self.pointNames.extend(cs.points.keys())
         # self.__dict__.update(kwargs)
 
     def plotAllPoints(self):
-        self.mainCS.plotPoints()
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
+        for coord in self.csDict.values():
+            for name, point in coord.points.items():
+                newPoint = self.mainCS.transformPointUsingPoint(point, coord)
+                ax.scatter3D(newPoint.homogeneous[0], newPoint.homogeneous[1], newPoint.homogeneous[2])
+                ax.text(newPoint.homogeneous[0], newPoint.homogeneous[1], newPoint.homogeneous[2], name)
+
+        ax.set_xlabel('X (in)')
+        ax.set_ylabel('Y (in)')
+        ax.set_zlabel('Z (in)')
+
+        ax.set_xlim3d(-15, 15)
+        ax.set_ylim3d(-15, 15)
+        ax.set_zlim3d(-15, 15)
+
+        plt.show()
 
     def findPointCS(self, pointa):
         for coord in self.csDict.values():

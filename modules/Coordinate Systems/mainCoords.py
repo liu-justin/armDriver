@@ -7,15 +7,14 @@ from mpl_toolkits.mplot3d import Axes3D
 csm = cs.coordinateSystemManager(csc.mainCS)
 
 csm.addCoordinateSystem(motorRC = csc.motorRC, motorRR = csc.motorRR, motorRT = csc.motorRT)
-print(csm.csDict)
+# csm.plotAllPoints()
 # changing motor angles-----------------------------------------
 csm.csDict["motorRC"].angle = -np.pi/2
 csm.csDict["motorRR"].angle = np.pi/3 # rotate all the points in RC
-csm.csDict["motorRT"].angle = 0
+csm.csDict["motorRT"].angle = np.pi/5
 
-a = csm.findPointMain("CE")
-print(a)
-cs.printPoints(csm.mainCS.points)
+# a = csm.findPointMain("CE")
+# cs.printPoints(csm.mainCS.points)
 # plotting --------------------------------------------------
 
-# csm.plotAllPoints()
+csm.plotAllPoints()

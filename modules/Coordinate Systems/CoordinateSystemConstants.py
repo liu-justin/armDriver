@@ -27,7 +27,6 @@ OO = p.Point(0, 0)
 
 # angle_RO_RR_RC = np.arccos(np.dot( RO.homogeneous[:-1] , RC.homogeneous[:-1] ) / (RO.magnitude() * RC.magnitude()) )
 angle_RO_RR_RC = p.getAngleBetween(RO, OO, RC)
-print(angle_RO_RR_RC)
 
 # matrix to transfer from this coordinate system, to its parent RT
 A_RR_RT = cs.getRotationMatrix( np.pi/2, 0, 0 )
