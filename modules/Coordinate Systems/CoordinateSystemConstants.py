@@ -64,8 +64,8 @@ print("adding dependent point AB now -------------------------------------------
 
 motorRR.addDependentPoint('AB', 'RA', 'BC')
 
-print("start of angle turning --------------------------------------------------------------")
-motorRC.angle = -2*np.pi/4
+# print("start of angle turning --------------------------------------------------------------")
+# motorRC.angle = -2*np.pi/4
 
 # after I set an angle, I need to update the parents; I cant have parents instead of children in Coordinate System,
 # because the child doesnt know how to get to where it needs to be in the parent coordinate system
