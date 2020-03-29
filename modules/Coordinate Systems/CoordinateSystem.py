@@ -130,23 +130,23 @@ class coordinateSystem(object):
         # self.updatePoints()
         # self.rotatePoints()
 
-class coordinateSystemManager(coordinateSystem):
+class coordinateSystemManager(object):
     def __init__(self, mainCS):
-        self.csDict = {}
         self.mainCS = mainCS
-        self.pointNames = []
 
     def addCoordinateSystem(self, **kwargs):
-        self.csDict.update(kwargs)
-        for cs in kwargs.values():
-            self.pointNames.extend(cs.points.keys())
-        # self.__dict__.update(kwargs)
+        # self.csDict.update(kwargs)
+        # for cs in kwargs.values():
+        #     self.pointNames.extend(cs.points.keys())
+        
+        # replaced __dict__ with vars(self)
+        vars(self).update(kwargs)
 
     def plotAllPoints(self):
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
 
-        for coord in self.csDict.values():
+        for coord in vars(self).values():
             for name, point in coord.points.items():
                 newPoint = self.mainCS.transformPointUsingPoint(point, coord)
                 ax.scatter3D(newPoint.homogeneous[0], newPoint.homogeneous[1], newPoint.homogeneous[2])
@@ -162,14 +162,14 @@ class coordinateSystemManager(coordinateSystem):
 
         plt.show()
 
-    def findPointCS(self, pointa):
-        for coord in self.csDict.values():
-            if pointa in coord.points.keys():
+    def findPointCS(self, p):
+        for coord in vars(self).values():
+            if p in coord.points.keys():
                 return coord
 
-    def findPointMain(self, pointa):
-        coord = self.findPointCS(pointa)
-        transformedPoint = np.dot(coord.parentMatrix, np.dot(coord.rotationMatrix, coord.points[pointa].homogeneous))
+    def findPointMain(self, p):
+        coord = self.findPointCS(p)
+        transformedPoint = np.dot(coord.parentMatrix, np.dot(coord.rotationMatrix, coord.points[p].homogeneous))
         coord = coord.parent
         while coord != self.mainCS:
             transformedPoint = np.dot(coord.parentMatrix, np.dot(coord.rotationMatrix, transformedPoint))

@@ -9,9 +9,9 @@ csm = cs.coordinateSystemManager(csc.mainCS)
 csm.addCoordinateSystem(motorRC = csc.motorRC, motorRR = csc.motorRR, motorRT = csc.motorRT)
 # csm.plotAllPoints()
 # changing motor angles-----------------------------------------
-csm.csDict["motorRC"].angle = -np.pi/2
-csm.csDict["motorRR"].angle = np.pi/3 # rotate all the points in RC
-csm.csDict["motorRT"].angle = np.pi/5
+csm.motorRC.angle = -np.pi/2
+csm.motorRR.angle = np.pi/3 # rotate all the points in RC
+csm.motorRT.angle = np.pi/5
 
 # a = csm.findPointMain("CE")
 # cs.printPoints(csm.mainCS.points)

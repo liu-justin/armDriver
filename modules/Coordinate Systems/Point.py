@@ -1,13 +1,12 @@
 import numpy as np
 import math
 
-class Point:
+class Point(object):
     def __init__(self, x, y, z=0):
         self._homogeneous = np.array([x,y,z,1])
         self.x = x
         self.y = y
         self.z = z
-        
 
     def magnitude(self):
         return math.sqrt( self.x**2 + self.y**2 + self.z**2 )
@@ -29,8 +28,6 @@ class Point:
         self.x = self._homogeneous[0]
         self.y = self._homogeneous[1]
         self.z = self._homogeneous[2]
-        
-
 
 class Circle(Point):
     def __init__(self, r, x, y, z=0):
