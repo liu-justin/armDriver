@@ -13,8 +13,8 @@ from mpl_toolkits.mplot3d import Axes3D
 class coordinateSystem(object):
     def __init__(self, *args):
         self.points = {}
-        self.dependents = {}
-        self.children = []
+        self.dependents = {} # key is pointName, value is (pointA, pointB) for the points it depends on
+        self.children = [] # other CS
 
         self._angle = 0
         # z will always be the axis for rotation
@@ -30,44 +30,66 @@ class coordinateSystem(object):
 
     def addPoint(self, key, point):
         self.points[key] = point
-        self.updatePoints()
+        # self.updatePoints()
 
     def addDependentPoint(self, key, pointA, pointB):
         self.dependents[key] = (pointA, pointB)
-        self.points[key] = self.points[pointA].intersectionPoint(self.points[pointB])
-        self.updatePoints()
+        self.updateDependentsOnly()
+        # self.points[key] = self.points[pointA].intersectionPoint(self.points[pointB])
+        # self.updatePoints()
 
-    def rotatePoints(self): # looks like if I want to use Points, i have to edit the dict values instead of make a new dict; alternative was np.array
-        # self.points = {key:np.dot(self.rotationMatrix, value) for key,value in self.points.items()}
-        for point in self.points.values():
-            point.homogeneous = np.dot(self.rotationMatrix, point.homogeneous)
-        # self.points = {key:p.Point(np.dot(self.rotationMatrix, value))for key,value in self.points.items()}
+    # def rotatePoints(self): # looks like if I want to use Points, i have to edit the dict values instead of make a new dict; alternative was np.array
+    #     # self.points = {key:np.dot(self.rotationMatrix, value) for key,value in self.points.items()}
+    #     for point in self.points.values():
+    #         point.homogeneous = np.dot(self.rotationMatrix, point.homogeneous)
+    #     # self.points = {key:p.Point(np.dot(self.rotationMatrix, value))for key,value in self.points.items()}
 
-    def updateDependents(self):
-        newDependents = {key:self.points[value[0]].intersectionPoint(self.points[value[1]]) for key, value in self.dependents.items()}
-        self.points.update(newDependents)
+    # def updateDependents(self): # if the points that these point depends on changes, this will update those dependent points 
+    #     newDependents = {key:self.points[value[0]].intersectionPoint(self.points[value[1]]) for key, value in self.dependents.items()}
+    #     self.points.update(newDependents)
 
-    def updatePoints(self): # recursively update parents with new points
-        if (not self.parent):
-            return
+    # def updatePoints(self): # recursively update parents with new points
+    #     if (not self.parent): # zero case for recursion, if self doesn't have a parent, meaning its mainCS
+    #         return
 
-        self.updateDependents()
+    #     self.updateDependents()
 
-        # create a copy of self.points to modify with matrices and send to parents
-        newPoints = {key:copy.deepcopy(value) for key,value in self.points.items()}
-        for point in newPoints.values():
-            point.homogeneous = np.dot(self.parentMatrix, np.dot(self.rotationMatrix, point.homogeneous))
+    #     newPoints = {key:copy.deepcopy(value) for key,value in self.points.items()} # create a deep copy of self.points
+    #     for point in newPoints.values():                                            # transform it with rotation and parent matrices
+    #         point.homogeneous = np.dot(self.parentMatrix, np.dot(self.rotationMatrix, point.homogeneous)) 
 
-        # for k,v in newPoints.items():
-        #     newPoints[k].homogeneous = np.dot(self.parent[1], np.dot(self.rotationMatrix, newPoints[k].homogeneous))
-        #     newPoints[k].regular = newPoints[k].homogeneous[:-1]
+    #     self.parent.points.update(newPoints) # then transfer the points to parents
+    #     self.parent.updatePoints() # then let the parents update their parents
+    #     return
 
-        # then transfer the points to parents
-        self.parent.points.update(newPoints)
-        # then let the parents update their parents
-        self.parent.updatePoints()
+    def findCSOfPoint(self, p):
+        print(p)
+        print(self.points.keys())
+        if p in self.points.keys():
+            return self
+        if self.children == []:
+            return None
+        for child in self.children:
+            return child.findCSOfPoint(p)
 
-        return
+    def transformPoint(self, p): # returns the transformed point, point must be in this coordinate system or its children
+        coord = self.findCSOfPoint(p)
+        newPoint = copy.deepcopy(coord.points[p])
+        while coord != self:
+            newPoint.homogeneous = np.dot(coord.parentMatrix, np.dot(coord.rotationMatrix, newPoint.homogeneous))
+            coord = coord.parent
+        return newPoint
+
+    def updateDependentsOnly(self):
+        # key is the actual point, value is the points that are needed for intersectionPoint
+        for key, value in self.dependents.items():
+            a = self.transformPoint(value[0])
+            print(a)
+            b = self.transformPoint(value[1])
+            print(b)
+            print("finished getting both points")
+
+            self.points[key] = a.intersectionPoint(b)
 
     def plotPoints(self):
         fig = plt.figure()
@@ -96,7 +118,8 @@ class coordinateSystem(object):
         self._angle = a
         # this reassignment has around the same runtime as reassigning each entry individually
         self.rotationMatrix = getRotationMatrix(0,0,self._angle)
-        self.updatePoints()
+        self.updateDependentsOnly()
+        # self.updatePoints()
         # self.rotatePoints()
 
 class coordinateSystemManager(coordinateSystem):
@@ -116,7 +139,7 @@ class coordinateSystemManager(coordinateSystem):
             if pointa in coord.points.keys():
                 return coord
 
-    def findPoint(self, pointa):
+    def findPointMain(self, pointa):
         coord = self.findPointCS(pointa)
         transformedPoint = np.dot(coord.parentMatrix, np.dot(coord.rotationMatrix, coord.points[pointa].homogeneous))
         coord = coord.parent

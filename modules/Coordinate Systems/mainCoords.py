@@ -13,7 +13,7 @@ csm.csDict["motorRC"].angle = -np.pi/2
 csm.csDict["motorRR"].angle = np.pi/3 # rotate all the points in RC
 csm.csDict["motorRT"].angle = 0
 
-a = csm.findPoint("CE")
+a = csm.findPointMain("CE")
 print(a)
 cs.printPoints(csm.mainCS.points)
 # plotting --------------------------------------------------
