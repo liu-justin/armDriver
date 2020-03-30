@@ -9,15 +9,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-def findAngle2D(csm, x, y, z=0):
+def findAngle2D(csm, test):
     # # renaming variables for the equation in the notebook
-    # x = test.x
-    # y = test.y # y is up
-    # z = test.z
+    x = test.x
+    y = test.y # y is up
+    z = test.z
     rR = math.sqrt(csc.RC.x**2 + csc.RC.y**2)
     rC = math.sqrt(csc.CE.x**2 + csc.CE.y**2)
 
-    angleRotation = math.atan2(z,x)
+    angleRotation = math.atan2(y,x)
+    # working in the XY plane, so just adjust the x to fit the distance between Test and the Z axis
     x = math.sqrt(y**2 + x**2)
 
     # initializing final tuple to return
@@ -68,13 +69,15 @@ def findAngle2D(csm, x, y, z=0):
 
     print("distZ: ", distZ)
     print("distX: ", distX)
+
     # angleD = math.atan2(distZ,distX) - csc.angle_HH_RA_RC #csc.angle_HH_RA_RC is local, need it to be global
     # angle_HH_RA_RC = math.atan((csm["RC"].z - csm["RA"].z)/(csm["RC"].x - csm["RA"].x))
     angle_HH_RA_RC = csm.motorRR.angle + csc.angle_HH_RA_RC
     angleD = math.atan2(distZ,distX) - angle_HH_RA_RC
-    print("angleHHRARC: ", angle_HH_RA_RC)
     csm.motorRC.angle = angleD # setting this angle will update points CE and BC, and will propagate changes up the parent tree
 
     mangleRA = np.pi/2 - p.getAngleBetween(csm["AB"], csm["RA"], csm["RO"] )
+
+    csm.motorRT.angle = angleRotation
 
     return (mangleRR, mangleRA)
