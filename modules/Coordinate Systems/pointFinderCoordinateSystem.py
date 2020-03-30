@@ -18,20 +18,20 @@ def findAngle2D(csm, x, y, z=0):
     rC = math.sqrt(csc.CE.x**2 + csc.CE.y**2)
 
     angleRotation = math.atan2(z,x)
-    x = math.sqrt(z**2 + x**2)
+    x = math.sqrt(y**2 + x**2)
 
     # initializing final tuple to return
     mangleRR= 0
     mangleRA= 0
 
     # equation k1 = k2*cos + k3*sin, came from circle equation from circle C
-    k1 = x**2 + y**2 + (rR**2) - (rC**2)
+    k1 = x**2 + z**2 + (rR**2) - (rC**2)
     k2 = 2*x*rR
-    k3 = 2*y*rR
+    k3 = 2*z*rR
     #print (f"k1: {k1} k2:{k2} k3: {k3}")
 
     try:
-        if y > 0:
+        if z > 0:
             # a*cos^2 + b*cos + c = 0
             a = -(k3**2)-(k2**2)
             b = 2*k1*k2
@@ -63,14 +63,17 @@ def findAngle2D(csm, x, y, z=0):
     csm.motorRR.angle = -mangleRR # after the angle is set, all the parent coordinate systems will update their points
 
     # make a couple of points dicts in csm, one updates parent with child (absolute), other updates child with parent (relative)
-    distY = y - csm["RC"].y
+    distZ = z - csm["RC"].z
     distX = x - csm["RC"].x
 
-    print("distY: ", distY)
+    print("distZ: ", distZ)
     print("distX: ", distX)
-
-    angleD = math.atan2(distY,distX) - csc.angle_HH_RA_RC
-    csm.motorRC.angle = -angleD # setting this angle will update points CE and BC, and will propagate changes up the parent tree
+    # angleD = math.atan2(distZ,distX) - csc.angle_HH_RA_RC #csc.angle_HH_RA_RC is local, need it to be global
+    # angle_HH_RA_RC = math.atan((csm["RC"].z - csm["RA"].z)/(csm["RC"].x - csm["RA"].x))
+    angle_HH_RA_RC = csm.motorRR.angle + csc.angle_HH_RA_RC
+    angleD = math.atan2(distZ,distX) - angle_HH_RA_RC
+    print("angleHHRARC: ", angle_HH_RA_RC)
+    csm.motorRC.angle = angleD # setting this angle will update points CE and BC, and will propagate changes up the parent tree
 
     mangleRA = np.pi/2 - p.getAngleBetween(csm["AB"], csm["RA"], csm["RO"] )
 

@@ -136,6 +136,7 @@ def findAngle2D(test, newzero=False):
     # this angle is referenced to the global reference plane, needs to be from mangleRRangle reference plane
     # angleD is the angle inside the upper quad, so we have to reverse the angle
     angleD = math.atan2(distY,distX) - bs.MAINARM.vangle_RA_RC
+    print("Main arm vangle: ", bs.MAINARM.vangle_RA_RC)
     # bs.linkC.center = bs.MAINARM.RC
     # bs.linkC.refAngle = bs.MAINARM.vangle_RA_RC
     bs.linkC.angle = angleD # setting the angle finds outside again, so make sure to do it last

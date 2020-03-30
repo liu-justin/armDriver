@@ -1,6 +1,7 @@
 import CoordinateSystem as cs
 import CoordinateSystemConstants as csc
 import pointFinderCoordinateSystem as pf
+import Point as p
 import numpy as np
 
 
@@ -17,6 +18,8 @@ csm.addCoordinateSystem(motorRC = csc.motorRC, motorRR = csc.motorRR, motorRT = 
 
 
 angles = pf.findAngle2D(csm, 10, 0)
+test = p.Point(10,0)
+csm.mainCS.addPoint("TS", test)
 # print(angles)
 # csm.printAllAngles()
 # csm.printAllPoints()
