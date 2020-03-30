@@ -130,6 +130,8 @@ def findAngle2D(test, newzero=False):
     distY = y - bs.MAINARM.RC.y
     distX = x - bs.MAINARM.RC.x
     #tempVector = np.array([distX, distY])
+    print("distY: ", distY)
+    print("distX: ", distX)
 
     # this angle is referenced to the global reference plane, needs to be from mangleRRangle reference plane
     # angleD is the angle inside the upper quad, so we have to reverse the angle

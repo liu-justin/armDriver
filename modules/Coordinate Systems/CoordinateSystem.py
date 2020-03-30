@@ -30,37 +30,10 @@ class coordinateSystem(object):
 
     def addPoint(self, key, point):
         self.points[key] = point
-        # self.updatePoints()
 
     def addDependentPoint(self, key, pointA, pointB):
         self.dependents[key] = (pointA, pointB)
         self.updateDependentsOnly()
-        # self.points[key] = self.points[pointA].intersectionPoint(self.points[pointB])
-        # self.updatePoints()
-
-    # def rotatePoints(self): # looks like if I want to use Points, i have to edit the dict values instead of make a new dict; alternative was np.array
-    #     # self.points = {key:np.dot(self.rotationMatrix, value) for key,value in self.points.items()}
-    #     for point in self.points.values():
-    #         point.homogeneous = np.dot(self.rotationMatrix, point.homogeneous)
-    #     # self.points = {key:p.Point(np.dot(self.rotationMatrix, value))for key,value in self.points.items()}
-
-    # def updateDependents(self): # if the points that these point depends on changes, this will update those dependent points 
-    #     newDependents = {key:self.points[value[0]].intersectionPoint(self.points[value[1]]) for key, value in self.dependents.items()}
-    #     self.points.update(newDependents)
-
-    # def updatePoints(self): # recursively update parents with new points
-    #     if (not self.parent): # zero case for recursion, if self doesn't have a parent, meaning its mainCS
-    #         return
-
-    #     self.updateDependents()
-
-    #     newPoints = {key:copy.deepcopy(value) for key,value in self.points.items()} # create a deep copy of self.points
-    #     for point in newPoints.values():                                            # transform it with rotation and parent matrices
-    #         point.homogeneous = np.dot(self.parentMatrix, np.dot(self.rotationMatrix, point.homogeneous)) 
-
-    #     self.parent.points.update(newPoints) # then transfer the points to parents
-    #     self.parent.updatePoints() # then let the parents update their parents
-    #     return
 
     def findCSOfPoint(self, p):
         if p in self.points.keys():
@@ -87,12 +60,12 @@ class coordinateSystem(object):
             coord = coord.parent
         return newPoint
 
-    def updateDependentsOnly(self):
-        if (self.parent == None):
+    def updateDependentsOnly(self): # recursively updates all the points that are dependent on other points, not fixed in space
+        if (self.parent == None): # zero case
             return
         # key is the actual point, value is the points that are needed for intersectionPoint
         for key, value in self.dependents.items():
-            a = self.transformPointUsingName(value[0])
+            a = self.transformPointUsingName(value[0]) # a/b are the two points that key depends on
             b = self.transformPointUsingName(value[1])
 
             self.points[key] = a.intersectionPoint(b)
@@ -127,8 +100,7 @@ class coordinateSystem(object):
         # this reassignment has around the same runtime as reassigning each entry individually
         self.rotationMatrix = getRotationMatrix(0,0,self._angle)
         self.updateDependentsOnly()
-        # self.updatePoints()
-        # self.rotatePoints()
+
 
 class coordinateSystemManager(object):
     def __init__(self, mainCS):
@@ -141,6 +113,9 @@ class coordinateSystemManager(object):
         
         # replaced __dict__ with vars(self)
         vars(self).update(kwargs)
+    
+    def __getitem__(self, name):
+        return self.findPointMain(name) 
 
     def plotAllPoints(self):
         fig = plt.figure()
@@ -161,20 +136,42 @@ class coordinateSystemManager(object):
         ax.set_zlim3d(-15, 15)
 
         plt.show()
+    
+    def printAllPoints(self):
+        print("<<<")
+        for coord in vars(self).values():
+            for name, point in coord.points.items():
+                newPoint = self.mainCS.transformPointUsingPoint(point, coord)
+                print(f"{name}: {newPoint}")
+        print(">>>")
 
-    def findPointCS(self, p):
+    def printAllAngles(self):
+        print("ALL ANGLES<<<")
+        for name, coord in vars(self).items():
+            print(f"{name}: {coord.angle}")
+        print(">>>")
+
+
+    def findCSMain(self, p):
         for coord in vars(self).values():
             if p in coord.points.keys():
                 return coord
 
-    def findPointMain(self, p):
-        coord = self.findPointCS(p)
-        transformedPoint = np.dot(coord.parentMatrix, np.dot(coord.rotationMatrix, coord.points[p].homogeneous))
-        coord = coord.parent
+    def findPointMain(self, p, coord=None):
+        # coord = self.findPointCS(p)
+        # transformedPoint = np.dot(coord.parentMatrix, np.dot(coord.rotationMatrix, coord.points[p].homogeneous))
+        # coord = coord.parent
+        # while coord != self.mainCS:
+        #     transformedPoint = np.dot(coord.parentMatrix, np.dot(coord.rotationMatrix, transformedPoint))
+        #     coord = coord.parent
+        # return transformedPoint
+        if coord == None:
+            coord = self.findCSMain(p)
+        newPoint = copy.deepcopy(coord.points[p])
         while coord != self.mainCS:
-            transformedPoint = np.dot(coord.parentMatrix, np.dot(coord.rotationMatrix, transformedPoint))
+            newPoint.homogeneous = np.dot(coord.parentMatrix, np.dot(coord.rotationMatrix, newPoint.homogeneous))
             coord = coord.parent
-        return transformedPoint            
+        return newPoint     
 
 
 def getTranslateMatrix(x,y,z):

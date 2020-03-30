@@ -9,11 +9,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-def findAngle2D(test, csm):
-    # renaming variables for the equation in the notebook
-    x = test.x
-    y = test.y # y is up
-    z = test.z
+def findAngle2D(csm, x, y, z=0):
+    # # renaming variables for the equation in the notebook
+    # x = test.x
+    # y = test.y # y is up
+    # z = test.z
     rR = math.sqrt(csc.RC.x**2 + csc.RC.y**2)
     rC = math.sqrt(csc.CE.x**2 + csc.CE.y**2)
 
@@ -63,27 +63,15 @@ def findAngle2D(test, csm):
     csm.motorRR.angle = -mangleRR # after the angle is set, all the parent coordinate systems will update their points
 
     # make a couple of points dicts in csm, one updates parent with child (absolute), other updates child with parent (relative)
-    distY = y - csm.RR.points["RC"][1]
-    distX = x - csm.RR.points["RC"][0]
-    # distY = y - bs.MAINARM.RC.y
-    # distX = x - bs.MAINARM.RC.x
-    #tempVector = np.array([distX, distY])
+    distY = y - csm["RC"].y
+    distX = x - csm["RC"].x
+
+    print("distY: ", distY)
+    print("distX: ", distX)
 
     angleD = math.atan2(distY,distX) - csc.angle_HH_RA_RC
     csm.motorRC.angle = -angleD # setting this angle will update points CE and BC, and will propagate changes up the parent tree
 
-    # # want to replace this with something else in csm
-    # aLength = 2.75
-    # bLength = 9.5
-    # cLength = 2.5
-    # dLength = 9.43702304
-    
-    # # geometry to get input stepper angle, using law of sines and cosines
-    # midLine = math.sqrt(cLength**2 + dLength**2 - 2*cLength*dLength*math.cos(angleD))
-    # angleCAD = np.arcsin(cLength*math.sin(angleD)/midLine)
-    # angleBAC = np.arccos((aLength**2 + midLine**2 - bLength**2)/(2*aLength*midLine))
-    # mangleRA = angleCAD + angleBAC
-
-    mangleRA = np.pi/2 - p.getAngleBetween(csm.mainCS.points["AB"], csm.mainCS.points["RA"], csm.mainCS.points["RO"] )
+    mangleRA = np.pi/2 - p.getAngleBetween(csm["AB"], csm["RA"], csm["RO"] )
 
     return (mangleRR, mangleRA)

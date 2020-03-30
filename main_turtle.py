@@ -4,7 +4,7 @@ import modules.motor as motor
 import modules.MotorList as MotorList
 
 def main():
-	first = bs.Point(7,9)
+	first = bs.Point(10,0)
 	p.singlePoint(first)
 	# bs.MAINARM.angle_VT_RR_RO = 0
 	# bs.linkC.angle = 52

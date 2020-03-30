@@ -8,6 +8,9 @@ class Point(object):
         self.y = y
         self.z = z
 
+    def __getitem__(self, position):
+        return self._homogeneous[position]
+
     def magnitude(self):
         return math.sqrt( self.x**2 + self.y**2 + self.z**2 )
 
@@ -55,3 +58,6 @@ class Circle(Point):
 
 def getAngleBetween(a, pivot, b):
     return np.arccos(np.dot( a.homogeneous[:-1] - pivot.homogeneous[:-1], b.homogeneous[:-1] - pivot.homogeneous[:-1]) / (a.magnitude() * b.magnitude()) )
+
+a = Point(2,3)
+print(a[3])
