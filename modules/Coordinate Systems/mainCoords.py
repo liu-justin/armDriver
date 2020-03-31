@@ -16,12 +16,12 @@ csm.addCoordinateSystem(motorRC = csc.motorRC, motorRR = csc.motorRR, motorRT = 
 
 # plotting --------------------------------------------------
 
-test = p.Point(5,0,7)
-angles = pf.findAngle2D(csm, test)
+# test = p.Point(5,0,7)
+# angles = pf.findAngle2D(csm, test)
 
-csm.mainCS.addPoint("TS", test)
+# csm.mainCS.addPoint("TS", test)
 # print(angles)
 # csm.printAllAngles()
-# csm.printAllPoints()
-print("distance from TS to RC: ", csm["TS"].distanceTo(csm["RC"]))
+csm.printAllPoints()
+# print("distance from TS to RC: ", csm["TS"].distanceTo(csm["RC"]))
 csm.plotAllPoints()

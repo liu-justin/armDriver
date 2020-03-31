@@ -11,22 +11,22 @@ from mpl_toolkits.mplot3d import Axes3D
 # alternative is passing in the matrix with the coordinateSystem in args
 
 class coordinateSystem(object):
-    def __init__(self, *args):
+    def __init__(self, parent = None, parentMatrix = None):
         self.points = {}
         self.dependents = {} # key is pointName, value is (pointA, pointB) for the points it depends on
-        self.children = [] # other CS
+        self.children = [] # other CS, type is CS
+        self.siblings = [] # other CS, type is CS
 
         self._angle = 0
         # z will always be the axis for rotation
         self.rotationMatrix = getRotationMatrix(0,0,self._angle)
 
-        if not args:
-            self.parent = None
-            self.parentMatrix = None
-        else:
-            self.parent = args[0]
-            self.parentMatrix = args[1]
+        self.parent = parent
+        self.parentMatrix = parentMatrix
+        if self.parent != None:
+            self.siblings.extend(self.parent.children)
             self.parent.children.append(self)
+            
 
     def addPoint(self, key, point):
         self.points[key] = point
