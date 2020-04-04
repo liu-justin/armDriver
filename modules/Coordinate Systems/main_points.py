@@ -13,6 +13,11 @@ C = p.Link("C", 2.5, BC, RC)
 R = p.Link("R", 9.7612, RA, RC)
 Clower = p.Link("Clower", 6.5, RC, CE)
 
+p.addRelation("collinear", Clower, C)
+
+print(R.vectorFrom(RA))
+
+
 motorRC = cs.coordinateSystem()
 motorRC.addPoint("RA", RA)
 motorRC.addPoint("AB", AB)
