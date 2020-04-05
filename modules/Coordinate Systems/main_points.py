@@ -15,9 +15,6 @@ Clower = p.Link("Clower", 6.5, RC, CE)
 
 p.addRelation("collinear", Clower, C)
 
-print(R.vectorFrom(RA))
-
-
 motorRC = cs.coordinateSystem()
 motorRC.addPoint("RA", RA)
 motorRC.addPoint("AB", AB)
@@ -25,8 +22,5 @@ motorRC.addPoint("BC", BC)
 motorRC.addPoint("RC", RC)
 motorRC.addPoint("CE", CE)
 
-A.changeAngle(2*np.pi/3, R)
-
-print(BC.distanceTo(AB))
-print(BC.distanceTo(RC))
+A.changeAngle(4*np.pi/6, R)
 motorRC.plotPoints()

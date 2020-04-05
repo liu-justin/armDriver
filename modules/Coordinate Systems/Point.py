@@ -1,6 +1,7 @@
 import numpy as np
 import CoordinateSystem as cs
 import math
+import time
 
 class Point(object):
     def __init__(self, name, x, y, z=0, state="nready"):
@@ -12,7 +13,7 @@ class Point(object):
         self.z = z
         self.links = []
         self.waitingLinks = []
-        self.state = state
+        self._state = state
 
     def __getitem__(self, position):
         return self._homogeneous[position]
@@ -77,13 +78,24 @@ class Point(object):
         self.x = self._regular[0]
         self.y = self._regular[1]
         self.z = self._regular[2]
-        print(f"new regular for point {self.name}: {self}")
+        print(f"in point {self.name} regular.setter, just set regular to {self.regular}")
 
         self.state = "ready"
 
-        print(f"going to update the following links: {[link.name for link in self.links]}")
+        for link in self.links: link.lookAtRelations()
         for link in self.links: link.update(self)
 
+    @property
+    def state(self):
+        return self._state
+    @state.setter
+    def state(self, incomingState):
+        self._state = incomingState
+        print(f"in point {self.name} state.setter, just set state to {self.state}")
+
+        for link in self.links: link.findState()
+
+# -----------------------------------------------------------------------------------------------------------------
 
 def addRelation(relation, linkA, linkB):
     linkA.relations[relation].append(linkB)
@@ -111,21 +123,29 @@ def collinearTransformation(linkA, linkB):
         ship = linkA
 
     pivot = findCommonPoint(harbor, ship)
-    # law of cosines to get angle between links
-    angle = np.dot(harbor.vectorFrom(pivot), ship.vectorFrom(pivot))/(magnitude(harbor.vectorFrom(pivot))*magnitude(ship.vectorFrom(pivot)))
-    # linkA is the base, rotate linkB to linkA
-    r = getXYRotationMatrix(angle)
-    ship.points[pivot].regular = pivot.regular + np.dot(r, ship.vectorFrom(pivot)) # need to add property for vector
+    # startang = time.perf_counter()
+    harborAngle = math.atan2(harbor.vectorFrom(pivot)[1],harbor.vectorFrom(pivot)[0])
+    # if harborAngle < 0: harborAngle = 2*np.pi - harborAngle
+    shipAngle = math.atan2(ship.vectorFrom(pivot)[1],ship.vectorFrom(pivot)[0])
+    # if shipAngle < 0: shipAngle = 2*np.pi - shipAngle
+    if abs(shipAngle - harborAngle) > np.pi/2:
+        harborAngle = math.atan2(harbor.vectorTo(pivot)[1],harbor.vectorTo(pivot)[0])
+    angle = harborAngle - shipAngle
+    # angtime = time.perf_counter() - startang
 
-    # p = findCommonPoint(linkA, linkB)
-    # # law of cosines to get angle between links
-    # angle = np.dot(linkA.vector, linkB.vector)/(magnitude(linkA.vector)*magnitude(linkB.vector))
-    # # linkA is the base, rotate linkB to linkA
-    # r = getXYRotationMatrix(angle)
-    # linkB.points[p].homogeneous = p.homogeneous + np.dot(r, linkB.vector) # need to add property for vector
+    # law of cosines doesn't show negative or positive, it just shows the abs angle value
+    # angle = math.acos(np.dot(harbor.vectorFrom(pivot), ship.vectorFrom(pivot))/(magnitude(harbor.vectorFrom(pivot))*magnitude(ship.vectorFrom(pivot))))
+    # if abs(angle) > np.pi/2: angle2 = np.pi - angle
+    # elif abs(angle) > np.pi: angle2 = angle - np.pi #- angle
+    
+    r = getXYRotationMatrix(angle)
+
+    ship.points[pivot].regular = pivot.regular + np.dot(r, ship.vectorFrom(pivot)) # need to add property for vector
 
 relToFunc = {"collinear": collinearTransformation, "perpendicular": "perpendicularTransformation", "parallel": "parallelTransformation"}
 stateImportance = {"fixed": 0, "ready": 1, "nready": 2, "waiting": 2}
+
+# -----------------------------------------------------------------------------------------------------------------
 
 class Link(object):
     def __init__(self, name, length, pointA, pointB):
@@ -140,7 +160,7 @@ class Link(object):
         pointA.links.append(self)
         pointB.links.append(self)
 
-        self.state = self.findState()
+        self.state = "nready"
     
     def vectorFrom(self, point):
         return self.points[point].regular - point.regular
@@ -153,20 +173,22 @@ class Link(object):
         for point in self.points.values():
             if (stateImportance[point.state] > stateImportance[highestPointState]):
                 highestPointState = point.state
-        return highestPointState
+        self.state = highestPointState
+        print(f"in link {self.name}, findState;  just set self.state to {self.state}")
 
 
     def update(self, point):
         # find the location of the other point, based on distances
-        print(f"link {self.name} updating, currently updating point {self.points[point].name} ")
+        print(f"link {self.name} updating, currently checking point {self.points[point].name} state")
+
         if self.points[point].state == "nready":
-            print("state was nready, so setting to waiting")
+            print("- state was nready, so setting to waiting")
             self.points[point].state = "waiting"
             self.points[point].waitingLinks.append(self)
 
         # if another link put the point into waiting, that means it can be found thru intersection
         elif self.points[point].state == "waiting":
-            print("state was waiting, so doing an intersection")
+            print("- state was waiting, so doing an intersection")
             self.points[point].waitingLinks.append(self)
             tup = self.points[point].intersectionPoint()
             
@@ -174,20 +196,19 @@ class Link(object):
 
         # if the other point is fixed, search thru the other links from that point
         elif self.points[point].state == "fixed":
-            print("state was fixed, so checking all the other links assoicated with this point")
+            print("- state was fixed, so checking all the other links assoicated with this point")
             for link in self.points[point].links:
                 if link != self: link.update(self.points[point])
 
-        # self.lookAtRelations()
-
     def lookAtRelations(self):
+        print(f"in link {self.name}, lookatRelations")
         for relation, links in self.relations.items():
             for link in links:
                 relToFunc[relation](self, link)
 
     def changeAngle(self, incomingAngle, baseLink):
         pivot = findCommonPoint(self, baseLink)
-        print(f"finding common point for {self.name}, {baseLink.name}: {pivot.name}")
+        print(f"in link {self.name}, changeAngle; just found pivot point {pivot.name}")
         r = getXYRotationMatrix(incomingAngle)
         notnormalized = np.dot(r, baseLink.vectorFrom(pivot)) # this isnt right
         self.points[pivot].regular = pivot.regular + notnormalized*magnitude(self.vectorFrom(pivot))/magnitude(baseLink.vectorFrom(pivot))
