@@ -1,9 +1,18 @@
 #include <Motor.h>
 #include <MotorManager.h>
+#include <ros.h>
+#include <v1_two_axis/Blind_idx_dir.h>
+
 Motor R0(2,3,4,42,103);
 Motor RA(5,6,7,34,81);
 
 MotorManager mm(&R0, &RA);
+
+ros::NodeHandle nh;
+
+void messageCallback( const v1_two_axis::Blind_idx_dir& blind_msg) {
+  blind_msg.index
+}
 
 int stepsPerRev = 800; // written on the motor driver
 int minorSteps = stepsPerRev/200; // how many minor steps are in between the 200 major steps of a standard stepper motor

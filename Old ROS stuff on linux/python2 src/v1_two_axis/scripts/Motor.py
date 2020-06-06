@@ -1,4 +1,4 @@
-import modules.stepMath as smath
+import stepMath as smath
 import numpy as np
 import math
 

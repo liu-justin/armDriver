@@ -1,0 +1,402 @@
+ros_create_pkg with dependencies here --> creates the package
+rosmake --> builds the package, runs thru and looks for packages and builds them
+
+node is just an exe file within a ROS package
+roscore --> start running ROS
+rosnode list --> tells which nodes are running, rosout is always running: it collects and logs nodes debugging output
+rosnode info /{whatever node} -> returns more info about the whatever node
+
+rosrun {packagename} {node name} to run a package without having to know the path
+
+ran into some issues running rosrun turtle sim, WSL doesn't allow for linux gui apps
+- had to write export DISPLAY=locahost:0.0 in Ubuntu
+- also had to start a VcXsrv on the windows side
+
+rosrun {package name} {node name} __name:={new node name} changes the name of the node
+
+rosnode ping {nodename} checks if the node is up
+
+ROS Topics
+
+turtlesim_node and turtle_teleop_key node are communicating with each other over a ROS topic
+- teleop_key is publishing keystrokes to the topic, turtle_sim subscribes to the same topic to receive keystrokes
+
+use rosrun rqt_graph rqt_graph to see a dynamic graph of all the topic stuffs
+rostopic echo {topic}(in my case its /turtle1/cmd_vel)
+something created a new node in rqt_graph, i guess when the turtle moves? the node is subscribed to cmd_vel
+
+rostopic list -v -> shows all the topics published to and subscribed to
+
+communication between topics happens by sending ROS messages btwn nodes
+- publisher and subscriber must send and receive the same type of message; topic type is defined by the message type published on it
+- rostopic type -> find the type of a message
+- rosmsg show {message type} to see details of the message
+- rostopic pub {topic} {msg_type} {args} --> publishes data to a topic, args defined by the msg_type(kinda like creating a new object of a class, you use the args in the way the class is made)
+-- rostopic pub --> publishes messages to the topic
+-- -1 --> option causes only one publish then exit, -r (#) --> publish steady stream at # Hz
+-- /turtle1/cmd_vel --> name of the topic to publish to
+-- geometry_msgs/Twist --> msg type to use when publishing to topic
+-- -- --> double dash tells non of following arguments is option, cases where you are sending negatives
+-- '[2.0, 0.0, 0.0]' '[0.0, 0.0, 1.0]'
+
+- when publishing continuously with -r #, in rqtgraph you can see a rostopic pub(lish) node publishing to topic cmd_vel, and a rostopic echo node subscribing to that same topic
+
+rostopic echo /turtle1/pose --> shows data published by package turtlesim
+- in rqt_graph, a new topic called turtle1/pose opens up, turtlesim publishes to it and a new echo node subcribes to it
+
+rostopic hz {topic} --> shows how fast a node is publishing to a topic, subject is a topic
+
+rostopic type {topic} | rosmsg show --> shows the type of the topic, along with the details
+
+rosrun rqt_plot rqt_plot --> brings up a plotter, add topics to it and it will plot them
+- example uses pose/x, pose/y; you can just do pose, it adds angular and linear velocity, accel
+
+- topics should only be used for continuous data streams (sensor data, robot state)
+
+-------------------
+ROS Services
+
+services are another way nodes can communicate with each other
+services allow nodes to send a request and receive a response
+
+rosservice list --> shows the services that the current nodes provide
+rosservice type {service} --> shows the type of the service, kinda like rostopic type {topic}
+- need additional         | rossrv show --> to show the details of what to put as arguments
+- in the output, the args below --- is the response
+rosservice call {service} {service args} --> calls the service with the appropriate arguments
+
+ROS Parameters
+rosparam allows you to store and manipulate data on ROS Parameter Server (can store ints, floats, bools, dicts, lists)
+uses YAML markup for syntax
+- 1 is int
+- 1.0 is float
+- one is string
+- true is bool
+- [1, 2, 3] is list of ints
+- {a:b, c:d} is dict
+
+rosparam list --> shows what parameters on the param server can be edited with rosparam set
+rosparam set {parameter} {args} --> change the parameter based on your args
+- need to rosservice call /clear to see the parameter change
+rosparam get {parameter} --> gets the parameter value
+- from here, i see that when you rosparam set, and rosparam get, the value gets updated
+- i guess in the python program you just need to reinitialize the background, its not coded to look for color changes
+- can also rosparam get / --> sees all the parameters in Parameter Server
+
+rosparam dump {file name.yaml} --> creates a parameters file in the current directory
+rosparam load {filename} {namespace} --> i guess you can load these params into another instance of Parameter Server, editing the parameters with rosparam set doesnt edit this copy
+- rosparam get /{tab} --> shows that the copy namespace creates another folder with its own params
+
+RQT Console
+kinda like the application status in FEI, can change the level in the gear setting in the top right
+in the turtlesim, displays wall hits as warnings
+logging levels follow this order: Fatal, Error, Warn, Info, Debug: rqt console will display all messages of set priority level or higher
+
+roslaunch
+for some reason, the beginner_tutorials is not sourced, had to go back to catkin_ws and run
+-  source devel/setup.bash
+- everytime you open a new instance of ubuntu, you need to re-source, cd to catkin_ws and run the above command
+-- or you can just add it to the startup file ~/.bashrc, and it will run it for you; make sure the address is correct though
+
+made and cd into a new folder after roscd into beginner_tutorials
+created a new launch file, turtlemimic.launch
+- looks like xml, with starting and ending tags
+- launch tag at the top like xml tag at the top
+- can create two of the same turtlesim node with the same name, just wrap in a group tag with ns(namespace) changed (turtlesim1, turtlesim2)
+- next there is a mimic node, remapping input to turtlesim1/turtle1 and output to turtlesim2
+
+in rqt_graph, can see that mimic node doesnt subscribe to the commands from rostopic pub, it just subscribes to the pose topic from turtlesim1, and publishes to turtlesim2 cmd_vel topic, which turtlesim2 is subscribed to
+
+rosed {package name} {file name} --> just like vim {file} except you dont need to know the exact location of the file in the package
+
+changed the default editor in Ubuntu to VScode, just add "export EDITOR="code" to the bottm of ~/.bashrc
+
+-------------------------------------
+msg
+simple text files that descirbe fields of a ROS message; ROS message is the thing that is transferred btwn nodes and topics
+msg are used to generate source code for ROS messages
+msg are simple text files with a field type and field name per line (can use lots of types, no dicts)
+- also frequently a Header type, which containts timestamp and coodr frame info; line is Header header
+
+created a msg folder in beginner_tutorials, and created a Num.msg file inside that folder that had lines like "string first_name", and "uint32 score"
+
+editted package.xml in beginner_tutorials with build depend tag message_generation and exec depen tag with message_runtime
+- this makes it so the msg files are acutally turned into source code for whatever programming langauge needed
+
+edited CMakeLists.txt in beginner_tutorials
+- added dependency "message_generation" to find_package call
+- in catkin_package, add message_runtime to CATKIN_DEPENDS
+- uncommented add_message_files, added only the msg I created (Num.msg)
+- uncommented generate_messages
+
+rosmsg show {package/message_type} --> basically shows what is inside the .msg 
+- rosmsg show {message_type} --> finds all the message types in catkin_ws and displays them seperated by package
+
+----------------------------------------------------------------
+srv
+descibes a service, same format as msg types except they havea request and response part
+- request go above the ---, response goes below
+
+roscp {package name} {donor_file_path} {donee_path}
+
+edited CMakeLists.txt again, uncommented add_service_files and replaced the filler srv files with my srv i copied from the donor path
+- all the uncommented stuff in msg applies to srv as well
+
+rossrv show {service type} --> same format as rosmsg show
+
+cd to catkin_ws, then
+- catkin_make install --> will generate code for use in all support languages
+
+-----------------------------------------------------------------
+publisher node
+created a folder called scripts
+got a code from github using rospy
+chmod +x {file} --> makes the file executable
+- #!/usr/bin/env python -->every node will have this declaration at the top, makes sure it is executed as Python script
+- import rospy --> every Python ROS node has this
+- from std_msgs.msg import String --> so we can reuse the String message type for publishing
+- pub = rospy.Publisher('chatter', String, queue_size=10)
+    - declares node is publishing to topic "chatter", using message type "String" we imported from std_msgs.msg
+    - queue_size limits the number of queued messages if any subscribe is not reading fast enough
+- rospy.init_node('talker', anonymous=True)
+    - tells ROS the name of my node (talker); name cannot contain any slashes
+    - anonymous = True adds random numbers to the end of name, to make the node name unique
+    -- thats why all the nodes in rqt_graph had those long numbers
+    -- ROS requires each node have a unique name
+    ---  if node with same name pops in, it bumps the older one; so that malfunctioning nodes can be kicked off easily
+- rate = rospy.Rate(10) --> creates a Rate object, and loops at the desired rate (10times/sec)
+- while not rospy.is_shutdown(): --> standard rospy construct, check if there is a ctrl-c
+    hello_str = "hello world %s" % rospy.get_time()
+        - can pass in String(), then hello_str.data = bleh
+        can also do hello_str = String(data=str), and if there are other attributes it goes to default
+    rospy.loginfo(hello_str) --> messages printed to screen, written to log file, and written to rosout(use rqt_console to see rosout)
+    pub.publish(hello_str) --> calls pub we defined above, to publish this hello_str to topic "chatter"
+        - if the msg defined in pub = rospy.Publisher is more complicated, put the args in the same order as in the .msg file
+    rate.sleep() --> maintains the rate we set in rospy.Rate(10)
+
+try:
+    talker() --> this whole function is talker btw, i didnt put it in the code description above
+except rospy.ROSInterruptException: --> along with line 165, this catches ctrl-c when in rate.sleep()
+    pass
+
+------
+subscriber node
+
+#!/usr/bin/env python
+import rospy
+from std_msgs.msg import String --> same imports as the publisher node
+
+def callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+    
+def listener():
+    rospy.init_node('listener', anonymous=True) --> same as publisher
+
+    rospy.Subscriber("chatter", String, callback) --> subscribes this node to topic "chatter", type of String from the import
+
+    rospy.spin() --> simply keeps python from exiting until this node is stopped
+
+if __name__ == '__main__':
+    listener()
+
+---------
+after both subscriber and publisher are created, run catkin_make in the catkin workspace folder
+make sure you re-source
+
+rosrun beginner_tutorials talker.py --> starts the talker node
+rosrun beginner_tutorials listener.py --> starts the listener node
+
+rosrun rqt_graph rqt_graph --> shows that talker publishes to topic "chatter", and listener subscribes to topic "chatter"
+- can also see the unique numbers behind talker and listener 
+
+----------
+service node
+I think the service node receives the request, while the client node makes the request
+
+#!/usr/bin/env python --> same as always, it defines this file as a python script
+
+from beginner_tutorials.srv import AddTwoInts,AddTwoIntsResponse
+import rospy  --> same old imports
+
+def handle_add_two_ints(req): --> req is AddTwoInts service type, input is a and b, output is sum (check rossrv show AddTwoInts)
+    print "Returning [%s + %s = %s]"%(req.a, req.b, (req.a + req.b))
+    return AddTwoIntsResponse(req.a + req.b)
+
+def add_two_ints_server():
+    rospy.init_node('add_two_ints_server') --> name the node as you init
+    s = rospy.Service('add_two_ints', AddTwoInts, handle_add_two_ints) --> new service name, using AddTwoInts type, all requests go to handle_add_two_ints
+    print "Ready to add two ints."
+    rospy.spin() --> keeps code from exiting until service shutdown
+
+if __name__ == "__main__":
+    add_two_ints_server()
+
+-------
+client node
+i think this makes the request to the service node, calls the service node
+
+#!/usr/bin/env python
+
+import sys
+import rospy
+from beginner_tutorials.srv import *
+
+def add_two_ints_client(x, y):
+    rospy.wait_for_service('add_two_ints') --> wait until the service is active
+    try:
+        add_two_ints = rospy.ServiceProxy('add_two_ints', AddTwoInts) --> using service add_two_ints, and service type AddTwoInts
+        resp1 = add_two_ints(x, y) use add_two_ints as a function and call it, using params x and y
+            - because we declared type to be AddTwoInts in ServiceProxy, this call just takes in x and y and converts to AddTwoInts type
+        return resp1.sum
+    except rospy.ServiceException, e:
+        print "Service call failed: %s"%e
+
+def usage():
+    return "%s [x y]"%sys.argv[0]
+
+if __name__ == "__main__":
+    if len(sys.argv) == 3: --> when you run the program in terminal, run it with 2 params x and y
+        x = int(sys.argv[1])
+        y = int(sys.argv[2])
+    else:
+        print usage() --> tells the user what format you need to run this node
+        sys.exit(1)
+    print "Requesting %s+%s"%(x, y)
+    print "%s + %s = %s"%(x, y, add_two_ints_client(x, y))
+
+--- 
+first start the server node, then run the client node
+- client node probably will never show up on rqt_graph unless you refresh while client node is running
+
+----------
+recording topic data using a bag file
+back to turtlesim, running turtlesim_node and turtle_teleop_key
+rostopic list -v --> shows all the topics being published at the moment
+- these topics have the only msg types able to be recorded in the bag file
+
+not roscd into any package, just mkdir a bagfiles at the root, cd into it, and run
+- rosbag record -a --> records all published topics
+- rosbag record -O subset {topics} --> records the following topics to a subset.bag
+- ctrl c to stop recording
+
+rosbag info {bag file} --> shows the bag description, we can see the topics that were published over the recording
+
+stop the turtle_teleop_key node, before running the following:
+- rosbag play {bag file} --> plays the file exactly as turtle_teleop_key did
+
+can use roswtf to troubleshoot what is going wrong
+
+----------------------
+Actions from actionlib
+there are cases when I would like to send a request to a node to perform a task, and also receive a reply
+- request motor_driver node to drive the motor one step, then receive ready state or encoder state
+- can be achieved with ROS services, but if the service takes a long time to execute I may want to cancel the request
+-- or see the progress of the request
+
+in order for client and server to communicate, need to define a few communication msg with an action specification
+- Goal: sent by ActionClient to ActionServer (information about where the robot final position)
+- Feedback: sent by server to tell client about progress of a goal (like robotics current pose)
+- Result: sent by ActionServer to ActionClient upon completion of the goal, sent exactly once (final pose of robot)
+
+-------------------
+trying to install python3
+catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3 --> throws an Error
+
+from online https://answers.ros.org/question/337135/catkin_make-no-module-named-catkin_pkg/
+- sudo apt install python3-catkin-pkg --> deleted a bunch of stuff, catkin_make wouldnt work, ~/.bashrc wouldn't source because the setup.bash in melodic wasnt there anymore either
+
+had to reinstall ros, but didnt uninstall first, i guess it just figured out what was missing and just sorted things out 
+- sudo apt install ros-melodic-desktop-full
+
+turns out python3 doesnt work well, probably need to do something else
+- i went back to python2, but i had the same problem, scripts couldnt rosrun
+- just forgot to chmod +x scripts, also need to change the srv path at the top of the scripts
+
+------------------
+WSL doesnt allow access to comports, so I cant communicate with my arduino
+- went back to my windows installation, updated ros with the same command as install in the documentation
+- roscd doesn't allows work, found that need to source the setup.bat in catkin_ws/dev
+    - to source in windows, just type the file, no source at the front; can type full path or navigate to it
+    - should add that in the startup batch file 
+- says rosed isn't a recognized command, thats not good
+- the ports aren't tty/blah, its just COM5, or COM4
+
+--------------------------------------------
+rosserial
+-------------------
+Hello world
+
+this is only topics, so not useful for requesting and receiving data;
+- probably only useful for Arduino publishing sensor data
+#########################
+// need the ros.h header file for every ROS arduino program
+// along with header files for any message being used
+#include <ros.h>
+#include <std_msgs/String.h>
+
+// make an instance of the node handle, allows program to create publishers and subscribers
+// node handle takes care of serial port comms
+ros::NodeHandle  nh;
+
+// create an instance of Publisher with topic chatter using msg str_msg instance
+std_msgs::String str_msg;
+ros::Publisher chatter("chatter", &str_msg);
+
+char hello[13] = "hello world!";
+
+// in setup, need to initialize the ROS node handle, advertise any topics being published, and subscribe to any topics arduino wants to listen to
+void setup()
+{
+  nh.initNode();
+  nh.advertise(chatter);
+}
+
+void loop()
+{
+  str_msg.data = hello;
+  chatter.publish( &str_msg ); // using chatter, publish "hello world!"
+  nh.spinOnce(); // all ROS com callback is handled
+  delay(1000);
+}
+##############################
+Arduino subscriber 
+
+- now, the arduino is subscribing to a topic, and its up to the publisher in python to publish at the correct time
+- for this one, I think I'd have to coordinate the time between Python and arduino
+
+################
+ /* 
+ * rosserial Subscriber Example
+ * Blinks an LED on callback
+ */
+// include ros.h header along with headers for any other message
+#include <ros.h>
+#include <std_msgs/Empty.h>
+
+// create an instance of the node handle, need it to create publishers and subscribers
+ros::NodeHandle  nh;
+
+// create a callback function for the subscriber, takes reference of message type Empty
+void messageCb( const std_msgs::Empty& toggle_msg){
+  // blink the led everytime we receive a message, nothing to do with the message because
+  // the message is empty
+  digitalWrite(13, HIGH-digitalRead(13));
+}
+
+// create an instance of a subscriber with topic toggle_led and type std_msgs::Empty
+// must template the subscriber upon the message (?)
+// the two args are the template its subscribing to (toggle_led) and the callback function
+ros::Subscriber<std_msgs::Empty> sub("toggle_led", &messageCb );
+
+void setup()
+{ 
+  pinMode(13, OUTPUT);
+  nh.initNode();
+  nh.subscribe(sub);
+}
+
+void loop()
+{  
+  nh.spinOnce(); // all ROS communication callbacks are handled, will pass messages to subscriber sub
+  delay(1);
+}
