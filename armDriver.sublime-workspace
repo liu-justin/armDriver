@@ -131,7 +131,7 @@
 			"file": "main.py",
 			"settings":
 			{
-				"buffer_size": 721,
+				"buffer_size": 793,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -158,7 +158,7 @@
 			"file": "modules/stepMath.py",
 			"settings":
 			{
-				"buffer_size": 625,
+				"buffer_size": 733,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -167,25 +167,7 @@
 			"file": "modules/sendToArduinoStream.py",
 			"settings":
 			{
-				"buffer_size": 4076,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/justi/Documents/Arduino/libraries/Motor/Motor.cpp",
-			"settings":
-			{
-				"buffer_size": 2275,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/justi/Documents/Arduino/libraries/Motor/Motor.h",
-			"settings":
-			{
-				"buffer_size": 1210,
+				"buffer_size": 2788,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -194,16 +176,7 @@
 			"file": "modules/motor.py",
 			"settings":
 			{
-				"buffer_size": 6205,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "modules/stepFinder.py",
-			"settings":
-			{
-				"buffer_size": 572,
+				"buffer_size": 7216,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -294,13 +267,17 @@
 	"expanded_folders":
 	[
 		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code",
+		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver",
+		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver/modules",
 		"/C/Users/justi/Documents/Arduino/libraries"
 	],
 	"file_history":
 	[
-		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/Python tests/asyncio_test1.py",
-		"/C/Users/justi/Documents/Arduino/libraries/Motor/Motor.h",
+		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver/modules/stepFinder.py",
 		"/C/Users/justi/Documents/Arduino/libraries/Motor/Motor.cpp",
+		"/C/Users/justi/Documents/Arduino/libraries/Motor/Motor.h",
+		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver/modules/motor.py",
+		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/Python tests/asyncio_test1.py",
 		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/Python tests/multiprocessing_test1.py",
 		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/Python tests/Multiprocessing/lock.py",
 		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/Python tests/f1040sb.pdf",
@@ -317,7 +294,6 @@
 		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver/Arduino Libraries/Motor/Motor.h",
 		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver/Arduino Libraries/Motor.h",
 		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver/Arduino Libraries/MotorManager.h",
-		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver/modules/stepFinder.py",
 		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver/modules/pointFinder.py",
 		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver/Arduino Libraries/MotorManager.cpp",
 		"/C/Users/justi/Documents/Arduino/libraries/iostream/ios.h",
@@ -338,7 +314,6 @@
 		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver/DM542_driver/DM542_driver_orig.cpp",
 		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver/DM542_driver/DM542_driver_orig.h",
 		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver/modules/stepMath.py",
-		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver/modules/motor.py",
 		"/C/Users/justi/Documents/Arduino/libraries/DM542_driver/DM542_driver.cpp",
 		"/C/Users/justi/Documents/Arduino/libraries/DM542_driver/DM542_driver_aux.cpp",
 		"/C/Users/justi/Documents/aaa/PP Solidworks/Robotic Arm v3 (Balanced)/code/armDriver/DM542_driver/DM542_driver.h",
@@ -479,7 +454,7 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 4,
 			"sheets":
 			[
 				{
@@ -488,15 +463,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 721,
+						"buffer_size": 793,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								674,
-								674
+								0,
+								0
 							]
 						],
 						"settings":
@@ -505,10 +480,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 117.0,
+						"translation.y": 39.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -537,7 +512,7 @@
 						"translation.y": 312.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -566,7 +541,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -575,7 +550,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 625,
+						"buffer_size": 733,
 						"regions":
 						{
 						},
@@ -591,10 +566,10 @@
 							"syntax": "Packages/Python/Python.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 195.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -603,15 +578,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4076,
+						"buffer_size": 2788,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2845,
-								2845
+								0,
+								0
 							]
 						],
 						"settings":
@@ -620,85 +595,27 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 801.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "/C/Users/justi/Documents/Arduino/libraries/Motor/Motor.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2275,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								360,
-								360
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 279.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "/C/Users/justi/Documents/Arduino/libraries/Motor/Motor.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1210,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								338,
-								338
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 234.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
+					"buffer": 5,
 					"file": "modules/motor.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6205,
+						"buffer_size": 7216,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								386,
-								386
+								0,
+								0
 							]
 						],
 						"settings":
@@ -708,40 +625,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 624.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "modules/stepFinder.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 572,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								234,
-								234
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
